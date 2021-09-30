@@ -826,9 +826,9 @@ INSERT INTO BreakingChangeWeighting VALUES ('Microsoft.Rules.Data.Upgrade.UR0000
             {
                 foreach($assessment in $serverInstances.AssessmentRecommendations) #level 3, the assessment
                 {
-                    $assessment.ImpactedDatabases = if ($assessment.ImpactedDatabases.Length -eq 0) {$blankImpactedDatabases} else {$assessment.ImpactedDatabases}
+                    $impactedDatabases = if (($assessment.ImpactedDatabases -eq $null) -or ($assessment.ImpactedDatabases.Length -eq 0)) {$blankImpactedDatabases} else {$assessment.ImpactedDatabases}
                         
-                    foreach($impacteddbs in $assessment.ImpactedDatabases) #level 4, the impacted objects
+                    foreach($impacteddbs in $impactedDatabases) #level 4, the impacted objects
                     {                       
                         #TODO Get date here will eventually be replace with timestamp from JSON file
                         $azuredatatable.rows.add((Get-Date).toString(), $serverInstances.ServerName, $serverInstances.Version, $serverInstances.Status, $assessment.Category, $assessment.Severity, $assessment.FeatureParityCategory, $assessment.RuleId, $assessment.Title, $assessment.Impact, $assessment.Recommendation, $assessment.MoreInfo, $impacteddbs.Name, $impacteddbs.ObjectType, $impacteddbs.ImpactDetail) | Out-Null
