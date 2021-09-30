@@ -84,7 +84,7 @@ param(
         $col2 = New-Object Microsoft.SqlServer.Management.Smo.Column($ReportDatatbl, "InstanceName", [Microsoft.SqlServer.Management.Smo.DataType]::VarChar(50))
         $col3 = New-Object Microsoft.SqlServer.Management.Smo.Column($ReportDatatbl, "Status", [Microsoft.SqlServer.Management.Smo.DataType]::VarChar(30))
         $col4 = New-Object Microsoft.SqlServer.Management.Smo.Column($ReportDatatbl, "Name", [Microsoft.SqlServer.Management.Smo.DataType]::VarChar(255))
-        $col5 = New-Object Microsoft.SqlServer.Management.Smo.Column($ReportDatatbl, "SizeMB", [Microsoft.SqlServer.Management.Smo.DataType]::VarChar(30))
+        $col5 = New-Object Microsoft.SqlServer.Management.Smo.Column($ReportDatatbl, "SizeMB", [Microsoft.SqlServer.Management.Smo.DataType]::Decimal(6, 38))
         $col6 = New-Object Microsoft.SqlServer.Management.Smo.Column($ReportDatatbl, "SourceCompatibilityLevel", [Microsoft.SqlServer.Management.Smo.DataType]::VarChar(15))
         $col7 = New-Object Microsoft.SqlServer.Management.Smo.Column($ReportDatatbl, "TargetCompatibilityLevel", [Microsoft.SqlServer.Management.Smo.DataType]::VarChar(15))
         $col8 = New-Object Microsoft.SqlServer.Management.Smo.Column($ReportDatatbl, "Category", [Microsoft.SqlServer.Management.Smo.DataType]::VarChar(30))
@@ -726,7 +726,7 @@ INSERT INTO BreakingChangeWeighting VALUES ('Microsoft.Rules.Data.Upgrade.UR0000
         $datatable.columns.add("InstanceName",[String]) | Out-Null
         $datatable.columns.add("Status",[String]) | Out-Null
         $datatable.columns.add("Name",[String]) | Out-Null
-        $datatable.columns.add("SizeMB",[String]) | Out-Null
+        $datatable.columns.add("SizeMB",[Decimal]) | Out-Null
         $datatable.columns.add("SourceCompatibilityLevel",[String]) | Out-Null
         $datatable.columns.add("TargetCompatibilityLevel",[String]) | Out-Null
         $datatable.columns.add("Category",[String]) | Out-Null
