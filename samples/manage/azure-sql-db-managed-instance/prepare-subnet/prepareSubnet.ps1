@@ -1023,10 +1023,6 @@ If($isValid -ne $true)
 
     If ($applyChanges) 
     { 
-        If($isOkServiceEndpoints -ne $true)
-        {
-            PrepareServiceEndpoints $subnet
-        }
             
         If($isOkNSG -ne $true)
         {
