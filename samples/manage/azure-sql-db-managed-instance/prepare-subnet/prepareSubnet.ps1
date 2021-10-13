@@ -846,13 +846,6 @@ function VerifyRouteTable {
 }
 
 
-function PrepareServiceEndpoints
-{
-    param($subnet)
-    Write-Host "Removing service endpoints."
-    $subnet.ServiceEndpoints.Clear()
-}
-
 function PrepareServiceDelegation
 {
     param($subnet)
