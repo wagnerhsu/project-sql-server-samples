@@ -193,6 +193,7 @@ Sub Main()
 	Dim timeout As Integer = RsSrc.Timeout
 	RsSrc.Timeout = 600000 '10 minutes
 	srcItems = RsSrc.ListChildren(GetSrcFolderPath(), True) 'Possible catalog item types: Model, Dataset, Component, Resource, DataSource, Folder, Report
+	Array.Sort(srcItems, New Comparison(Of CatalogItem)(AddressOf SortParentFoldersFirst))
 	RsSrc.Timeout = timeout
 	
 	For Each ci As CatalogItem In srcItems
@@ -1068,3 +1069,15 @@ Sub WriteSuccess()
 	Console.WriteLine(" ... SUCCESS")
 	Console.ResetColor()
 End Sub
+
+Function SortParentFoldersFirst(first As CatalogItem, second As CatalogItem) As Integer
+	If first.TypeName = "Folder" And second.TypeName <> "Folder" Then
+		Return -1
+	ElseIf first.TypeName <> "Folder" And second.TypeName = "Folder" Then
+		Return 1
+	ElseIf first.TypeName <> "Folder" And second.TypeName <> "Folder" Then
+		Return 0
+	Else
+		Return String.Compare(first.Path, second.Path)
+	End If
+End Function
