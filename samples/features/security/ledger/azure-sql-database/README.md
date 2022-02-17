@@ -40,7 +40,6 @@ You also need to make sure the following software is installed on your machine:
      ```powershell
      Get-InstalledModule -Name SqlServer
      ```
-
 2. [Bicep](https://docs.microsoft.com/en-us/azure/azure-resource-manager/bicep/overview?tabs=bicep) version 0.4.1272 or later. You need to install Bicep and ensure it can be invoked from PowerShell. There are several ways to [install Bicep](https://docs.microsoft.com/en-us/azure/azure-resource-manager/bicep/install).
 3. [SQL Server Management Studio (SSMS)](https://msdn.microsoft.com/en-us/library/mt238290.aspx) - version 18.10 or later is recommended.
 
