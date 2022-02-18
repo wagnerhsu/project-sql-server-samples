@@ -40,6 +40,7 @@ You also need to make sure the following software is installed on your machine:
      ```powershell
      Get-InstalledModule -Name SqlServer
      ```
+
 2. [Bicep](https://docs.microsoft.com/en-us/azure/azure-resource-manager/bicep/overview?tabs=bicep) version 0.4.1272 or later. You need to install Bicep and ensure it can be invoked from PowerShell. There are several ways to [install Bicep](https://docs.microsoft.com/en-us/azure/azure-resource-manager/bicep/install).
 3. [SQL Server Management Studio (SSMS)](https://msdn.microsoft.com/en-us/library/mt238290.aspx) - version 18.10 or later is recommended.
 
@@ -48,7 +49,7 @@ You also need to make sure the following software is installed on your machine:
 By following the below setup steps, you will create a new resource group and deploy the following resources to your Azure subscription:
 
 - A logical database server.
-- The **ContosoHR** database using General Purpose compute tier, 2 vCores, and the Gen5 hardware generation.
+- The **ContosoHR** database using Serverless General Purpose compute tier, 1 vCore, and the Gen5 hardware generation.
 - A storage account that will be used to store ledger digests.
 - The Contoso HR web application in Azure Web Apps.
 
@@ -78,10 +79,13 @@ By following the below setup steps, you will create a new resource group and dep
    Please copy and save the above information. You will need it for the demo steps.
 
 ## Demo - show the main benefits of the ledger feature
+
 ### Scenario
+
 The HR department of Contoso is using a simple web application to manage the employee's salaries.
 In this demo you will use 3 different types of users:
-- Rachel, who works at the HR depermant.
+
+- Rachel, who works at the HR department.
 - Alice, who is an auditor.
 - Jay, the DBA of the company. He thinks he should earn more money for the type of work he's doing :)  
 
@@ -100,7 +104,7 @@ Perform the below steps before you show the demo.
          ![Connection Properties](./img/ssms-connect-to-server-connection-properties-page.png)
 
       1. Click **Connect**.
-      
+
 1. Prepare a browser window for the HR user.
    1. Open your browser.
    1. Point the browser to the demo application URL.
@@ -108,7 +112,7 @@ Perform the below steps before you show the demo.
    1. Leave the ContosoHR tab selected.
 
 1. Prepare a web browser for the Auditor user.
-   1. Open a new InPrivate browser window.
+   1. Open a [Private Browsing](https://en.wikipedia.org/wiki/Private_browsing) window.
    1. Point the browser to the demo application URL.
    1. Log on as alice@contoso.com. The password is: Password!1
    1. You should now see 5 tabs. Leave the ContosoHR tab selected.
@@ -135,7 +139,7 @@ Perform the below steps before you show the demo.
    1. Show the Contoso HR web app in the HR user's browser. Click on the **Employees tab**. This application displays employee records, and allows HR staff members to manage employee records.
    ![Employees tab](./img/Employees-tab.png)
    1. Switch to SSMS, select the **ListAllEmployees.sql** tab and execute the query, which shows the content of the **Employees** table. The web application uses this table as a data store.  
-   
+
 1. Show how ledger helps investigate tampering by DBAs.
    1. Point to Jay’s record in the table (row #4). Let's assume Jay is both the DBA of the ContosoHR database as well as an employee of Contoso. Jay wants to maliciously increase his salary.
    1. Pretending you are Jay, switch to SSMS, select the **UpdateSalary.sql** and execute the query.
@@ -145,7 +149,7 @@ Perform the below steps before you show the demo.
    ![Ledger Verifications](./img/Ledger-Verifications.png)
    1. Select the **Employee Ledger** tab. In the **Employee Ledger** tab, Alice can browse the content of the ledger view for the **Employees** table. She notices a suspicious update operation performed by Jay, who will not be able to effectively deny he has updated his salary, because the data in the ledger table has been cryptographically verified as genuine and it clearly shows Jay updated his salary.
    ![Employee Ledger](./img/Employee-ledger.png)
-   1. Switch to SSMS. Select the **CreateDatabaseSchema.sql** tab and show the stored procedures (that are used by the web application): 
+   1. Switch to SSMS. Select the **CreateDatabaseSchema.sql** tab and show the stored procedures (that are used by the web application):
        1. **VerifyLedger** - Explain the sys.sp_verify_database_ledger_from_digest_storage procedure
        1. **GetEmployeeLedgerEntries** - Explain the view Employees_Ledger and table sys.database_ledger_transactions
 
@@ -159,12 +163,12 @@ Perform the below steps before you show the demo.
 
 ### Key Takeaways
 
-Ledger makes your data tamper-evident and cryptographically verifiable, which helps ensure non-repudiation, eliminating a need to run laborous manual audits and time-consuming investigations.
+Ledger makes your data tamper-evident and cryptographically verifiable, which helps ensure non-repudiation, eliminating a need to run laborious manual audits and time-consuming investigations.
 
 ## Cleanup
 
 To permanently remove all demo resources:
 
 1. Run the **cleanup.ps1** PowerShell script in the setup folder.
-1. When prompted, enter your demo resource group name and your subscripton id, and sign in to Azure.
+1. When prompted, enter your demo resource group name and your subscription id, and sign in to Azure.
 1. Confirm you want to delete resource group.

@@ -79,12 +79,13 @@ resource Server_Name_activeDirectory 'Microsoft.Sql/servers/administrators@2021-
 // Create the ContosoHR database//
 //////////////////////////////////
 
-resource Database_Resource 'Microsoft.Sql/servers/databases@2021-08-01-preview' = {
+resource Database_Resource 'Microsoft.Sql/servers/databases@2021-02-01-preview' = {
   name: 'ContosoHR'
   parent: Server_Name_resource
   location: location
   sku: {
-    name:'GP_S_Gen5_1'
+    name: 'GP_S_Gen5_1'
+    tier: 'GeneralPurpose'    
   }
 }
 
@@ -167,7 +168,7 @@ resource WebApp_Resource 'Microsoft.Web/sites@2021-02-01' = {
  resource AppSetting 'config' = {
   name: 'appsettings'
   properties: {
-    PROJECT: 'samples/features/security/sql-ledger/source/ContosoHR/ContosoHR.csproj'
+    PROJECT: 'samples/features/security/ledger/source/ContosoHR/ContosoHR.csproj'
   }
  }
 }
