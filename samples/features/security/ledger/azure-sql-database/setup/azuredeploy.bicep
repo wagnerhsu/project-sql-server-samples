@@ -30,6 +30,7 @@ param location string = resourceGroup().location
 
 // Create the server
 var SQLServerName_var = '${projectName}server'
+#disable-next-line BCP081
 resource Server_Name_resource 'Microsoft.Sql/servers@2021-08-01-preview' = {
   name: SQLServerName_var
   location: location
@@ -46,6 +47,7 @@ resource Server_Name_resource 'Microsoft.Sql/servers@2021-08-01-preview' = {
 }
 
 // Allow Azure services and resources to access this server
+#disable-next-line BCP081
 resource Server_Name_AllowAllWindowsAzureIps 'Microsoft.Sql/servers/firewallRules@2021-08-01-preview' = {
   name: '${Server_Name_resource.name}/AllowAllWindowsAzureIps'
   properties: {
@@ -55,6 +57,7 @@ resource Server_Name_AllowAllWindowsAzureIps 'Microsoft.Sql/servers/firewallRule
 }
 
 // Allow Client IP to access this server
+#disable-next-line BCP081
 resource Server_Name_AllowClientIP 'Microsoft.Sql/servers/firewallRules@2021-08-01-preview' = {
   name: '${Server_Name_resource.name}/AllowClientIP'
   properties: {
@@ -64,6 +67,7 @@ resource Server_Name_AllowClientIP 'Microsoft.Sql/servers/firewallRules@2021-08-
 }
 
 // Make the user an Azure AD administrator for the server, so that the user can connect with universal authentication
+#disable-next-line BCP081
 resource Server_Name_activeDirectory 'Microsoft.Sql/servers/administrators@2021-08-01-preview' = {
   name: '${Server_Name_resource.name}/activeDirectory'
   properties: {
@@ -78,7 +82,7 @@ resource Server_Name_activeDirectory 'Microsoft.Sql/servers/administrators@2021-
 ///////////////////////////////////
 // Create the ContosoHR database//
 //////////////////////////////////
-
+#disable-next-line BCP081
 resource Database_Resource 'Microsoft.Sql/servers/databases@2021-08-01-preview' = {
   name: 'ContosoHR'
   parent: Server_Name_resource
@@ -95,6 +99,7 @@ resource Database_Resource 'Microsoft.Sql/servers/databases@2021-08-01-preview' 
 
 //Create a storage account to store ledger digests
 var StorageAccount_var = '${projectName}stg'
+#disable-next-line BCP081
 resource StorageAccount_Resource 'Microsoft.Storage/storageAccounts@2021-08-01' = {
   name: StorageAccount_var
   location: location 
@@ -109,6 +114,7 @@ resource StorageAccount_Resource 'Microsoft.Storage/storageAccounts@2021-08-01' 
 
 //Grant the server access to the storage account
 var roleDefinitionId = 'ba92f5b4-2d11-453d-a403-e96b0029c9fe' // this is Storage Blob Data Contributor's GUID from https://docs.microsoft.com/en-us/azure/role-based-access-control/built-in-roles#storage-blob-data-contributor
+#disable-next-line BCP081
 resource roleAssignment 'Microsoft.Authorization/roleAssignments@2020-08-01-preview' = {
   name: guid(resourceGroup().id, resourceGroup().name, StorageAccount_var)
   scope: StorageAccount_Resource
@@ -119,6 +125,7 @@ resource roleAssignment 'Microsoft.Authorization/roleAssignments@2020-08-01-prev
 }
 
 //Enable ledger digest uploads
+#disable-next-line BCP081
 resource LedgerDigestUploads_Resource 'Microsoft.Sql/servers/databases/ledgerDigestUploads@2021-08-01-preview' = {
   name: 'current'
   parent: Database_Resource
