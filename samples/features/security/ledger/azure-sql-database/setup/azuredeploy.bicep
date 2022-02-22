@@ -83,7 +83,7 @@ resource Server_Name_activeDirectory 'Microsoft.Sql/servers/administrators@2021-
 // Create the ContosoHR database//
 //////////////////////////////////
 #disable-next-line BCP081
-resource Database_Resource 'Microsoft.Sql/servers/databases@2021-08-01-preview' = {
+resource Database_Resource 'Microsoft.Sql/servers/databases@2021-02-01-preview' = {
   name: 'ContosoHR'
   parent: Server_Name_resource
   location: location
