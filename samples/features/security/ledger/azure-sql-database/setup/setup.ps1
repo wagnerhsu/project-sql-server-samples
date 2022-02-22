@@ -1,4 +1,4 @@
-﻿Import-Module "Az" -MinimumVersion "7.1.0"
+﻿Import-Module "Az" -MinimumVersion "7.2.1"
 Import-Module "SqlServer" -MinimumVersion "21.1.18256"
 
 ######################################################################
@@ -15,7 +15,7 @@ $sqlAdminPassword = (New-Object PSCredential "user",$sqlAdminPasswordSecureStrin
 $clientIP = (Invoke-WebRequest ifconfig.me/ip).Content.Trim()
 $bicepFile = "azuredeploy.bicep"
 $projectName = $projectName.ToLower()
-
+$location = $location.ToLower()
 
 ######################################################################
 # Sign in to Azure

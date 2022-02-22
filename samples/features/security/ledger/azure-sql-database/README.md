@@ -29,7 +29,7 @@ You also need to make sure the following software is installed on your machine:
 
 1. PowerShell modules:
 
-   1. Az version 7.1.0 or later. For details on how to install the Az PowerShell module, see [Install the Azure Az PowerShell module](https://docs.microsoft.com/powershell/azure/install-az-ps). To determine the version of the Az module installed on your machine, run the following command from a PowerShell session.
+   1. Az version 7.2.1 or later. For details on how to install the Az PowerShell module, see [Install the Azure Az PowerShell module](https://docs.microsoft.com/powershell/azure/install-az-ps). To determine the version of the Az module installed on your machine, run the following command from a PowerShell session.
 
      ```powershell
      Get-InstalledModule -Name Az

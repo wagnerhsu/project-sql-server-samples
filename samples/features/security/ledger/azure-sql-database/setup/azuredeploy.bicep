@@ -79,7 +79,7 @@ resource Server_Name_activeDirectory 'Microsoft.Sql/servers/administrators@2021-
 // Create the ContosoHR database//
 //////////////////////////////////
 
-resource Database_Resource 'Microsoft.Sql/servers/databases@2021-02-01-preview' = {
+resource Database_Resource 'Microsoft.Sql/servers/databases@2021-08-01-preview' = {
   name: 'ContosoHR'
   parent: Server_Name_resource
   location: location
@@ -109,7 +109,7 @@ resource StorageAccount_Resource 'Microsoft.Storage/storageAccounts@2021-08-01' 
 
 //Grant the server access to the storage account
 var roleDefinitionId = 'ba92f5b4-2d11-453d-a403-e96b0029c9fe' // this is Storage Blob Data Contributor's GUID from https://docs.microsoft.com/en-us/azure/role-based-access-control/built-in-roles#storage-blob-data-contributor
-resource roleAssignment 'Microsoft.Authorization/roleAssignments@2021-04-01-preview' = {
+resource roleAssignment 'Microsoft.Authorization/roleAssignments@2020-08-01-preview' = {
   name: guid(resourceGroup().id, resourceGroup().name, StorageAccount_var)
   scope: StorageAccount_Resource
   properties: {
