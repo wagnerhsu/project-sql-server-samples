@@ -1,7 +1,7 @@
-#SQL Security
+# SQL Security
 
 <!--placeholder for summary.--> 
-[Ledger Demo](ledger)
+[Ledger Demos](ledger)
 
 [Always Encrypted with secure enclaves Demos](always-encrypted-with-secure-enclaves)
 
