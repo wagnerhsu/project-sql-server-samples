@@ -99,9 +99,9 @@ Perform the below steps before you show the demo.
    1. Start the SQL Server Management Studio.
    1. In the **Connect to Server** dialog:
       1. Enter your database server name. Set **Authentication** to **SQL Server Authentication**. Enter the admin username and the admin password.
-      1. Click the **Options >>** button, select the **Connection Properties** tab and enter the database name (**ContosoHR**).
+      1. Click the **Options >>** button, select the **Connection Properties** tab and enter the database name (**ContosoHR**). 
 
-         ![Connection Properties](../media/features/ledger/ssms-connect-to-server-connection-properties-page.png)
+         ![Connection Properties](../../../../../media/features/ledger/ssms-connect-to-server-connection-properties-page.png)
 
       1. Click **Connect**.
 
