@@ -42,7 +42,7 @@ You also need to make sure the following software is installed on your machine:
      ```
 
 2. [Bicep](https://docs.microsoft.com/en-us/azure/azure-resource-manager/bicep/overview?tabs=bicep) version 0.4.1272 or later. You need to install Bicep and ensure it can be invoked from PowerShell. There are several ways to [install Bicep](https://docs.microsoft.com/en-us/azure/azure-resource-manager/bicep/install).
-3. [SQL Server Management Studio (SSMS)](https://msdn.microsoft.com/en-us/library/mt238290.aspx) - version 18.10 or later is recommended.
+3. [SQL Server Management Studio (SSMS)](https://msdn.microsoft.com/en-us/library/mt238290.aspx) - version 18.11 or later is required.
 
 ## Setup
 
@@ -101,7 +101,7 @@ Perform the below steps before you show the demo.
       1. Enter your database server name. Set **Authentication** to **SQL Server Authentication**. Enter the admin username and the admin password.
       1. Click the **Options >>** button, select the **Connection Properties** tab and enter the database name (**ContosoHR**).
 
-         ![Connection Properties](./img/ssms-connect-to-server-connection-properties-page.png)
+         ![Connection Properties](../media/features/ledger/ssms-connect-to-server-connection-properties-page.png)
 
       1. Click **Connect**.
 
