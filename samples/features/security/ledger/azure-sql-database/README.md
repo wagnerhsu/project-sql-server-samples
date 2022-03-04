@@ -124,7 +124,7 @@ Perform the below steps before you show the demo.
 
    1. With the **ContosoHR** database selected, type Ctrl + O. In the **Open File** dialog, navigate to the **setup** folder and select **CreateDatabaseSchema.sql**. Do not execute the query.
    1. With the **ContosoHR** database selected, type Ctrl + O. In the **Open File** dialog, navigate to the **tsql-scripts** folder and select **UpdateSalary.sql**. Do not execute the query yet.
-   1. With the **ContosoHR** database selected, type Ctrl + O. In the **Open File** dialog, navigate to the **tsql-scripts** folder and select ***ListAllEmployees.sql**. Do not execute the query.
+   1. With the **ContosoHR** database selected, type Ctrl + O. In the **Open File** dialog, navigate to the **tsql-scripts** folder and select **ListAllEmployees.sql**. Do not execute the query.
 
 1. *Optional* - If you've showed this demo before, reseed the database to ensure it contains the original employee data.
    1. In Object Explorer, find and select the **ContosoHR** database.
