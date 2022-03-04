@@ -120,7 +120,7 @@ Perform the below steps before you show the demo.
 1. Open the demo queries in SSMS.
    1. In Object Explorer, find and select the **ContosoHR** database.
 
-        ![Selecting database](./img/ssms-explorer-select-database.png)
+        ![Selecting database](../../../../../media/features/ledger/ssms-explorer-select-database.png)
 
    1. With the **ContosoHR** database selected, type Ctrl + O. In the **Open File** dialog, navigate to the **setup** folder and select **CreateDatabaseSchema.sql**. Do not execute the query.
    1. With the **ContosoHR** database selected, type Ctrl + O. In the **Open File** dialog, navigate to the **tsql-scripts** folder and select **UpdateSalary.sql**. Do not execute the query yet.
@@ -137,18 +137,18 @@ Perform the below steps before you show the demo.
 
 1. Show the app and the database.
    1. Show the Contoso HR web app in the HR user's browser. Click on the **Employees tab**. This application displays employee records, and allows HR staff members to manage employee records.
-   ![Employees tab](./img/Employees-tab.png)
+   ![Employees tab](../../../../../media/features/ledger/Employees-tab.png)
    1. Switch to SSMS, select the **ListAllEmployees.sql** tab and execute the query, which shows the content of the **Employees** table. The web application uses this table as a data store.  
 
 1. Show how ledger helps investigate tampering by DBAs.
    1. Point to Jay’s record in the table (row #4). Let's assume Jay is both the DBA of the ContosoHR database as well as an employee of Contoso. Jay wants to maliciously increase his salary.
    1. Pretending you are Jay, switch to SSMS, select the **UpdateSalary.sql** and execute the query.
    1. In HR user’s (Rachel's) browser window, refresh the content of the **Contoso HR** tab. Point to Jay’s record to show the HR application shows Jay’s updated salary.
-   1. Switch to SSMS. Select the **CreateDatabaseSchema.sql** tab and show the CREATE TABLE statement for the **Employees** table. (Once SSMS supports scripting ledger tables, generate and show the CREATE TABLE statement for the Employees table instead.) Unfortunately for Jay, the **Employees** table is an updatable ledger table, which means his change, along with his identity and the timestamp, have been persisted in a tamper-evident ledger data structures.
+   1. Switch to SSMS. Right click on the **Employees** table and select `Script Table as - CREATE to - New Query Editor Window`. Show the CREATE TABLE statement for the **Employees** table. Unfortunately for Jay, the **Employees** table is an updatable ledger table, which means his change, along with his identity and the timestamp, have been persisted in a tamper-evident ledger data structures.
    1. Switch to auditor’s (Alice's) browser window and select the **Ledger Verifications** tab. Let's assume, a few weeks later, Alice, who is an auditor, performs a routine review of changes in the HR database. As her first step, Alice runs the ledger verification to make sure she can trust the data, she’s going to examine. The result should be "Success" like the screenshot below.
-   ![Ledger Verifications](./img/Ledger-Verifications.png)
+   ![Ledger Verifications](../../../../../media/features/ledger/Ledger-Verifications.png)
    1. Select the **Employee Ledger** tab. In the **Employee Ledger** tab, Alice can browse the content of the ledger view for the **Employees** table. She notices a suspicious update operation performed by Jay, who will not be able to effectively deny he has updated his salary, because the data in the ledger table has been cryptographically verified as genuine and it clearly shows Jay updated his salary.
-   ![Employee Ledger](./img/Employee-ledger.png)
+   ![Employee Ledger](../../../../../media/features/ledger/Employee-ledger.png)
    1. Switch to SSMS. Select the **CreateDatabaseSchema.sql** tab and show the stored procedures (that are used by the web application):
        1. **VerifyLedger** - Explain the sys.sp_verify_database_ledger_from_digest_storage procedure
        1. **GetEmployeeLedgerEntries** - Explain the view Employees_Ledger and table sys.database_ledger_transactions
@@ -156,10 +156,10 @@ Perform the below steps before you show the demo.
 1. Show how ledger helps investigate tampering by malicious application users.
    1. Switch to HR user’s (Rachel’s) browser to execute a different attack scenario. This time, you will perform an authorized salary change acting as a malicious HR staff member - Rachel. Click the **Employees** tab and find Frances' record in row 3 (you can pick another employee record if you want). Click the **Edit** link for Frances' record, enter a new salary value and click **Save**.
    1. Switch to Auditor’s browser window. Select and refresh the **Employee Ledger** tab. When Alice, the auditor, performs her next review of changes in the HR database, she again notices a suspicious salary update. However, this time the **User Name** column does not tell Alice who performed the update, because the column contains the managed identity of the web application, not the identity of the application user.
-   ![Employee Ledger2](./img/Employee-ledger2.png)
-   1. This time, the attacker, Rachel, is out of luck too, because the Contoso HR web application has been instrumented to write all SQL update queries, triggered by its users against the **Employees**  table, to an append-only ledger table – **AuditEvents**. Switch to SSMS. Select the **CreateDatabaseSchema.sql** query tab and show the CREATE TABLE statement for the **AuditEvents** table. (Once SSMS supports scripting ledger tables, generate and show the CREATE TABLE statement for the **AuditEvents** table instead.)
+   ![Employee Ledger2](../../../../../media/features/ledger/Employee-ledger2.png)
+   1. This time, the attacker, Rachel, is out of luck too, because the Contoso HR web application has been instrumented to write all SQL update queries, triggered by its users against the **Employees**  table, to an append-only ledger table – **AuditEvents**. Switch to SSMS. Right click on the **AuditEvents** table and select `Script Table as - CREATE to - New Query Editor Window`. Show the CREATE TABLE statement for the **AuditEvents** table.
    1. Go back to Auditor’s browser window. When Alice views the content of the **AuditEvents** table, she finds the corresponding Transact-SQL update statement, Rachel triggered. Since Transact-SQL statements are stored in a ledger table, and are therefore protected from tampering, Rachel will be unable to effectively deny she has made the change.
-   ![Audit Events](./img/Audit-Events.png)
+   ![Audit Events](../../../../../media/features/ledger/Audit-Events.png)
 
 ### Key Takeaways
 
