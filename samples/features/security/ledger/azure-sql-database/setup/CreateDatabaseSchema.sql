@@ -20,7 +20,7 @@ GO
 
 
 CREATE TABLE [dbo].[AuditEvents](
-	[Timestamp] [Datetime2] NOT NULL DEFAULT (GETDATE()),
+	[Timestamp] [Datetime2] NOT NULL DEFAULT (SYSDATETIMEOFFSET()),
 	[UserName] [nvarchar](255) NOT NULL,
 	[Query] [nvarchar](4000) NOT NULL
 	)
@@ -28,7 +28,7 @@ WITH (LEDGER = ON (APPEND_ONLY = ON));
 GO
 
 CREATE TABLE [dbo].[LedgerVerifications](
-	[Timestamp] [Datetime2] NOT NULL DEFAULT (GETDATE()),
+	[Timestamp] [Datetime2] NOT NULL DEFAULT (SYSDATETIMEOFFSET()),
 	[DigestLocations] [nvarchar](max) NOT NULL,
 	[Result] [nvarchar](255) NOT NULL,
 )
@@ -37,8 +37,8 @@ GO
 
 CREATE PROCEDURE [dbo].[GetEmployeeLedgerEntries]
 AS 
-SET NOCOUNT ON 
 BEGIN
+	SET NOCOUNT ON 
 	SELECT
 	t.[commit_time] AS [CommitTime] 
 	, t.[principal_name] AS [UserName]
@@ -51,8 +51,8 @@ BEGIN
 	FROM [dbo].[Employees_Ledger] l
 	JOIN sys.database_ledger_transactions t
 	ON t.transaction_id = l.ledger_transaction_id
-	WHERE t.[commit_time] > DATEADD(MINUTE, -10, GETDATE())
-	ORDER BY t.commit_time DESC
+	WHERE t.[commit_time] > DATEADD(MINUTE, -10, SYSDATETIMEOFFSET())
+	ORDER BY t.commit_time DESC;
 END;
 GO
 
@@ -60,7 +60,7 @@ CREATE PROCEDURE [dbo].[VerifyLedger]
 AS 
 BEGIN
 	SET NOCOUNT ON 
-	DECLARE @digest_locations NVARCHAR(MAX) = (SELECT * FROM sys.database_ledger_digest_locations FOR JSON AUTO, INCLUDE_NULL_VALUES);
+	DECLARE @digest_locations NVARCHAR(MAX) = (SELECT path, last_digest_block_id, is_current FROM sys.database_ledger_digest_locations FOR JSON AUTO, INCLUDE_NULL_VALUES);
 	BEGIN TRY
        EXEC sys.sp_verify_database_ledger_from_digest_storage @digest_locations;
        INSERT INTO [dbo].[LedgerVerifications] ([DigestLocations], [Result]) VALUES (@digest_locations, N'Success')
@@ -77,8 +77,8 @@ SET NOCOUNT ON
 BEGIN
 	SELECT * 
 	FROM [dbo].[LedgerVerifications]
-	WHERE [Timestamp] > DATEADD(MINUTE, -60, GETDATE())
-	ORDER BY [Timestamp] DESC
+	WHERE [Timestamp] > DATEADD(MINUTE, -60, SYSDATETIMEOFFSET())
+	ORDER BY [Timestamp] DESC;
 END;
 GO
 
@@ -88,8 +88,8 @@ SET NOCOUNT ON
 BEGIN
 	SELECT * 
 	FROM [dbo].[AuditEvents]
-	WHERE [Timestamp] > DATEADD(MINUTE, -10, GETDATE())
-	ORDER BY [Timestamp] DESC
+	WHERE [Timestamp] > DATEADD(MINUTE, -10, SYSDATETIMEOFFSET())
+	ORDER BY [Timestamp] DESC;
 END;
 GO
 

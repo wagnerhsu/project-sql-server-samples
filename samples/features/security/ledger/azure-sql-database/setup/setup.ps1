@@ -76,12 +76,12 @@ $accessToken = (Get-AzAccessToken -ResourceUrl https://database.windows.net).Tok
 Invoke-Sqlcmd -ServerInstance "tcp:$fullServerName" -Database $databaseName -AccessToken $accessToken -QueryTimeout 30 -Query $query
 
 # Grant the application access to the database.
-$query = "EXEC sp_addrolemember 'db_datareader', '$appName';"
+$query = "ALTER ROLE db_datareader ADD MEMBER [$appName];"
 $accessToken = (Get-AzAccessToken -ResourceUrl https://database.windows.net).Token
 Invoke-Sqlcmd -ServerInstance "tcp:$fullServerName" -Database $databaseName -AccessToken $accessToken -QueryTimeout 30 -Query $query
 
 # Grant the application access to the database.
-$query = "EXEC sp_addrolemember 'db_datawriter', '$appName';"
+$query = "ALTER ROLE db_datawriter ADD MEMBER [$appName];"
 $accessToken = (Get-AzAccessToken -ResourceUrl https://database.windows.net).Token
 Invoke-Sqlcmd -ServerInstance "tcp:$fullServerName" -Database $databaseName -AccessToken $accessToken -QueryTimeout 30 -Query $query
 
