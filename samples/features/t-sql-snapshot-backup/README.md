@@ -1,4 +1,4 @@
-# Graph Tables
+# T-SQL Snapshot Backup
 This code sample demonstrates how to populate graph tables from an existing table or a csv files. It provides a couple of examples as well.
 
 ### Contents
