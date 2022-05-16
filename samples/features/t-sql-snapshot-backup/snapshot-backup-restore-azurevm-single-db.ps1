@@ -12,7 +12,7 @@ $SQLServer = "YOUR-SQL-SERVER-INSTANCE-NAME"
 $db = "YOUR-DATABASE-NAME"
 
 $suspendDb = "ALTER DATABASE [" + $db +"] SET SUSPEND_FOR_SNAPSHOT_BACKUP ON;"
-$backupMetadata = "BACKUP DATABASE [" + $db +"] TO DISK='" + $bkmfile + "' WITH SNAPSHOT, FORMAT;"
+$backupMetadata = "BACKUP DATABASE [" + $db +"] TO DISK='" + $bkmfile + "' WITH METADATA_ONLY, FORMAT;"
 $unsuspendDb = "ALTER DATABASE [" + $db + "] SET SUSPEND_FOR_SNAPSHOT_BACKUP OFF;"
 
 $createDB="IF NOT EXISTS(SELECT * FROM sys.databases WHERE name = '" + $db + "') CREATE DATABASE " + $db
@@ -20,7 +20,7 @@ $dropDB="IF EXISTS(SELECT * FROM sys.databases WHERE name = '" + $db + "') BEGIN
 $mdfFile = "F:\Program Files\Microsoft SQL Server\MSSQL16.MSSQLSERVER\MSSQL\DATA\" + $db +".mdf"
 $ldfFile = "F:\Program Files\Microsoft SQL Server\MSSQL16.MSSQLSERVER\MSSQL\DATA\" + $db +"_log.ldf"
 
-$restoreDB = "RESTORE DATABASE [" + $db +"] FROM DISK='" + $bkmFile + "' WITH SNAPSHOT, MOVE '" + $db +"' TO '" + $mdfFile + "', MOVE '" + $db +"_log' TO '" + $ldfFile + "';"
+$restoreDB = "RESTORE DATABASE [" + $db +"] FROM DISK='" + $bkmFile + "' WITH METADATA_ONLY, MOVE '" + $db +"' TO '" + $mdfFile + "', MOVE '" + $db +"_log' TO '" + $ldfFile + "';"
 
 
 # Login and set the Azure subscription
