@@ -183,31 +183,33 @@ function VerifySubnet {
     param (
         $subnet
     )
-        Write-Host("Verifying subnet '{0}'." -f $subnet.Name)
-        If($subnet.AddressPrefix.Split('/')[1] -le 28)
-        {
-            Write-Host "Passed Validation - Subnet is of enough size." -ForegroundColor Green
-        }
-        Else
-        {
-            Write-Host "Failed Validation - Minimum supported subnet size is /28." -ForegroundColor Red
-            Break
-        }
-        If(
+    Write-Host("Verifying subnet '{0}'." -f $subnet.Name)
+    If ($subnet.AddressPrefix.Split('/')[1] -le 28) {
+        Write-Host "Passed Validation - Subnet is of enough size." -ForegroundColor Green
+    }
+    Else {
+        Write-Host "Failed Validation - Minimum supported subnet size is /28." -ForegroundColor Red
+        Break
+    }
+    If (
             ($subnet.IpConfigurations.Count -eq 0) -and
             (
                 ($subnet.ResourceNavigationLinks.Count -eq 0) -or
                 ($subnet.ResourceNavigationLinks[0].LinkedResourceType -eq 'Microsoft.Sql/virtualClusters')
             )
-          )
-        {
-            Write-Host "Passed Validation - There are no conflicting resources inside the subnet." -ForegroundColor Green
-        }
-        Else
-        {
-            Write-Host "Failed Validation - Subnet is already in use." -ForegroundColor Red
+    ) {
+        If ($subnet.NatGateway.Id) {
+            Write-Host "Failed Validation - There is a NAT gateway associated with this subnet." -ForegroundColor Red
             Break
         }
+        Else {
+            Write-Host "Passed Validation - There are no conflicting resources inside the subnet." -ForegroundColor Green       
+        }            
+    }
+    Else {
+        Write-Host "Failed Validation - Subnet is already in use." -ForegroundColor Red
+        Break
+    }
 }
 
 
