@@ -1,7 +1,7 @@
 ﻿{
   "schemaVersion": "1.0",
   "name": "Microsoft ruleset",
-  "version": "1.0.306",
+  "version": "1.1.9",
   "rules": [
     {
       "id": "AutoCreateStats",
@@ -767,12 +767,6 @@
       "targetFilter": {
         "version": "[12.0, )"
       },
-      "tags": [
-        "DefaultRuleset",
-        "TraceFlag",
-        "QueryOptimizer",
-        "Performance"
-      ],
       "message": "TF2312 sets the query optimizer cardinality estimation model to SQL Server 2014 or above versions, dependent of the compatibility level of the database",
       "level": "Information",
       "enabled": false
@@ -1400,10 +1394,7 @@
       "target": {
         "type": "Server",
         "version": "[11.0, 14.0)",
-        "platform": [
-          "Windows",
-          "Linux"
-        ],
+        "platform": "Windows",
         "engineEdition": "SqlServer"
       },
       "tags": [
@@ -1469,10 +1460,7 @@
       "target": {
         "type": "Server",
         "version": "[11.0.6020,11.0.6518)",
-        "platform": [
-          "Windows",
-          "Linux"
-        ],
+        "platform": "Windows",
         "engineEdition": "SqlServer"
       },
       "tags": [
@@ -2106,7 +2094,7 @@
         "version": [
           "[11.0.7001, 12.0)",
           "[12.0.6024, 13.0)",
-          "[13.0.5026,)"
+          "[13.0.6300,)"
         ]
       },
       "displayName": "SQL Server instance is not up to date",
@@ -2119,15 +2107,25 @@
       "targetFilter": {
         "version": [
           "[11.0.7507, 12.0)",
-          "[12.0.6433, 13.0)",
-          "[13.0.6300, 14.0)",
-          "[14.0.3430, 15.0)",
-          "[15.0.4198,)"
+          "[12.0.6439, 13.0)",
+          "[13.0.6419, 14.0)",
+          "[14.0.3445, 15.0)",
+          "[15.0.4236,)"
         ]
       },
       "displayName": "SQL Server instance is up to date",
       "message": "Product version @{ProductVersion} is latest available",
       "condition": true
+    },
+    {
+      "id": "LatestCU",
+      "itemType": "override",
+      "targetFilter": {
+        "version": "[11.0, 12.0)"
+      },
+      "description": "We recommend upgrading to the latest SQL Server version to keep your instances secure and compliant. If upgrade is not an option at this point, follow the help link to protect your SQL Server 2012 with Extended Security Updates (ESU).",
+      "message": "Upgrade SQL Server 2012 to receive full product updates and Microsoft Support. End of support is July, 12 2022.",
+      "helpLink": "https://docs.microsoft.com/sql/sql-server/end-of-support/sql-server-extended-security-updates"
     },
     {
       "id": "FKNoIndexes",
@@ -2156,14 +2154,22 @@
       ],
       "displayName": "Foreign key constraints should have corresponding indexes",
       "description": "Unlike primary key constraints, creating a foreign key constraint does not automatically create a corresponding index. However, manually creating an index on a foreign key is often useful.",
-      "message": "Create a corresponding index for each foreign key. There is no index on foreign keys: @{ConstraintName}",
+      "message": "Create a corresponding index on each foreign key in tables: @{TableName}",
       "helpLink": "https://docs.microsoft.com/sql/relational-databases/tables/primary-and-foreign-key-constraints",
       "level": "Medium",
-      "condition": {
-        "@ConstraintName": ""
-      },
       "probes": [
-        "FKNoIndexes"
+        {
+          "id": "FKNoIndexes",
+          "transform": {
+            "type": "aggregate",
+            "map": {
+              "TableName": {
+                "type": "join",
+                "limit": 10
+              }
+            }
+          }
+        }
       ]
     },
     {
@@ -2896,7 +2902,7 @@
       ],
       "displayName": "Duplicate indexes",
       "description": "A SQL Server index is an on-disk or in-memory structure associated with a table or view that speeds retrieval of rows from the table or view. An index contains keys built from one or more columns in the table or view. ",
-      "message": "Remove duplicate indexes in table @{Table}: @{ToDelete}",
+      "message": "Remove duplicate indexes in table @{Table}: @{Indexes}",
       "helpLink": "https://docs.microsoft.com/sql/relational-databases/sql-server-index-design-guide",
       "level": "Low",
       "probes": [
@@ -3482,8 +3488,15 @@
       "message": "Set strong passwords for logins: @{PasswordData}",
       "helpLink": "https://docs.microsoft.com/sql/relational-databases/security/strong-passwords",
       "level": "Medium",
+      "condition": "@is_integrated_security_only",
       "probes": [
-        "WeakPassword"
+        "ServerProperties",
+        {
+          "id": "WeakPassword",
+          "params": {
+            "is_disabled": 0
+          }
+        }
       ]
     },
     {
@@ -3536,10 +3549,7 @@
       "target": {
         "type": "Server",
         "version": "[11.0,11.0.3349)",
-        "platform": [
-          "Windows",
-          "Linux"
-        ],
+        "platform": "Windows",
         "engineEdition": "SqlServer"
       },
       "tags": [
@@ -3604,10 +3614,7 @@
       "target": {
         "type": "Server",
         "version": "[11.0,12.0)",
-        "platform": [
-          "Windows",
-          "Linux"
-        ],
+        "platform": "Windows",
         "engineEdition": "SqlServer"
       },
       "tags": [
@@ -3638,10 +3645,7 @@
       "target": {
         "type": "Server",
         "version": "[11.0,13.0)",
-        "platform": [
-          "Windows",
-          "Linux"
-        ],
+        "platform": "Windows",
         "engineEdition": "SqlServer"
       },
       "tags": [
@@ -3671,10 +3675,7 @@
       "target": {
         "type": "Server",
         "version": "[11.0,13.0)",
-        "platform": [
-          "Windows",
-          "Linux"
-        ],
+        "platform": "Windows",
         "engineEdition": "SqlServer"
       },
       "tags": [
@@ -3704,10 +3705,7 @@
       "target": {
         "type": "Server",
         "version": "[11.0,13.0)",
-        "platform": [
-          "Windows",
-          "Linux"
-        ],
+        "platform": "Windows",
         "engineEdition": "SqlServer, ManagedInstance"
       },
       "tags": [
@@ -3738,10 +3736,7 @@
       "target": {
         "type": "Server",
         "version": "[11.0,13.0)",
-        "platform": [
-          "Windows",
-          "Linux"
-        ],
+        "platform": "Windows",
         "engineEdition": "SqlServer"
       },
       "tags": [
@@ -3772,10 +3767,7 @@
       "target": {
         "type": "Server",
         "version": "[11.0,12.0)",
-        "platform": [
-          "Windows",
-          "Linux"
-        ],
+        "platform": "Windows",
         "engineEdition": "SqlServer"
       },
       "tags": [
@@ -3855,7 +3847,7 @@
       "description": "In SQL Server, the sp_ prefix designates system stored procedures. If you use that prefix for your stored procedures, the name of your procedure might conflict with the name of a system stored procedure that will be created in the future. If such a conflict occurs, your application might break if your application refers to the procedure without qualifying the reference by schema. In this situation, the name will bind to the system procedure instead of to your procedure.",
       "message": "Rename the following stored procedures to eliminate 'sp_' prefix: @{ObjectName}",
       "helpLink": "https://docs.microsoft.com/previous-versions/visualstudio/visual-studio-2010/dd172115(v=vs.100)",
-      "level": "Medium",
+      "level": "Low",
       "condition": {
         "not": "@ObjectName"
       },
@@ -4151,10 +4143,7 @@
       "itemType": "definition",
       "target": {
         "type": "Database",
-        "platform": [
-          "Windows",
-          "Linux"
-        ],
+        "platform": "Windows",
         "name": {
           "not": [
             "master",
@@ -4616,58 +4605,6 @@
       ]
     },
     {
-      "id": "LoginNoPassword",
-      "itemType": "definition",
-      "target": {
-        "type": "Server",
-        "platform": [
-          "Windows",
-          "Linux"
-        ],
-        "engineEdition": "SqlServer, ManagedInstance",
-        "version": "[11.0,)"
-      },
-      "tags": [
-        "DefaultRuleset",
-        "Security",
-        "WeakPassword"
-      ],
-      "displayName": "SQL logins have no passwords",
-      "enabled": false,
-      "description": "Password complexity policies are designed to deter brute force attacks by increasing the number of possible passwords. Make sure that you use a strong password for each of your SQL logins to decrease vulnerabilities.",
-      "message": "Set strong passwords for logins: @{PasswordData}",
-      "helpLink": "https://docs.microsoft.com/sql/relational-databases/security/password-policy",
-      "probes": [
-        "NullPassword"
-      ]
-    },
-    {
-      "id": "LoginEqPassword",
-      "itemType": "definition",
-      "target": {
-        "type": "Server",
-        "platform": [
-          "Windows",
-          "Linux"
-        ],
-        "engineEdition": "SqlServer, ManagedInstance",
-        "version": "[11.0,)"
-      },
-      "tags": [
-        "DefaultRuleset",
-        "Security",
-        "WeakPassword"
-      ],
-      "displayName": "Passwords and SQL login names are the same",
-      "enabled": false,
-      "description": "Password complexity policies are designed to deter brute force attacks by increasing the number of possible passwords. Make sure that you use passwords that are different from your SQL login names.",
-      "message": "Review logins that have passwords equal to SQL login names: @{PasswordData}",
-      "helpLink": "https://docs.microsoft.com/sql/relational-databases/security/password-policy",
-      "probes": [
-        "NamePassword"
-      ]
-    },
-    {
       "id": "SystemHealth",
       "itemType": "definition",
       "target": {
@@ -5018,10 +4955,7 @@
       "target": {
         "type": "Server",
         "engineEdition": "SqlServer",
-        "platform": [
-          "Windows",
-          "Linux"
-        ],
+        "platform": "Windows",
         "version": "[11.0, 13.0)"
       },
       "tags": [
@@ -5604,10 +5538,7 @@
       "target": {
         "type": "Database",
         "version": "[11.0.6020, 11.0.6518)",
-        "platform": [
-          "Windows",
-          "Linux"
-        ],
+        "platform": "Windows",
         "name": {
           "not": [
             "master",
@@ -5853,7 +5784,7 @@
       ],
       "displayName": "Affinity Mask and Affinity I/O Mask overlapping",
       "description": "Enabling a CPU with both the affinity mask and the affinity I/O mask can slow performance by forcing the processor to be overused. When specified either the affinity mask or the affinity I/O mask options they must both be specified, but only enables each CPU no more than once. The same CPU should not be enabled in both the affinity mask option and the affinity I/O mask option. The bits that correspond to each CPU should be in one of the following states.",
-      "message": "Correct Affinity Mask and Affinity IO Mask overlap. AffinityMask = @{affinity_mask}, Affinity64Mask = @{affinity64_mask}, AffinityIOMask = @{affinity_io_mask}, Affinity64IOMask = @{affinity64_io_mask}",
+      "message": "Correct Affinity Mask and Affinity IO Mask overlap",
       "helpLink": "https://docs.microsoft.com/sql/relational-databases/policy-based-management/correct-affinity-mask-and-affinity-input-and-output-mask-overlap",
       "level": "Low",
       "condition": {
@@ -5870,20 +5801,31 @@
             ]
           },
           {
-            "eq": [
+            "or": [
               {
-                "bitand": [
-                  "@affinity64_mask",
-                  "@affinity64_io_mask"
+                "ne": [
+                  "@architecture",
+                  64
                 ]
               },
-              0
+              {
+                "eq": [
+                  {
+                    "bitand": [
+                      "@affinity64_mask",
+                      "@affinity64_io_mask"
+                    ]
+                  },
+                  0
+                ]
+              }
             ]
           }
         ]
       },
       "probes": [
-        "SysConfiguration"
+        "SysConfiguration",
+        "ServerProperties"
       ]
     },
     {
@@ -7147,10 +7089,7 @@
       "target": {
         "type": "Server",
         "engineEdition": "SqlServer",
-        "platform": [
-          "Windows",
-          "Linux"
-        ],
+        "platform": "Windows",
         "version": "[11.0, 13.0)"
       },
       "tags": [
@@ -7213,7 +7152,7 @@
           "Windows",
           "Linux"
         ],
-        "engineEdition": "SqlServer, ManagedInstance",
+        "engineEdition": "SqlServer",
         "version": "[11.0,)"
       },
       "tags": [
@@ -7342,7 +7281,7 @@
           "Windows",
           "Linux"
         ],
-        "engineEdition": "SqlServer, ManagedInstance",
+        "engineEdition": "SqlServer",
         "version": "[11.0,)"
       },
       "tags": [
@@ -7560,9 +7499,17 @@
       "probes": [
         "NtfsBlockSize",
         {
-          "id": "DatabaseFilesLocation",
+          "id": "DatabaseMasterFiles",
           "params": {
-            "type": null
+            "type": null,
+            "dbId": null
+          },
+          "transform": {
+            "type": "aggregate",
+            "group": [
+              "volume_mount_point",
+              "volume_id"
+            ]
           }
         }
       ]
@@ -7599,15 +7546,23 @@
       "probes": [
         "NtfsBlockSize",
         {
-          "id": "DatabaseFilesLocation",
+          "id": "DatabaseMasterFiles",
           "params": {
-            "type": null
+            "type": null,
+            "dbId": null
+          },
+          "transform": {
+            "type": "aggregate",
+            "group": [
+              "volume_mount_point",
+              "volume_id"
+            ]
           }
         },
         {
           "id": "AzStorage",
           "params": {
-            "path": "@DatabaseFilesLocation::volume_id"
+            "path": "@DatabaseMasterFiles::volume_id"
           }
         }
       ]
@@ -8538,6 +8493,83 @@
       ]
     },
     {
+      "id": "AccessCheckCache",
+      "itemType": "definition",
+      "target": {
+        "type": "Server",
+        "engineEdition": "SqlServer, ManagedInstance",
+        "version": "[11.0,)",
+        "platform": [
+          "Windows",
+          "Linux"
+        ]
+      },
+      "tags": [
+        "DefaultRuleset",
+        "Configuration"
+      ],
+      "displayName": "Non-default values for access check cache options",
+      "description": "When database objects are accessed by SQL Server, the access check is cached in an internal structure called the access check result cache. The 'access check cache bucket count' and 'access check cache quota' options control the number of hash buckets and number of entries used for access check result cache. The default values of 0 indicate that SQL Server is managing these options.",
+      "message": "Review non-default values for access check cache options",
+      "helpLink": "https://docs.microsoft.com/sql/database-engine/configure-windows/access-check-cache-server-configuration-options",
+      "level": "Information",
+      "condition": {
+        "and": [
+          {
+            "eq": [
+              "@access_check_cache_quota",
+              0
+            ]
+          },
+          {
+            "eq": [
+              "@access_check_cache_bucket_count",
+              0
+            ]
+          }
+        ]
+      },
+      "probes": [
+        "SysConfiguration"
+      ]
+    },
+    {
+      "id": "AccessCheckCacheRatio",
+      "itemType": "definition",
+      "target": {
+        "type": "Server",
+        "engineEdition": "SqlServer, ManagedInstance",
+        "version": "[11.0,)",
+        "platform": [
+          "Windows",
+          "Linux"
+        ]
+      },
+      "tags": [
+        "DefaultRuleset",
+        "Configuration"
+      ],
+      "displayName": "Access check cache options ratio",
+      "description": "When database objects are accessed by SQL Server, the access check is cached in an internal structure called the access check result cache. The 'access check cache bucket count' and 'access check cache quota' options control the number of hash buckets and number of entries used for access check result cache. These options should be set using a ratio of 1:4.",
+      "message": "Use a ratio of 1:4 for access check cache options",
+      "helpLink": "https://docs.microsoft.com/sql/database-engine/configure-windows/access-check-cache-server-configuration-options",
+      "level": "Low",
+      "condition": {
+        "eq": [
+          "@access_check_cache_quota",
+          {
+            "mul": [
+              4,
+              "@access_check_cache_bucket_count"
+            ]
+          }
+        ]
+      },
+      "probes": [
+        "SysConfiguration"
+      ]
+    },
+    {
       "id": "Affinity64IOMask",
       "itemType": "definition",
       "target": {
@@ -8560,13 +8592,24 @@
       "helpLink": "https://docs.microsoft.com/sql/database-engine/configure-windows/affinity64-input-output-mask-server-configuration-option",
       "level": "Information",
       "condition": {
-        "eq": [
-          "@affinity64_io_mask",
-          0
+        "or": [
+          {
+            "ne": [
+              "@architecture",
+              64
+            ]
+          },
+          {
+            "eq": [
+              "@affinity64_io_mask",
+              0
+            ]
+          }
         ]
       },
       "probes": [
-        "SysConfiguration"
+        "SysConfiguration",
+        "ServerProperties"
       ]
     },
     {
@@ -8592,13 +8635,24 @@
       "helpLink": "https://docs.microsoft.com/sql/database-engine/configure-windows/affinity64-mask-server-configuration-option",
       "level": "Low",
       "condition": {
-        "eq": [
-          "@affinity64_mask",
-          0
+        "or": [
+          {
+            "ne": [
+              "@architecture",
+              64
+            ]
+          },
+          {
+            "eq": [
+              "@affinity64_mask",
+              0
+            ]
+          }
         ]
       },
       "probes": [
-        "SysConfiguration"
+        "SysConfiguration",
+        "ServerProperties"
       ]
     },
     {
@@ -8666,6 +8720,73 @@
       ]
     },
     {
+      "id": "AGDbDisjoined",
+      "itemType": "definition",
+      "target": {
+        "type": "Server",
+        "engineEdition": "SqlServer",
+        "version": "[11.0,)",
+        "platform": [
+          "Windows",
+          "Linux"
+        ]
+      },
+      "tags": [
+        "DefaultRuleset",
+        "AlwaysOn"
+      ],
+      "displayName": "Availability database joined state",
+      "description": "To add a database to an availability group, the database must be an online, read-write database that exists on the server instance that hosts the primary replica. When you add a database, it joins the availability group as a primary database. No corresponding secondary database exists until backups of the new primary database are restored to the server instance that hosts the secondary replica. The new secondary database is in the RESTORING state until it is joined to the availability group. Joining places the secondary database into the ONLINE state and initiates data synchronization with the corresponding primary database.",
+      "message": "Join database '@{databaseName}' to availability group '@{ag_name}' on secondary replica '@{ag_replica_server}'",
+      "helpLink": "https://docs.microsoft.com/sql/database-engine/availability-groups/windows/join-a-secondary-database-to-an-availability-group-sql-server",
+      "condition": {
+        "or": [
+          {
+            "or": [
+              {
+                "ne": [
+                  "@AGConfiguration::replica_id",
+                  "@AGDatabases::replica_id"
+                ]
+              },
+              {
+                "ne": [
+                  "@is_ag_replica_local",
+                  0
+                ]
+              }
+            ]
+          },
+          "@is_database_joined"
+        ]
+      },
+      "probes": [
+        "AGDatabases",
+        "AGConfiguration"
+      ]
+    },
+    {
+      "id": "AGEndpointEncryption",
+      "itemType": "definition",
+      "target": {
+        "type": "Server",
+        "engineEdition": "SqlServer",
+        "version": "[11.0,)",
+        "platform": [
+          "Windows",
+          "Linux"
+        ]
+      },
+      "displayName": "Database mirroring endpoint encryption",
+      "description": "By default, a database mirroring endpoint requires encryption of data sent over mirroring connections. In this case, the endpoint can connect only to endpoints that also use encryption. Unless you can guarantee that your network is secure, we recommend that you require encryption for your database mirroring connections.",
+      "message": "Configure data encryption on endpoint '@{endpoint_name}'",
+      "helpLink": "https://docs.microsoft.com/sql/database-engine/availability-groups/windows/prereqs-restrictions-recommendations-always-on-availability",
+      "condition": "@is_encryption_enabled",
+      "probes": [
+        "AGEndpoints"
+      ]
+    },
+    {
       "id": "AgentXPs",
       "itemType": "definition",
       "target": {
@@ -8689,6 +8810,331 @@
       "condition": "@Agent_XPs",
       "probes": [
         "SysConfiguration"
+      ]
+    },
+    {
+      "id": "AGFailureConditionLevel",
+      "itemType": "definition",
+      "target": {
+        "type": "Server",
+        "engineEdition": "SqlServer",
+        "version": "[11.0,)",
+        "platform": [
+          "Windows",
+          "Linux"
+        ]
+      },
+      "tags": [
+        "DefaultRuleset",
+        "AlwaysOn"
+      ],
+      "displayName": "Availability group failure-condition level",
+      "description": "A flexible failover policy provides granular control over the conditions that cause automatic failover for an availability group. By changing the failure conditions that trigger an automatic failover and the frequency of health checks, you can increase or decrease the likelihood of an automatic failover to support your Service Level Agreement (SLA) for high availability.",
+      "message": "Review failure-condition level for availability group '@{ag_name}'",
+      "helpLink": "https://docs.microsoft.com/sql/database-engine/availability-groups/windows/configure-flexible-automatic-failover-policy",
+      "level": "Information",
+      "condition": {
+        "or": [
+          {
+            "or": [
+              {
+                "ne": [
+                  "@ag_replica_role",
+                  1
+                ]
+              },
+              "@is_distributed"
+            ]
+          },
+          {
+            "eq": [
+              "@failure_condition_level",
+              3
+            ]
+          }
+        ]
+      },
+      "probes": [
+        "AGConfiguration"
+      ]
+    },
+    {
+      "id": "AGHealthCheckTimeout",
+      "itemType": "definition",
+      "target": {
+        "type": "Server",
+        "engineEdition": "SqlServer",
+        "version": "[11.0,)",
+        "platform": [
+          "Windows",
+          "Linux"
+        ]
+      },
+      "tags": [
+        "DefaultRuleset",
+        "AlwaysOn"
+      ],
+      "displayName": "Availability group health check timeout",
+      "description": "The Always On resource DLL monitors the status of internal SQL Server components. sp_server_diagnostics reports the health of these components on an interval controlled by health check timeout. The default settings are optimized for quickly reacting to symptoms of hard failures and limiting downtime, but these settings can also be overly aggressive for certain workloads and configurations.",
+      "message": "Review non-default value @{health_check_timeout} of health check timeout for availability group '@{ag_name}'. Default value is 30000 milliseconds (30 seconds)",
+      "helpLink": "https://docs.microsoft.com/sql/database-engine/availability-groups/windows/availability-group-lease-healthcheck-timeout",
+      "level": "Information",
+      "condition": {
+        "or": [
+          {
+            "or": [
+              {
+                "ne": [
+                  "@ag_replica_role",
+                  1
+                ]
+              },
+              "@is_distributed"
+            ]
+          },
+          {
+            "eq": [
+              "@health_check_timeout",
+              30000
+            ]
+          }
+        ]
+      },
+      "probes": [
+        "AGConfiguration"
+      ]
+    },
+    {
+      "id": "AGIsFailoverReady",
+      "itemType": "definition",
+      "target": {
+        "type": "Server",
+        "engineEdition": "SqlServer",
+        "version": "[11.0,)",
+        "platform": [
+          "Windows",
+          "Linux"
+        ]
+      },
+      "tags": [
+        "DefaultRuleset",
+        "AlwaysOn"
+      ],
+      "displayName": "Availability database automatic failover readiness",
+      "description": "Within the context of an availability group, the primary role and secondary role of availability replicas are typically interchangeable in a process known as failover. During the failover, a qualified secondary replica takes over the primary role, recovers its databases, and brings them online as the new primary databases. An automatic failover causes a qualified secondary replica to automatically transition to the primary role after the primary replica becomes unavailable.",
+      "message": "Database '@{databaseName}' in availability group '@{ag_name}' is not ready for automatic failover. Synchronize database on secondary replica '@{ag_replica_server}'",
+      "helpLink": "https://docs.microsoft.com/sql/database-engine/availability-groups/windows/failover-and-failover-modes-always-on-availability-groups#AutomaticFailover",
+      "condition": {
+        "or": [
+          {
+            "or": [
+              {
+                "ne": [
+                  "@AGConfiguration::replica_id",
+                  "@AGDatabases::replica_id"
+                ]
+              },
+              {
+                "ne": [
+                  "@AGConfiguration::failover_mode",
+                  0
+                ]
+              },
+              {
+                "ne": [
+                  "@AGConfiguration::availability_mode",
+                  1
+                ]
+              },
+              {
+                "ne": [
+                  "@is_ag_replica_local",
+                  0
+                ]
+              }
+            ]
+          },
+          "@is_failover_ready"
+        ]
+      },
+      "probes": [
+        "AGConfiguration",
+        "AGDatabases"
+      ]
+    },
+    {
+      "id": "AGMultipleDHCPListenerSubnets",
+      "itemType": "definition",
+      "target": {
+        "type": "Server",
+        "engineEdition": "SqlServer",
+        "version": "[11.0,)",
+        "platform": [
+          "Windows",
+          "Linux"
+        ]
+      },
+      "displayName": "Availability group listener network mode",
+      "description": "DHCP network mode is limited to a single subnet that is used for every server instances that hosts a replica in the availability group. To create an availability group across multiple subnets, each subnet requires a static IP address in the listener configuration.",
+      "message": "Reconfigure '@{dns_name}' listener for '@{ag_name}' availability group. Use static IP addresses across multiple subnets",
+      "helpLink": "https://docs.microsoft.com/sql/database-engine/availability-groups/windows/create-or-configure-an-availability-group-listener-sql-server",
+      "condition": {
+        "or": [
+          {
+            "or": [
+              {
+                "not": "@is_dhcp"
+              },
+              {
+                "ne": [
+                  "@ag_id",
+                  "@group_id"
+                ]
+              }
+            ]
+          },
+          {
+            "eq": [
+              "@network_subnet_ip",
+              1
+            ]
+          }
+        ]
+      },
+      "probes": [
+        {
+          "id": "AGListener",
+          "transform": {
+            "type": "aggregate",
+            "group": [
+              "group_id",
+              "listener_id",
+              "dns_name"
+            ],
+            "map": {
+              "is_dhcp": "or",
+              "network_subnet_ip": "count"
+            }
+          }
+        },
+        {
+          "id": "AGConfiguration",
+          "transform": {
+            "type": "aggregate",
+            "group": [
+              "ag_id",
+              "ag_name"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "AGReplicasDisconnected",
+      "itemType": "definition",
+      "target": {
+        "type": "Server",
+        "engineEdition": "SqlServer",
+        "version": "[11.0,)",
+        "platform": [
+          "Windows",
+          "Linux"
+        ]
+      },
+      "tags": [
+        "DefaultRuleset",
+        "AlwaysOn"
+      ],
+      "displayName": "Availability replica connection state",
+      "description": "An availability group supports a replicated environment for a discrete set of user databases, known as availability databases. Each set of availability databases is hosted by an availability replica. Two types of availability replicas exist: a single primary replica, which hosts the primary databases, and one to eight secondary replicas, each of which hosts a set of secondary databases and serves as potential failover targets for the availability group. The primary replica sends transaction log records of each primary database to every secondary database. This process - known as data synchronization - occurs at the database level. Every secondary replica caches the transaction log records and then applies them to its corresponding secondary database.",
+      "message": "Resolve connection issue on availability replica '@{ag_replica_server}' in availability group '@{ag_name}'",
+      "helpLink": "https://docs.microsoft.com/sql/database-engine/availability-groups/windows/overview-of-always-on-availability-groups-sql-server",
+      "condition": {
+        "or": [
+          {
+            "not": "@is_on_primary_replica"
+          },
+          "@ag_replica_connected_state"
+        ]
+      },
+      "probes": [
+        "AGConfiguration"
+      ]
+    },
+    {
+      "id": "AGReplicasSynchronized",
+      "itemType": "definition",
+      "target": {
+        "type": "Server",
+        "engineEdition": "SqlServer",
+        "version": "[11.0,)",
+        "platform": [
+          "Windows",
+          "Linux"
+        ]
+      },
+      "tags": [
+        "DefaultRuleset",
+        "AlwaysOn"
+      ],
+      "displayName": "Availablity replica synchronization health",
+      "description": "An availability group supports a replicated environment for a discrete set of user databases, known as availability databases. Each set of availability databases is hosted by an availability replica. Two types of availability replicas exist: a single primary replica, which hosts the primary databases, and one to eight secondary replicas, each of which hosts a set of secondary databases and serves as potential failover targets for the availability group. The primary replica sends transaction log records of each primary database to every secondary database. This process - known as data synchronization - occurs at the database level. Every secondary replica caches the transaction log records and then applies them to its corresponding secondary database.",
+      "message": "Resolve synchronization issues on availability replica '@{ag_replica_server}' in availability group '@{ag_name}'",
+      "helpLink": "https://docs.microsoft.com/sql/database-engine/availability-groups/windows/overview-of-always-on-availability-groups-sql-server",
+      "condition": {
+        "or": [
+          {
+            "not": "@is_on_primary_replica"
+          },
+          {
+            "eq": [
+              "@ag_replica_synchronization_health",
+              2
+            ]
+          }
+        ]
+      },
+      "probes": [
+        "AGConfiguration"
+      ]
+    },
+    {
+      "id": "AGTotalNumber",
+      "itemType": "definition",
+      "target": {
+        "type": "Server",
+        "engineEdition": "SqlServer",
+        "version": "[11.0,)",
+        "platform": [
+          "Windows",
+          "Linux"
+        ]
+      },
+      "tags": [
+        "DefaultRuleset",
+        "AlwaysOn"
+      ],
+      "displayName": "Maximum number of Availability Groups",
+      "description": "The actual number of databases and availability groups you can put on a computer (VM or physical) depends on the hardware and workload, but there is no enforced limit. Microsoft has tested up to 10 AGs and 100 DBs per physical machine. Signs of overloaded systems can include, but are not limited to, worker thread exhaustion, slow response times for availability group system views and DMVs, and/or stalled dispatcher system dumps.",
+      "message": "Review the number of Availability Groups (@{ag_id}) currently hosted on the SQL Server instance",
+      "helpLink": "https://docs.microsoft.com/sql/database-engine/availability-groups/windows/prereqs-restrictions-recommendations-always-on-availability#PrerequisitesForAGs",
+      "threshold": 10,
+      "condition": {
+        "le": [
+          "@ag_id",
+          "@threshold"
+        ]
+      },
+      "probes": [
+        {
+          "id": "AGConfiguration",
+          "transform": {
+            "type": "aggregate",
+            "map": {
+              "ag_id": "count"
+            }
+          }
+        }
       ]
     },
     {
@@ -8831,21 +9277,97 @@
       },
       "probes": [
         {
-          "id": "DatabaseFilesLocation",
+          "id": "DatabaseMasterFiles",
           "params": {
-            "type": 0
+            "type": 0,
+            "is_percent_growth": null
+          },
+          "transform": {
+            "type": "aggregate",
+            "group": [
+              "volume_mount_point",
+              "volume_id"
+            ]
           }
         },
         {
           "id": "AzStorage",
           "params": {
-            "path": "@DatabaseFilesLocation::volume_id"
+            "path": "@DatabaseMasterFiles::volume_id"
           }
         },
         {
           "id": "AzDiskMetadata",
           "params": {
             "lun": "@AzStorage::lun"
+          }
+        }
+      ]
+    },
+    {
+      "id": "AzDataDiskStriping",
+      "itemType": "definition",
+      "target": {
+        "type": "Server",
+        "platform": "Windows",
+        "engineEdition": "SqlServer",
+        "version": "[11.0,)",
+        "machineType": "AzureVm"
+      },
+      "tags": [
+        "DefaultRuleset",
+        "Configuration",
+        "Performance"
+      ],
+      "displayName": "Azure data disk striping",
+      "description": "There are throughput and bandwidth limits at the data disk level. Applications that consume resources beyond these limits will be throttled. For more throughput and bandwidth, you can add additional data disks and use disk striping. You can use Storage Spaces inside a virtual machine to combine multiple data disks, creating more storage capacity or performance than is available from a single data disk.",
+      "message": "Consider using data disk striping to increase I/O bandwidth of volume @{volume_mount_point}",
+      "helpLink": "https://docs.microsoft.com/azure/azure-sql/virtual-machines/windows/performance-guidelines-best-practices-storage#disk-striping",
+      "level": "Information",
+      "condition": {
+        "or": [
+          {
+            "not": "@isData"
+          },
+          "@isPoolDisk"
+        ]
+      },
+      "probes": [
+        {
+          "id": "DatabaseMasterFiles",
+          "alias": "db_files",
+          "params": {
+            "dbId": null,
+            "type": null
+          },
+          "transform": [
+            {
+              "type": "aggregate",
+              "group": [
+                "volume_mount_point",
+                "volume_id"
+              ]
+            },
+            {
+              "type": "aggregate",
+              "group": "volume_id",
+              "map": {
+                "volume_mount_point": "join"
+              }
+            }
+          ]
+        },
+        {
+          "id": "AzStorage",
+          "params": {
+            "path": "@db_files::volume_id"
+          },
+          "transform": {
+            "type": "aggregate",
+            "group": "isData",
+            "map": {
+              "isPoolDisk": "and"
+            }
           }
         }
       ]
@@ -8885,15 +9407,23 @@
       },
       "probes": [
         {
-          "id": "DatabaseFilesLocation",
+          "id": "DatabaseMasterFiles",
           "params": {
-            "type": 0
+            "type": 0,
+            "is_percent_growth": null
+          },
+          "transform": {
+            "type": "aggregate",
+            "group": [
+              "volume_mount_point",
+              "volume_id"
+            ]
           }
         },
         {
           "id": "AzStorage",
           "params": {
-            "path": "@DatabaseFilesLocation::volume_id"
+            "path": "@DatabaseMasterFiles::volume_id"
           }
         }
       ]
@@ -8995,15 +9525,23 @@
       },
       "probes": [
         {
-          "id": "DatabaseFilesLocation",
+          "id": "DatabaseMasterFiles",
           "params": {
-            "type": null
+            "type": null,
+            "dbId": null
+          },
+          "transform": {
+            "type": "aggregate",
+            "group": [
+              "volume_mount_point",
+              "volume_id"
+            ]
           }
         },
         {
           "id": "AzStorage",
           "params": {
-            "path": "@DatabaseFilesLocation::volume_id"
+            "path": "@DatabaseMasterFiles::volume_id"
           },
           "transform": {
             "type": "aggregate",
@@ -9086,15 +9624,23 @@
       },
       "probes": [
         {
-          "id": "DatabaseFilesLocation",
+          "id": "DatabaseMasterFiles",
           "params": {
-            "type": 0
+            "type": 0,
+            "is_percent_growth": null
+          },
+          "transform": {
+            "type": "aggregate",
+            "group": [
+              "volume_mount_point",
+              "volume_id"
+            ]
           }
         },
         {
           "id": "AzStorage",
           "params": {
-            "path": "@DatabaseFilesLocation::volume_id"
+            "path": "@DatabaseMasterFiles::volume_id"
           }
         },
         {
@@ -9142,15 +9688,23 @@
       "condition": "@isTemp",
       "probes": [
         {
-          "id": "DatabaseFilesLocation",
+          "id": "DatabaseMasterFiles",
           "params": {
-            "type": null
+            "type": null,
+            "is_percent_growth": null
+          },
+          "transform": {
+            "type": "aggregate",
+            "group": [
+              "volume_mount_point",
+              "volume_id"
+            ]
           }
         },
         {
           "id": "AzStorage",
           "params": {
-            "path": "@DatabaseFilesLocation::volume_id"
+            "path": "@DatabaseMasterFiles::volume_id"
           },
           "transform": {
             "type": "aggregate",
@@ -9199,15 +9753,23 @@
       },
       "probes": [
         {
-          "id": "DatabaseFilesLocation",
+          "id": "DatabaseMasterFiles",
           "params": {
-            "type": 1
+            "type": 1,
+            "is_percent_growth": null
+          },
+          "transform": {
+            "type": "aggregate",
+            "group": [
+              "volume_mount_point",
+              "volume_id"
+            ]
           }
         },
         {
           "id": "AzStorage",
           "params": {
-            "path": "@DatabaseFilesLocation::volume_id"
+            "path": "@DatabaseMasterFiles::volume_id"
           }
         },
         {
@@ -9216,6 +9778,34 @@
             "lun": "@AzStorage::lun"
           }
         }
+      ]
+    },
+    {
+      "id": "BackupCompression",
+      "itemType": "definition",
+      "target": {
+        "type": "Server",
+        "engineEdition": "Standard, Enterprise, ManagedInstance",
+        "version": "[11.0,)",
+        "platform": [
+          "Windows",
+          "Linux"
+        ]
+      },
+      "displayName": "Option 'backup compression default' is disabled",
+      "description": "The 'backup compression default' option determines whether the server instance creates compressed backups by default. Because a compressed backup is smaller than an uncompressed backup of the same data, compressing a backup typically requires less device I/O and therefore usually increases backup speed significantly.",
+      "message": "Enable 'backup compression default' option",
+      "helpLink": "https://docs.microsoft.com/sql/database-engine/configure-windows/view-or-configure-the-backup-compression-default-server-configuration-option",
+      "level": "Information",
+      "tags": [
+        "DefaultRuleset",
+        "Configuration",
+        "Performance",
+        "Backup"
+      ],
+      "condition": "@backup_compression",
+      "probes": [
+        "SysConfiguration"
       ]
     },
     {
@@ -9283,7 +9873,7 @@
       "itemType": "definition",
       "target": {
         "type": "Server",
-        "engineEdition": "SqlServer, ManagedInstance",
+        "engineEdition": "Enterprise, ManagedInstance",
         "version": "[11.0,)",
         "platform": [
           "Windows",
@@ -9484,7 +10074,7 @@
       },
       "displayName": "Uncompressed database tables and indexes",
       "description": "The compression capability at either the row or page level provides an opportunity to save disk space and improve performance, with the tradeoff of requiring a bit more CPU to compress and decompress the data, but requiring less memory and disk access improving performance in many workloads. The data pages are kept compressed when they are uploaded to memory. This check fires if a relatively large amount of space is on indexes without compression (for example, more than 10GB).",
-      "message": "Compress index: @{IndexName}, total space: @{TotalSpaceMB:N2} MB",
+      "message": "Turn on compression for these @{ObjectType}: @{ObjectName}, total space used by these objects: @{TotalSpaceMB:N2} MB",
       "helpLink": "https://docs.microsoft.com/sql/relational-databases/sql-server-index-design-guide",
       "level": "Information",
       "tags": [
@@ -9492,6 +10082,7 @@
         "Configuration",
         "Performance"
       ],
+      "topObjectsForCompression": 10,
       "threshold": 1280000,
       "condition": {
         "lt": [
@@ -9509,8 +10100,27 @@
         {
           "id": "TopUncompressedTables",
           "params": {
-            "topN": 10
-          }
+            "topN": "@topObjectsForCompression"
+          },
+          "transform": [
+            {
+              "type": "aggregate",
+              "group": "ObjectType",
+              "map": {
+                "ObjectName": "join",
+                "TotalIndexPages": "sum"
+              }
+            },
+            {
+              "type": "toString",
+              "map": {
+                "ObjectType": {
+                  "tables": 0,
+                  "indexes": 1
+                }
+              }
+            }
+          ]
         }
       ],
       "locals": {
@@ -9677,11 +10287,86 @@
       ]
     },
     {
+      "id": "DbState",
+      "itemType": "definition",
+      "target": {
+        "type": "Server",
+        "engineEdition": "SqlServer, ManagedInstance",
+        "version": "[11.0,)",
+        "platform": [
+          "Windows",
+          "Linux"
+        ]
+      },
+      "displayName": "Database with unavailable state",
+      "description": "Database unavailability may affect expected application behavior due to the impossibility of establishing user connections. The issue occurs when a database is in any of the following states: 'RECOVERY_PENDING', 'RECOVERING', 'SUSPECT', or 'RESTORING'.",
+      "message": "Check '@{DbName}' database availability. Current database state is: @{DbStateDesc}",
+      "helpLink": "https://docs.microsoft.com/sql/relational-databases/databases/database-states",
+      "level": "Low",
+      "tags": [
+        "DefaultRuleset",
+        "Configuration"
+      ],
+      "condition": {
+        "or": [
+          {
+            "ne": [
+              "@source_database_id",
+              null
+            ]
+          },
+          {
+            "not": {
+              "in": [
+                "@DbState",
+                "@unavailableStates"
+              ]
+            }
+          }
+        ]
+      },
+      "unavailableStates": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "probes": [
+        "DatabasesState"
+      ]
+    },
+    {
+      "id": "DisallowResultsTriggers",
+      "itemType": "definition",
+      "target": {
+        "type": "Server",
+        "engineEdition": "SqlServer, ManagedInstance",
+        "platform": [
+          "Windows",
+          "Linux"
+        ],
+        "version": "[11.0,)"
+      },
+      "tags": [
+        "DefaultRuleset",
+        "Configuration"
+      ],
+      "displayName": "Option 'disallow results from triggers' is disabled",
+      "description": "Use the 'disallow results from triggers' option to control whether triggers return result sets. Triggers that return result sets may cause unexpected behavior in applications that are not designed to work with them.",
+      "message": "Enable 'disallow results from triggers' option as the ability to return result sets from triggers will be removed in a future version",
+      "helpLink": "https://docs.microsoft.com/sql/database-engine/configure-windows/disallow-results-from-triggers-server-configuration-option",
+      "level": "Information",
+      "condition": "@disallow_results_from_triggers",
+      "probes": [
+        "SysConfiguration"
+      ]
+    },
+    {
       "id": "EKMProvider",
       "itemType": "definition",
       "target": {
         "type": "Server",
-        "engineEdition": "Enterprise, ManagedInstance",
+        "engineEdition": "Standard, Enterprise, ManagedInstance",
         "version": "[11.0,)",
         "platform": [
           "Windows",
@@ -9703,6 +10388,96 @@
       "probes": [
         "SysConfiguration"
       ]
+    },
+    {
+      "id": "EKMProvider",
+      "itemType": "override",
+      "targetFilter": {
+        "engineEdition": "Standard",
+        "version": "[11.0, 15.0)"
+      },
+      "enabled": false
+    },
+    {
+      "id": "FileMaxSize",
+      "itemType": "definition",
+      "target": {
+        "type": "Server",
+        "platform": [
+          "Windows",
+          "Linux"
+        ],
+        "engineEdition": "SqlServer",
+        "version": "[11.0,)"
+      },
+      "displayName": "Setting 'Autogrow' for data files",
+      "description": "This check verifies the 'autogrow' settings of data files for all system and user databases. In SQL Server, a log file specified with unlimited growth has a maximum size of 2 TB, and a data file has a maximum size of 16 TB. There is no maximum size when this option is specified for a FILESTREAM container. It continues to grow until the disk is full. If there is no space available, performance issues may occur and the database may become unavailable.",
+      "message": "Check 'autogrow' setting. Currently maximum size of @{maxsize_in_mb} MBs is set for @{type_desc} file @{fileName} in database @{databaseName}",
+      "helpLink": "https://docs.microsoft.com/sql/t-sql/statements/alter-database-transact-sql-file-and-filegroup-options",
+      "level": "Information",
+      "tags": [
+        "DefaultRuleset",
+        "Performance",
+        "DBFileConfiguration"
+      ],
+      "defaultLogValues": [
+        -1,
+        0,
+        268435456
+      ],
+      "condition": {
+        "and": [
+          {
+            "or": [
+              {
+                "ne": [
+                  "@type",
+                  0
+                ]
+              },
+              {
+                "le": [
+                  "@max_size",
+                  0
+                ]
+              }
+            ]
+          },
+          {
+            "or": [
+              {
+                "ne": [
+                  "@type",
+                  1
+                ]
+              },
+              {
+                "in": [
+                  "@max_size",
+                  "@defaultLogValues"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "probes": [
+        {
+          "id": "DatabaseMasterFiles",
+          "params": {
+            "type": null,
+            "dbId": null
+          }
+        }
+      ],
+      "locals": {
+        "maxsize_in_mb": {
+          "div": [
+            "@max_size",
+            128
+          ]
+        }
+      }
     },
     {
       "id": "FilestreamAccessLevel",
@@ -9892,6 +10667,53 @@
       ]
     },
     {
+      "id": "FullTextDefaultLang",
+      "itemType": "definition",
+      "target": {
+        "type": "Server",
+        "engineEdition": "SqlServer, ManagedInstance",
+        "version": "[11.0,)",
+        "platform": [
+          "Windows",
+          "Linux"
+        ]
+      },
+      "tags": [
+        "DefaultRuleset",
+        "Configuration"
+      ],
+      "displayName": "Not supported value for 'default full-text language' option",
+      "description": "The value of the 'default full-text language' option is used in a full-text index when no language is specified. If the default full-text language is not supported or the linguistic analysis package is not available, CREATE FULLTEXT INDEX and ALTER FULLTEXT INDEX statements will fail.",
+      "message": "Set 'default full-text language' option to a supported value",
+      "helpLink": "https://docs.microsoft.com/sql/database-engine/configure-windows/configure-the-default-full-text-language-server-configuration-option",
+      "condition": {
+        "or": [
+          {
+            "not": "@IsFulltextInstalled"
+          },
+          {
+            "in": [
+              "@default_full_text_language",
+              "@lcid"
+            ]
+          }
+        ]
+      },
+      "probes": [
+        "SysConfiguration",
+        {
+          "id": "SysFullTextLanguages",
+          "transform": {
+            "type": "aggregate",
+            "map": {
+              "lcid": "array"
+            }
+          }
+        },
+        "FullTextServiceInfo"
+      ]
+    },
+    {
       "id": "FullTextNoiseWords",
       "itemType": "definition",
       "target": {
@@ -9933,7 +10755,7 @@
       },
       "displayName": "Non-default value for 'PH timeout' option",
       "description": "The 'PH timeout' option controls the number of seconds that the full-text protocol handler will wait to connect to a database before reaching the timeout threshold. You can increase the 'PH timeout' value when connection attempts are timing out due to temporary network issues.",
-      "message": "Set 'PH timeout' option to default",
+      "message": "Review non-default value @{PH_timeout} for the 'PH timeout' option",
       "helpLink": "https://docs.microsoft.com/sql/database-engine/configure-windows/ph-timeout-server-configuration-option",
       "level": "Information",
       "tags": [
@@ -9990,7 +10812,8 @@
         "engineEdition": "SqlServer",
         "version": [
           "[11.0.7001,12.0)",
-          "[12.0.5000, )"
+          "[12.0.6024,13.0)",
+          "[13.0.4001,)"
         ]
       },
       "tags": [
@@ -10267,6 +11090,51 @@
       ]
     },
     {
+      "id": "MoreIndexesThanCols",
+      "itemType": "definition",
+      "target": {
+        "type": "Database",
+        "platform": [
+          "Windows",
+          "Linux"
+        ],
+        "name": {
+          "not": [
+            "master",
+            "model",
+            "msdb",
+            "tempdb"
+          ]
+        },
+        "engineEdition": "SqlServer, ManagedInstance",
+        "version": "[11.0,)"
+      },
+      "tags": [
+        "DefaultRuleset",
+        "Performance",
+        "Indexes"
+      ],
+      "displayName": "Tables with more indexes than columns",
+      "description": "One or more database tables have been identified as having more indexes than columns. During inserts, updates and deletes, every index on a table has to be evaluated and, potentially, updated. If too many indexes exist, SQL Server will spend unnecessary resources maintaining indexes that may not be used. This can significantly affect the amount of disk I/O generated and, subsequently, performance.",
+      "message": "Consider removing potentially unnecessary indexes on table @{SchemaName}.@{TableName} that has more indexes than columns",
+      "helpLink": "https://docs.microsoft.com/sql/relational-databases/sql-server-index-design-guide",
+      "level": "Information",
+      "condition": {
+        "le": [
+          {
+            "sub": [
+              "@IndexCount",
+              "@FilteredIndexCount"
+            ]
+          },
+          "@ColumnCount"
+        ]
+      },
+      "probes": [
+        "TablesInformation"
+      ]
+    },
+    {
       "id": "OneDbPerPool",
       "itemType": "definition",
       "target": {
@@ -10383,7 +11251,8 @@
         "ccmsqlce.dll",
         "msdasql.dll",
         "odbccp32.dll",
-        "umpdc.dll"
+        "umpdc.dll",
+        "sqlevn70.rll"
       ],
       "condition": {
         "or": [
@@ -10721,6 +11590,50 @@
       ]
     },
     {
+      "id": "TempDbSameVolume",
+      "itemType": "definition",
+      "target": {
+        "type": "Database",
+        "name": "tempdb",
+        "platform": "Windows",
+        "engineEdition": "SqlServer",
+        "version": "[11.0,)",
+        "machineType": {
+          "not": "AzureVm"
+        }
+      },
+      "tags": [
+        "DefaultRuleset",
+        "Performance",
+        "DBFileConfiguration"
+      ],
+      "displayName": "Tempdb and user databases should not share volumes",
+      "description": "The tempdb system database is used for temporary objects, internal objects and row versions. Tempdb is often heavily used when queries are executed and, if it has files placed on the same volume as user database files, there can be contention for the IO resources.",
+      "message": "Place tempdb on a separate volume. Tempdb and user databases share volume @{volume_mount_point}",
+      "helpLink": "https://docs.microsoft.com/sql/relational-databases/databases/tempdb-database",
+      "level": "Medium",
+      "probes": [
+        {
+          "id": "DatabaseSharedVolumes",
+          "params": {
+            "is_system_database": 0
+          },
+          "transform": [
+            {
+              "type": "aggregate",
+              "group": "volume_mount_point"
+            },
+            {
+              "type": "aggregate",
+              "map": {
+                "volume_mount_point": "join"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "TwoDigitYearCutoff",
       "itemType": "definition",
       "target": {
@@ -10876,7 +11789,7 @@
           ]
         },
         "implementation": {
-          "query": "SELECT COUNT(id) AS [BlackBoxTraceCount] FROM [sys].[traces] WHERE [path] LIKE '%blackbox%.trc' AND status=1;"
+          "query": "SELECT COUNT(id) AS [BlackBoxTraceCount] FROM [sys].[traces] WITH (NOLOCK) WHERE [path] LIKE '%blackbox%.trc' AND status = 1;"
         }
       }
     ],
@@ -10894,7 +11807,7 @@
           ]
         },
         "implementation": {
-          "query": "SELECT COUNT(id) AS [DefaultTraceCount] FROM [sys].[traces] WHERE is_default = 1 AND status = 1;"
+          "query": "SELECT COUNT(id) AS [DefaultTraceCount] FROM [sys].[traces] WITH (NOLOCK) WHERE is_default = 1 AND status = 1;"
         }
       }
     ],
@@ -11006,13 +11919,7 @@
         },
         "implementation": {
           "useDatabase": true,
-          "query": "SELECT QUOTENAME(fk.parent_schema_name)+ '.' + QUOTENAME(fk.parent_table_name) + '.' + QUOTENAME(fk.constraint_name) AS ConstraintName FROM ( SELECT t.name AS [parent_schema_name], OBJECT_NAME(FKC.parent_object_id) [parent_table_name], OBJECT_NAME(constraint_object_id) AS [constraint_name], SUBSTRING((SELECT ',' + RTRIM(COL_NAME(k.parent_object_id,parent_column_id)) AS [data()] FROM sys.foreign_key_columns k (NOLOCK) INNER JOIN sys.foreign_keys (NOLOCK) ON k.constraint_object_id = [object_id] AND k.constraint_object_id = FKC.constraint_object_id ORDER BY constraint_column_id FOR XML PATH('')), 2, 8000) AS [parent_columns] FROM sys.foreign_key_columns FKC (NOLOCK) INNER JOIN sys.objects o (NOLOCK) ON FKC.parent_object_id = o.[object_id] INNER JOIN sys.tables mst (NOLOCK) ON mst.[object_id] = o.[object_id] INNER JOIN sys.schemas t (NOLOCK) ON t.[schema_id] = mst.[schema_id] INNER JOIN sys.objects so (NOLOCK) ON FKC.referenced_object_id = so.[object_id] WHERE o.type = 'U' AND so.type = 'U' AND o.is_ms_shipped = 0 GROUP BY o.[schema_id],so.[schema_id],FKC.parent_object_id,constraint_object_id,referenced_object_id,t.name ) fk WHERE NOT EXISTS (SELECT 1 FROM ( SELECT t.name AS schemaName, OBJECT_NAME(mst.[object_id]) AS objectName, SUBSTRING(( SELECT ',' + RTRIM(ac.name) FROM sys.tables AS st INNER JOIN sys.indexes AS mi ON st.[object_id] = mi.[object_id] INNER JOIN sys.index_columns AS ic ON mi.[object_id] = ic.[object_id] AND mi.[index_id] = ic.[index_id] INNER JOIN sys.all_columns AS ac ON st.[object_id] = ac.[object_id] AND ic.[column_id] = ac.[column_id] WHERE i.[object_id] = mi.[object_id] AND i.index_id = mi.index_id AND ic.is_included_column = 0 ORDER BY ac.column_id FOR XML PATH('')), 2, 8000) AS KeyCols FROM sys.indexes AS i INNER JOIN sys.tables AS mst ON mst.[object_id] = i.[object_id] INNER JOIN sys.schemas AS t ON t.[schema_id] = mst.[schema_id] WHERE i.[type] IN (1,2,5,6) AND i.is_unique_constraint = 0 AND mst.is_ms_shipped = 0 ) ict WHERE fk.parent_schema_name = ict.schemaName AND fk.parent_table_name = ict.objectName AND REPLACE(fk.parent_columns,' ,',',') = ict.KeyCols);",
-          "transform": {
-            "type": "aggregate",
-            "map": {
-              "ConstraintName": "join"
-            }
-          }
+          "query": "SELECT QUOTENAME(OBJECT_SCHEMA_NAME(parent_object_id)) + '.' + QUOTENAME(OBJECT_NAME(parent_object_id)) AS TableName FROM ( SELECT FKC.parent_object_id, constraint_object_id, REPLACE(SUBSTRING((SELECT ',' + RTRIM(COL_NAME(k.parent_object_id,parent_column_id)) FROM sys.foreign_key_columns k (NOLOCK) INNER JOIN sys.foreign_keys (NOLOCK) ON k.constraint_object_id = [object_id] AND k.constraint_object_id = FKC.constraint_object_id ORDER BY constraint_column_id FOR XML PATH('')), 2, 8000), ' ,',',') AS [parent_columns] FROM sys.foreign_key_columns FKC (NOLOCK) INNER JOIN sys.objects o (NOLOCK) ON FKC.parent_object_id = o.[object_id] INNER JOIN sys.objects so (NOLOCK) ON FKC.referenced_object_id = so.[object_id] WHERE o.type = 'U' AND so.type = 'U' AND o.is_ms_shipped = 0 GROUP BY o.[schema_id],so.[schema_id],FKC.parent_object_id,constraint_object_id,referenced_object_id ) AS Const LEFT JOIN ( SELECT mst.[object_id], REPLACE(SUBSTRING(( SELECT ',' + RTRIM(ac.name) FROM sys.tables AS st (NOLOCK) INNER JOIN sys.indexes AS mi (NOLOCK) ON st.[object_id] = mi.[object_id] INNER JOIN sys.index_columns AS ic (NOLOCK) ON mi.[object_id] = ic.[object_id] AND mi.[index_id] = ic.[index_id] INNER JOIN sys.all_columns AS ac (NOLOCK) ON st.[object_id] = ac.[object_id] AND ic.[column_id] = ac.[column_id] WHERE i.[object_id] = mi.[object_id] AND i.index_id = mi.index_id AND ic.is_included_column = 0 ORDER BY ac.column_id FOR XML PATH('')), 2, 8000), ' ,',',') AS KeyCols FROM sys.indexes AS i (NOLOCK) INNER JOIN sys.tables AS mst (NOLOCK) ON mst.[object_id] = i.[object_id] WHERE i.[type] IN (1,2,5,6) AND i.is_unique_constraint = 0 AND mst.is_ms_shipped = 0 ) AS IdxConst ON Const.parent_object_id = IdxConst.[object_id] AND Const.parent_columns = IdxConst.KeyCols WHERE IdxConst.[object_id] IS NULL GROUP BY parent_object_id"
         }
       }
     ],
@@ -11047,7 +11954,7 @@
         },
         "implementation": {
           "useDatabase": true,
-          "query": "SELECT ss.name AS [Schema_Name], so.name AS [Object_Name], so.type_desc, CASE WHEN sm.[definition] LIKE '%FORCE ORDER%' THEN '[FORCE ORDER Hint]' WHEN sm.[definition] LIKE '%MERGE JOIN%' OR sm.[definition] LIKE '%LOOP JOIN%' OR sm.[definition] LIKE '%HASH JOIN%' THEN '[JOIN Hint]' END AS Hint FROM [sys].[sql_modules] AS sm INNER JOIN [sys].[objects] AS so ON sm.[object_id] = so.[object_id] INNER JOIN [sys].[schemas] AS ss ON so.[schema_id] = ss.[schema_id] WHERE (sm.[definition] LIKE '%FORCE ORDER%' OR sm.[definition] LIKE '%MERGE JOIN%' OR sm.[definition] LIKE '%LOOP JOIN%' OR sm.[definition] LIKE '%HASH JOIN%') AND OBJECTPROPERTY(sm.[object_id],'IsMSShipped') = 0;"
+          "query": "SELECT ss.name AS [Schema_Name], so.name AS [Object_Name], so.type_desc, CASE WHEN sm.[definition] LIKE '%FORCE ORDER%' THEN '[FORCE ORDER Hint]' WHEN sm.[definition] LIKE '%MERGE JOIN%' OR sm.[definition] LIKE '%LOOP JOIN%' OR sm.[definition] LIKE '%HASH JOIN%' THEN '[JOIN Hint]' END AS Hint FROM [sys].[sql_modules] AS sm WITH (NOLOCK) INNER JOIN [sys].[objects] AS so WITH (NOLOCK) ON sm.[object_id] = so.[object_id] INNER JOIN [sys].[schemas] AS ss WITH (NOLOCK) ON so.[schema_id] = ss.[schema_id] WHERE ( sm.[definition] LIKE '%FORCE ORDER%' OR sm.[definition] LIKE '%MERGE JOIN%' OR sm.[definition] LIKE '%LOOP JOIN%' OR sm.[definition] LIKE '%HASH JOIN%' ) AND OBJECTPROPERTY(sm.[object_id], 'IsMSShipped') = 0;"
         }
       }
     ],
@@ -11082,7 +11989,7 @@
         },
         "implementation": {
           "useDatabase": true,
-          "query": "SELECT QUOTENAME(t.name) AS [Schema], QUOTENAME(o.[name]) AS [Object], i.name AS [IndexName] FROM [sys].[indexes] i INNER JOIN [sys].[objects] AS o ON o.[object_id] = i.[object_id] INNER JOIN [sys].[tables] AS mst ON mst.[object_id] = i.[object_id] INNER JOIN [sys].[schemas] AS t ON t.[schema_id] = mst.[schema_id] WHERE i.is_hypothetical = 1 and o.is_ms_shipped = 0;"
+          "query": "SELECT QUOTENAME(t.name) AS [Schema], QUOTENAME(o.[name]) AS [Object], i.name AS [IndexName] FROM [sys].[indexes] AS i WITH (NOLOCK) INNER JOIN [sys].[objects] AS o WITH (NOLOCK) ON o.[object_id] = i.[object_id] INNER JOIN [sys].[tables] AS mst WITH (NOLOCK) ON mst.[object_id] = i.[object_id] INNER JOIN [sys].[schemas] AS t WITH (NOLOCK) ON t.[schema_id] = mst.[schema_id] WHERE i.is_hypothetical = 1 and o.is_ms_shipped = 0;"
         }
       }
     ],
@@ -11100,7 +12007,7 @@
         },
         "implementation": {
           "useDatabase": true,
-          "query": "SELECT QUOTENAME(t.name) AS [Schema], QUOTENAME(o.[name]) AS [Object], s.name AS [StatName] FROM [sys].[stats] s INNER JOIN [sys].[objects] AS o (NOLOCK) ON o.[object_id] = s.[object_id] INNER JOIN [sys].[tables] AS mst (NOLOCK) ON mst.[object_id] = s.[object_id] INNER JOIN [sys].[schemas] AS t (NOLOCK) ON t.[schema_id] = mst.[schema_id] WHERE (s.name LIKE 'hind_%' OR s.name LIKE '_dta_stat%') AND auto_created = 0 AND s.name NOT IN (SELECT name FROM sys.indexes) AND o.[is_ms_shipped] = 0;"
+          "query": "SELECT QUOTENAME(t.name) AS [Schema], QUOTENAME(o.[name]) AS [Object], s.name AS [StatName] FROM [sys].[stats] AS s WITH (NOLOCK) INNER JOIN [sys].[objects] AS o (NOLOCK) ON o.[object_id] = s.[object_id] INNER JOIN [sys].[tables] AS mst (NOLOCK) ON mst.[object_id] = s.[object_id] INNER JOIN [sys].[schemas] AS t (NOLOCK) ON t.[schema_id] = mst.[schema_id] WHERE ( s.name LIKE 'hind_%' OR s.name LIKE '_dta_stat%' ) AND auto_created = 0 AND s.name NOT IN ( SELECT name FROM sys.indexes ) AND o.[is_ms_shipped] = 0;"
         }
       }
     ],
@@ -11128,7 +12035,7 @@
         },
         "implementation": {
           "useDatabase": true,
-          "query": "SELECT RIGHT(i.[statement],LEN(i.[statement])-(LEN(m.[name])+3)) AS [Table], CASE WHEN (i.equality_columns IS NOT NULL AND i.inequality_columns IS NULL) THEN i.equality_columns WHEN (i.equality_columns IS NULL AND i.inequality_columns IS NOT NULL) THEN i.inequality_columns ELSE i.equality_columns+','+i.inequality_columns END AS [KeyCols], ISNULL(i.included_columns,'') AS [IncludedCols], (CONVERT(NUMERIC(19,3),s.user_seeks)+CONVERT(NUMERIC(19,3),s.user_scans))*CONVERT(NUMERIC(19,3),s.avg_total_user_cost)*CONVERT(NUMERIC(19,3),s.avg_user_impact) AS [Score] FROM [sys].[dm_db_missing_index_details] i INNER JOIN [master].[sys].[databases] m ON i.database_id=m.database_id INNER JOIN [sys].[dm_db_missing_index_groups] g ON i.index_handle=g.index_handle INNER JOIN [sys].[dm_db_missing_index_group_stats] s ON s.group_handle=g.index_group_handle WHERE m.[name]=@TargetName AND OBJECTPROPERTY(i.[object_id], 'IsMSShipped') = 0"
+          "query": "SELECT RIGHT( i.[statement], LEN(i.[statement]) -(LEN(m.[name]) + 3) ) AS [Table], CASE WHEN ( i.equality_columns IS NOT NULL AND i.inequality_columns IS NULL ) THEN i.equality_columns WHEN ( i.equality_columns IS NULL AND i.inequality_columns IS NOT NULL ) THEN i.inequality_columns ELSE i.equality_columns + ',' + i.inequality_columns END AS [KeyCols], ISNULL(i.included_columns, '') AS [IncludedCols], ( CONVERT(NUMERIC(19, 3), s.user_seeks) + CONVERT(NUMERIC(19, 3), s.user_scans) ) * CONVERT(NUMERIC(19, 3), s.avg_total_user_cost) * CONVERT(NUMERIC(19, 3), s.avg_user_impact) AS [Score] FROM [sys].[dm_db_missing_index_details] i INNER JOIN [master].[sys].[databases] AS m WITH (NOLOCK) ON i.database_id = m.database_id INNER JOIN [sys].[dm_db_missing_index_groups] g ON i.index_handle = g.index_handle INNER JOIN [sys].[dm_db_missing_index_group_stats] s ON s.group_handle = g.index_group_handle WHERE m.[name] = @TargetName AND OBJECTPROPERTY(i.[object_id], 'IsMSShipped') = 0"
         }
       }
     ],
@@ -11145,7 +12052,7 @@
           "version": "[11.0,)"
         },
         "implementation": {
-          "query": "SELECT db.recovery_model, db.recovery_model_desc, fb.LastFullBackup, tl.LastTLBackup FROM [master].[sys].[databases] db (NOLOCK) LEFT JOIN (SELECT b.database_name, DATEDIFF(HH, MAX(b.backup_finish_date),GETDATE()) AS LastFullBackup FROM [msdb].[dbo].[backupset] b WHERE b.is_copy_only=0 AND b.type='D' GROUP BY b.database_name) fb ON fb.database_name=db.name LEFT JOIN (SELECT b.database_name, DATEDIFF(HH, MAX(b.backup_finish_date), GETDATE()) AS LastTLBackup FROM [msdb].[dbo].[backupset] b WHERE b.is_copy_only=0 AND b.type='L' GROUP BY b.database_name HAVING MAX(b.backup_finish_date)>=(SELECT MAX(f.backup_finish_date) FROM [msdb].[dbo].[backupset] f WHERE f.is_copy_only=0 AND f.type IN ('D','I') AND f.database_name=b.database_name GROUP BY f.database_name )) tl ON fb.database_name=tl.database_name WHERE db.name=@TargetName;"
+          "query": "SELECT db.recovery_model, db.recovery_model_desc, fb.LastFullBackup, tl.LastTLBackup FROM [master].[sys].[databases] AS db WITH (NOLOCK) LEFT JOIN ( SELECT b.database_name, DATEDIFF(HH, MAX(b.backup_finish_date), GETDATE()) AS LastFullBackup FROM [msdb].[dbo].[backupset] AS b WITH (NOLOCK) WHERE b.is_copy_only = 0 AND b.type = 'D' GROUP BY b.database_name ) fb ON fb.database_name = db.name LEFT JOIN ( SELECT b.database_name, DATEDIFF(HH, MAX(b.backup_finish_date), GETDATE()) AS LastTLBackup FROM [msdb].[dbo].[backupset] AS b WITH (NOLOCK) WHERE b.is_copy_only = 0 AND b.type = 'L' GROUP BY b.database_name HAVING MAX(b.backup_finish_date) >=( SELECT MAX(f.backup_finish_date) FROM [msdb].[dbo].[backupset] AS f WITH (NOLOCK) WHERE f.is_copy_only = 0 AND f.type IN ('D', 'I') AND f.database_name = b.database_name GROUP BY f.database_name ) ) tl ON fb.database_name = tl.database_name WHERE db.name = @TargetName;"
         }
       }
     ],
@@ -11162,7 +12069,7 @@
           "version": "[11.0,)"
         },
         "implementation": {
-          "query": "SELECT COUNT(DISTINCT size) AS filesizeCount FROM tempdb.sys.database_files WHERE [type] = 0"
+          "query": "SELECT COUNT(DISTINCT size) AS filesizeCount FROM tempdb.sys.database_files WITH (NOLOCK) WHERE [type] = 0"
         }
       }
     ],
@@ -11196,7 +12103,7 @@
           "version": "[11.0,)"
         },
         "implementation": {
-          "query": "SELECT mf.database_id, dbs.name AS databaseName, [type], [type_desc], physical_name, mf.name AS fileName, size, growth, is_percent_growth, mf.max_size, volume_mount_point, volume_id FROM [sys].[master_files] AS mf INNER JOIN [sys].databases AS dbs ON mf.database_id = dbs.database_id CROSS APPLY sys.dm_os_volume_stats(mf.database_id, mf.file_id) WHERE mf.database_id = ISNULL(@dbId, mf.database_id) AND [type] = ISNULL(@type, [type])"
+          "query": "SELECT mf.database_id, dbs.name AS databaseName, [type], [type_desc], physical_name, mf.name AS fileName, size, growth, is_percent_growth, mf.max_size, volume_mount_point, volume_id FROM [sys].[master_files] AS mf WITH (NOLOCK) INNER JOIN [sys].databases AS dbs WITH (NOLOCK) ON mf.database_id = dbs.database_id CROSS APPLY sys.dm_os_volume_stats(mf.database_id, mf.file_id) WHERE mf.database_id = ISNULL(@dbId, mf.database_id) AND [type] = ISNULL(@type, [type])"
         }
       },
       {
@@ -11212,7 +12119,7 @@
         },
         "implementation": {
           "useDatabase": true,
-          "query": "SELECT df.[type], physical_name, df.name AS fileName, size, growth, is_percent_growth, ISNULL(FILEPROPERTY(df.name, 'SpaceUsed'), 0) AS spaceUsed, volume_mount_point, volume_id FROM [sys].[database_files] AS df CROSS APPLY sys.dm_os_volume_stats(DB_ID(), df.file_id) WHERE df.[type] = ISNULL(@type, df.[type]) AND is_percent_growth = ISNULL(@is_percent_growth, is_percent_growth)"
+          "query": "SELECT df.[type], physical_name, df.name AS fileName, size, growth, is_percent_growth, ISNULL(FILEPROPERTY(df.name, 'SpaceUsed'), 0) AS spaceUsed, volume_mount_point, volume_id FROM [sys].[database_files] AS df WITH (NOLOCK) CROSS APPLY sys.dm_os_volume_stats(DB_ID(), df.file_id) WHERE df.[type] = ISNULL(@type, df.[type]) AND is_percent_growth = ISNULL(@is_percent_growth, is_percent_growth)"
         }
       }
     ],
@@ -11223,7 +12130,8 @@
           "type": "Server",
           "version": [
             "[11.0.7001,12.0)",
-            "[12.0.5000,)"
+            "[12.0.6024,13.0)",
+            "[13.0.4001,)"
           ],
           "platform": [
             "Windows",
@@ -11265,7 +12173,7 @@
         },
         "implementation": {
           "useDatabase": true,
-          "query": "SELECT i.object_id, QUOTENAME(t.name) + '.' + QUOTENAME(st.name) AS TableName, QUOTENAME(i.name) AS IndexName, QUOTENAME(ac.Name) AS ColumnName, ic.is_included_column, i.is_primary_key, i.filter_definition, i.is_unique, ic.key_ordinal, sty.name AS ColTypeName, CASE sty.name WHEN 'nvarchar' THEN ac.max_length / 2 ELSE ac.max_length END AS ColTypeSize, i.fill_factor, i.is_disabled, i.type AS IndexType, index_stat.Hits, index_stat.Reads_Ratio, index_stat.last_user_update FROM [sys].[tables] AS st INNER JOIN [sys].[schemas] AS t ON t.[schema_id] = st.[schema_id] INNER JOIN [sys].[indexes] AS i ON st.[object_id] = i.[object_id] INNER JOIN [sys].[index_columns] AS ic ON i.[object_id] = ic.[object_id] AND i.[index_id] = ic.[index_id] INNER JOIN [sys].[all_columns] AS ac ON st.[object_id] = ac.[object_id] AND ic.[column_id] = ac.[column_id] INNER JOIN [sys].[types] AS sty ON ac.user_type_id = sty.user_type_id LEFT JOIN( SELECT s.object_id, s.index_id, ( stat.user_seeks + stat.user_scans + stat.user_lookups ) AS [Hits], RTRIM( CONVERT( NVARCHAR(10), CAST( CASE WHEN ( stat.user_seeks + stat.user_scans + stat.user_lookups ) = 0 THEN 0 ELSE CONVERT( REAL, ( stat.user_seeks + stat.user_scans + stat.user_lookups ) ) * 100 /CASE ( stat.user_seeks + stat.user_scans + stat.user_lookups + stat.user_updates ) WHEN 0 THEN 1 ELSE CONVERT( REAL, ( stat.user_seeks + stat.user_scans + stat.user_lookups + stat.user_updates ) ) END END AS DECIMAL(18, 2) ) ) ) AS [Reads_Ratio], MAX(stat.last_user_update) AS last_user_update FROM sys.indexes s INNER JOIN sys.dm_db_index_usage_stats stat on stat.object_id = s.object_id and stat.index_id = s.index_id WHERE s.type IN (2, 6) AND s.is_primary_key = 0 AND s.is_unique_constraint = 0 GROUP BY s.object_id, s.index_id, stat.user_seeks, stat.user_scans, stat.user_lookups, stat.user_updates ) index_stat ON index_stat.object_id = i.object_id AND index_stat.index_id = i.index_id WHERE i.type IN (1, 2, 5, 6) AND st.is_ms_shipped = 0 AND i.is_unique_constraint = 0",
+          "query": "SELECT i.object_id, QUOTENAME(t.name) + '.' + QUOTENAME(st.name) AS TableName, QUOTENAME(i.name) AS IndexName, QUOTENAME(ac.Name) AS ColumnName, ic.is_included_column, i.is_primary_key, i.filter_definition, i.is_unique, ic.key_ordinal, CASE sty.name WHEN 'nvarchar' THEN ac.max_length / 2 ELSE ac.max_length END AS ColTypeSize, i.fill_factor, i.is_disabled, i.type AS IndexType, ISNULL(index_stat.Hits, 0) AS [Hits], ISNULL(index_stat.Reads_Ratio, 0) AS Reads_Ratio FROM [sys].[tables] AS st WITH (NOLOCK) INNER JOIN [sys].[schemas] AS t WITH (NOLOCK) ON t.[schema_id] = st.[schema_id] INNER JOIN [sys].[indexes] AS i WITH (NOLOCK) ON st.[object_id] = i.[object_id] INNER JOIN [sys].[index_columns] AS ic WITH (NOLOCK) ON i.[object_id] = ic.[object_id] AND i.[index_id] = ic.[index_id] INNER JOIN [sys].[all_columns] AS ac WITH (NOLOCK) ON st.[object_id] = ac.[object_id] AND ic.[column_id] = ac.[column_id] INNER JOIN [sys].[types] AS sty WITH (NOLOCK) ON ac.user_type_id = sty.user_type_id LEFT JOIN( SELECT s.object_id, s.index_id, ( stat.user_seeks + stat.user_scans + stat.user_lookups ) AS [Hits], CAST( CASE WHEN ( stat.user_seeks + stat.user_scans + stat.user_lookups ) = 0 THEN 0 ELSE CONVERT( REAL, ( stat.user_seeks + stat.user_scans + stat.user_lookups ) ) * 100 /CASE ( stat.user_seeks + stat.user_scans + stat.user_lookups + stat.user_updates ) WHEN 0 THEN 1 ELSE CONVERT( REAL, ( stat.user_seeks + stat.user_scans + stat.user_lookups + stat.user_updates ) ) END END AS DECIMAL(18, 2) ) AS [Reads_Ratio] FROM sys.indexes AS s WITH (NOLOCK) INNER JOIN sys.dm_db_index_usage_stats stat on stat.object_id = s.object_id and stat.index_id = s.index_id WHERE s.type IN (2, 6) AND s.is_primary_key = 0 AND s.is_unique_constraint = 0 GROUP BY s.object_id, s.index_id, stat.user_seeks, stat.user_scans, stat.user_lookups, stat.user_updates ) index_stat ON index_stat.object_id = i.object_id AND index_stat.index_id = i.index_id WHERE i.type IN (1, 2, 5, 6) AND st.is_ms_shipped = 0 AND i.is_unique_constraint = 0",
           "transform": {
             "type": "indexDefinition"
           }
@@ -11281,7 +12189,7 @@
           "version": "[11.0,)"
         },
         "implementation": {
-          "query": "SELECT sao.name AS [Object_Name] FROM master.sys.all_objects sao INNER JOIN master.sys.schemas ss ON sao.[schema_id] = ss.[schema_id] WHERE sao.is_ms_shipped = 0 AND sao.[type] IN ('AF','FN','P','IF','PC','TF','TR','T','V') ORDER BY sao.name, sao.type_desc;",
+          "query": "SELECT sao.name AS [Object_Name] FROM master.sys.all_objects AS sao WITH (NOLOCK) INNER JOIN master.sys.schemas AS ss WITH (NOLOCK) ON sao.[schema_id] = ss.[schema_id] WHERE sao.is_ms_shipped = 0 AND sao.[type] IN ('AF', 'FN', 'P', 'IF', 'PC', 'TF', 'TR', 'T', 'V') ORDER BY sao.name, sao.type_desc;",
           "transform": {
             "type": "aggregate",
             "map": {
@@ -11344,7 +12252,7 @@
           "version": "[11.0,)"
         },
         "implementation": {
-          "query": "DECLARE @cmd NVARCHAR(max) = N''; SELECT @cmd = @cmd + N' USE ' + QUOTENAME([name]) + N'; SELECT msa.publisher_db ,msa.publication FROM dbo.MSdistribution_history AS msh INNER JOIN dbo.MSrepl_errors AS mse ON mse.id = msh.error_id INNER JOIN dbo.MSdistribution_agents AS msa ON msh.agent_id = msa.id WHERE mse.time >= DATEADD(hh, - 24, GETDATE()) GROUP BY msa.publisher_db ,msa.publication;' FROM [master].sys.databases WHERE is_distributor = 1; EXEC (@cmd);"
+          "query": "DECLARE @cmd NVARCHAR(max) = N''; SELECT @cmd = @cmd + N' USE ' + QUOTENAME([name]) + N'; SELECT msa.publisher_db ,msa.publication FROM dbo.MSdistribution_history AS msh WITH (NOLOCK) INNER JOIN dbo.MSrepl_errors AS mse WITH (NOLOCK) ON mse.id = msh.error_id INNER JOIN dbo.MSdistribution_agents AS msa WITH (NOLOCK) ON msh.agent_id = msa.id WHERE mse.time >= DATEADD(hh, - 24, GETDATE()) GROUP BY msa.publisher_db ,msa.publication;' FROM [master].sys.databases WITH (NOLOCK) WHERE is_distributor = 1; EXEC (@cmd);"
         }
       }
     ],
@@ -11362,7 +12270,7 @@
           ]
         },
         "implementation": {
-          "query": "SELECT DISTINCT severity, message_id FROM [msdb].[dbo].[sysalerts]",
+          "query": "SELECT DISTINCT severity, message_id FROM [msdb].[dbo].[sysalerts] WITH (NOLOCK)",
           "transform": {
             "type": "aggregate",
             "map": {
@@ -11386,7 +12294,7 @@
           "version": "[11.0,)"
         },
         "implementation": {
-          "query": "DECLARE @word TABLE (word NVARCHAR(50)); INSERT INTO @word VALUES ('0') ,('012') ,('0123') ,('01234') ,('012345') ,('0123456') ,('01234567') ,('012345678') ,('0123456789') ,('01234567890') ,('11111') ,('111111') ,('1111111') ,('11111111') ,('21') ,('321') ,('4321') ,('54321') ,('654321') ,('7654321') ,('87654321') ,('987654321') ,('0987654321') ,('pwd') ,('Password') ,('password') ,('P@ssw0rd') ,('p@ssw0rd') ,('Teste') ,('teste') ,('Test') ,('test') ,('') ,('p@wd') ,('Qwerty') ,('qwerty') ,('Password1') ,('password1'); SELECT RTRIM(s.[name]) AS [PasswordData] FROM @word d INNER JOIN [master].sys.sql_logins s ON PWDCOMPARE(d.word, s.[password_hash]) = 1 UNION SELECT RTRIM(s.[name]) AS [PasswordData] FROM [master].sys.sql_logins s WHERE PWDCOMPARE(RTRIM(RTRIM(s.[name])), s.[password_hash]) = 1 UNION SELECT RTRIM(s.[name]) AS [PasswordData] FROM [master].sys.sql_logins s WHERE s.[password_hash] IS NULL AND s.[name] NOT IN ( 'MSCRMSqlClrLogin' ,'##MS_SmoExtendedSigningCertificate##' ,'##MS_PolicySigningCertificate##' ,'##MS_SQLResourceSigningCertificate##' ,'##MS_SQLReplicationSigningCertificate##' ,'##MS_SQLAuthenticatorCertificate##' ,'##MS_AgentSigningCertificate##' ,'##MS_SQLEnableSystemAssemblyLoadingUser##' )",
+          "query": "DECLARE @word TABLE (word NVARCHAR(50)); INSERT INTO @word VALUES ('0') ,('012') ,('0123') ,('01234') ,('012345') ,('0123456') ,('01234567') ,('012345678') ,('0123456789') ,('01234567890') ,('11111') ,('111111') ,('1111111') ,('11111111') ,('21') ,('321') ,('4321') ,('54321') ,('654321') ,('7654321') ,('87654321') ,('987654321') ,('0987654321') ,('pwd') ,('Password') ,('password') ,('P@ssw0rd') ,('p@ssw0rd') ,('Teste') ,('teste') ,('Test') ,('test') ,('') ,('p@wd') ,('Qwerty') ,('qwerty') ,('Password1') ,('password1'); SELECT RTRIM(s.[name]) AS [PasswordData] FROM [master].sys.sql_logins AS s WITH (NOLOCK) LEFT JOIN @word AS d ON PWDCOMPARE(d.word, s.[password_hash]) = 1 WHERE ( d.word IS NOT NULL OR PWDCOMPARE(RTRIM(RTRIM(s.[name])), s.[password_hash]) = 1 OR ( ( s.[password_hash] IS NULL OR s.[is_policy_checked] = 0 OR s.[is_expiration_checked] = 0 ) AND s.[name] NOT IN ( 'MSCRMSqlClrLogin' ,'##MS_SmoExtendedSigningCertificate##' ,'##MS_PolicyEventProcessingLogin##' ,'##MS_PolicySigningCertificate##' ,'##MS_PolicyTsqlExecutionLogin##' ,'##MS_SQLResourceSigningCertificate##' ,'##MS_SQLReplicationSigningCertificate##' ,'##MS_SQLAuthenticatorCertificate##' ,'##MS_AgentSigningCertificate##' ,'##MS_SQLEnableSystemAssemblyLoadingUser##' ) ) ) AND s.is_disabled = ISNULL(@is_disabled, s.is_disabled)",
           "transform": {
             "type": "aggregate",
             "map": {
@@ -11424,7 +12332,7 @@
         },
         "implementation": {
           "useDatabase": true,
-          "query": "SELECT s.[name]+'.'+so.[name] AS ObjectName FROM sys.objects so INNER JOIN sys.schemas s ON so.schema_id = s.schema_id WHERE so.is_ms_shipped = 0 AND [type] = 'P' AND so.[name] LIKE 'sp[_]%' AND so.[name] NOT IN ('sp_alterdiagram','sp_creatediagram','sp_dropdiagram','sp_helpdiagramdefinition','sp_helpdiagrams','sp_renamediagram','sp_upgraddiagrams');",
+          "query": "SELECT s.[name] + '.' + so.[name] AS ObjectName FROM sys.objects AS so WITH (NOLOCK) INNER JOIN sys.schemas AS s WITH (NOLOCK) ON so.schema_id = s.schema_id WHERE so.is_ms_shipped = 0 AND [type] = 'P' AND so.[name] LIKE 'sp[_]%' AND so.[name] NOT IN ( 'sp_alterdiagram', 'sp_creatediagram', 'sp_dropdiagram', 'sp_helpdiagramdefinition', 'sp_helpdiagrams', 'sp_renamediagram', 'sp_upgraddiagrams' );",
           "transform": {
             "type": "aggregate",
             "map": {
@@ -11444,7 +12352,7 @@
         },
         "implementation": {
           "useDatabase": true,
-          "query": "SELECT s.[name] +'.'+so.[name] as ObjectName FROM sys.objects so INNER JOIN sys.schemas s ON so.schema_id = s.schema_id WHERE so.is_ms_shipped = 0 AND [type] <> 'S' AND (so.[name] LIKE '% %' OR so.[name] LIKE '%[[]%' OR so.[name] LIKE '%]%' OR so.[name] LIKE '%-%' OR so.[name] LIKE '%.%' OR so.[name] LIKE '%,%' OR so.[name] LIKE '%;%' OR so.[name] LIKE '%' + CHAR(34) + '%' OR so.[name] LIKE '%' + CHAR(39) + '%');",
+          "query": "SELECT s.[name] + '.' + so.[name] as ObjectName FROM sys.objects AS so WITH (NOLOCK) INNER JOIN sys.schemas AS s WITH (NOLOCK) ON so.schema_id = s.schema_id WHERE so.is_ms_shipped = 0 AND [type] <> 'S' AND ( so.[name] LIKE '% %' OR so.[name] LIKE '%[[]%' OR so.[name] LIKE '%]%' OR so.[name] LIKE '%-%' OR so.[name] LIKE '%.%' OR so.[name] LIKE '%,%' OR so.[name] LIKE '%;%' OR so.[name] LIKE '%' + CHAR(34) + '%' OR so.[name] LIKE '%' + CHAR(39) + '%' );",
           "transform": {
             "type": "aggregate",
             "map": {
@@ -11464,7 +12372,7 @@
         },
         "implementation": {
           "useDatabase": true,
-          "query": "SELECT s.name +'.'+ so.name + '.'+sc.name AS ObjectName FROM sys.columns sc INNER JOIN sys.objects so ON sc.object_id = so.object_id INNER JOIN sys.schemas s ON so.schema_id = s.schema_id WHERE so.is_ms_shipped = 0 AND (sc.[name] LIKE '% %' OR sc.[name] LIKE '%[[]%' OR sc.[name] LIKE '%]%' OR sc.[name] LIKE '%-%' OR sc.[name] LIKE '%.%' OR sc.[name] LIKE '%,%' OR sc.[name] LIKE '%;%' OR sc.[name] LIKE '%' + CHAR(34) + '%' OR sc.[name] LIKE '%' + CHAR(39) + '%') ORDER BY 1;",
+          "query": "SELECT s.name + '.' + so.name + '.' + sc.name AS ObjectName FROM sys.columns AS sc WITH (NOLOCK) INNER JOIN sys.objects AS so WITH (NOLOCK) ON sc.object_id = so.object_id INNER JOIN sys.schemas AS s WITH (NOLOCK) ON so.schema_id = s.schema_id WHERE so.is_ms_shipped = 0 AND ( sc.[name] LIKE '% %' OR sc.[name] LIKE '%[[]%' OR sc.[name] LIKE '%]%' OR sc.[name] LIKE '%-%' OR sc.[name] LIKE '%.%' OR sc.[name] LIKE '%,%' OR sc.[name] LIKE '%;%' OR sc.[name] LIKE '%' + CHAR(34) + '%' OR sc.[name] LIKE '%' + CHAR(39) + '%' ) ORDER BY 1;",
           "transform": {
             "type": "aggregate",
             "map": {
@@ -11484,7 +12392,7 @@
         },
         "implementation": {
           "useDatabase": true,
-          "query": "SELECT s.name+'.'+so.name AS ObjectName FROM sys.objects so INNER JOIN sys.schemas s ON so.schema_id = s.schema_id WHERE so.is_ms_shipped = 0 AND [type] IN ('FN','FS','TF','IF') AND so.[name] LIKE 'fn[_]%' AND so.[name] NOT IN ('fn_diagram_objects')",
+          "query": "SELECT s.name + '.' + so.name AS ObjectName FROM sys.objects AS so WITH (NOLOCK) INNER JOIN sys.schemas AS s WITH (NOLOCK) ON so.schema_id = s.schema_id WHERE so.is_ms_shipped = 0 AND [type] IN ('FN', 'FS', 'TF', 'IF') AND so.[name] LIKE 'fn[_]%' AND so.[name] NOT IN ('fn_diagram_objects')",
           "transform": {
             "type": "aggregate",
             "map": {
@@ -11505,10 +12413,10 @@
         "implementation": {
           "useDatabase": true,
           "query": [
-            "DECLARE @KeywordTbl AS TABLE(Keyword VARCHAR(255)) INSERT INTO @KeywordTbl VALUES ('ABSOLUTE'), ('ACTION'), ('ADA'), ('ADD'), ('ADMIN'), ('AFTER'), ('AGGREGATE'), ('ALIAS'), ('ALL'), ('ALLOCATE'), ('ALTER'), ('AND'), ('ANY'), ('ARE'), ('ARRAY'), ('AS'), ('ASC'), ('ASSERTION'), ('AT'), ('AUTHORIZATION'), ('AVG'), ('BACKUP'), ('BEFORE'), ('BEGIN'), ('BETWEEN'), ('BINARY'), ('BIT'), ('BIT_LENGTH'), ('BLOB'), ('BOOLEAN'), ('BOTH'), ('BREADTH'), ('BREAK'), ('BROWSE'), ('BULK'), ('BY'), ('CALL'), ('CASCADE'), ('CASCADED'), ('CASE'), ('CAST'), ('CATALOG'), ('CHAR'), ('CHAR_LENGTH'), ('CHARACTER'), ('CHARACTER_LENGTH'), ('CHECK'), ('CHECKPOINT'), ('CLASS'), ('CLOB'), ('CLOSE'), ('CLUSTERED'), ('COALESCE'), ('COLLATE'), ('COLLATION'), ('COLUMN'), ('COMMIT'), ('COMPLETION'), ('COMPUTE'), ('CONNECT'), ('CONNECTION'), ('CONSTRAINT'), ('CONSTRAINTS'), ('CONSTRUCTOR'), ('CONTAINS'), ('CONTAINSTABLE'), ('CONTINUE'), ('CONVERT'), ('CORRESPONDING'), ('COUNT'), ('CREATE'), ('CROSS'), ('CUBE'), ('CURRENT'), ('CURRENT_DATE'), ('CURRENT_PATH'), ('CURRENT_ROLE'), ('CURRENT_TIME'), ('CURRENT_TIMESTAMP'), ('CURRENT_USER'), ('CURSOR'), ('CYCLE'), ('DATA'), ('DATABASE'), ('DATE'), ('DAY'), ('DBCC'), ('DEALLOCATE'), ('DEC'), ('DECIMAL'), ('DECLARE'), ('DEFAULT'), ('DEFERRABLE'), ('DEFERRED'), ('DELETE'), ('DENY'), ('DEPTH'), ('DEREF'), ('DESC'), ('DESCRIBE'), ('DESCRIPTOR'), ('DESTROY'), ('DESTRUCTOR'), ('DETERMINISTIC'), ('DIAGNOSTICS'), ('DICTIONARY'), ('DISCONNECT'), ('DISK'), ('DISTINCT'), ('DISTRIBUTED'), ('DOMAIN'), ('DOUBLE'), ('DROP'), ('DUMMY'), ('DUMP'), ('DYNAMIC') SELECT [schema]+'.'+[ObjName] AS ObjectName FROM ( SELECT s.name [schema], so.name [ObjName], type, type_desc FROM sys.objects so INNER JOIN sys.schemas s ON so.schema_id = s.schema_id WHERE so.is_ms_shipped = 0 AND [type] <> 'S') AS ObjNames CROSS JOIN @KeywordTbl WHERE ObjName like '% '+Keyword+' %' COLLATE DATABASE_DEFAULT OR ObjName like '% '+Keyword COLLATE DATABASE_DEFAULT OR ObjName = Keyword COLLATE DATABASE_DEFAULT",
-            "DECLARE @KeywordTbl AS TABLE(Keyword VARCHAR(255)) INSERT INTO @KeywordTbl VALUES ('EACH'), ('ELSE'), ('END'), ('END-EXEC'), ('EQUALS'), ('ERRLVL'), ('ESCAPE'), ('EVERY'), ('EXCEPT'), ('EXCEPTION'), ('EXEC'), ('EXECUTE'), ('EXISTS'), ('EXIT'), ('EXTERNAL'), ('EXTRACT'), ('FALSE'), ('FETCH'), ('FILE'), ('FILLFACTOR'), ('FIRST'), ('FLOAT'), ('FOR'), ('FOREIGN'), ('FORTRAN'), ('FOUND'), ('FREE'), ('FREETEXT'), ('FREETEXTTABLE'), ('FROM'), ('FULL'), ('FULLTEXTTABLE'), ('FUNCTION'), ('GENERAL'), ('GET'), ('GLOBAL'), ('GO'), ('GOTO'), ('GRANT'), ('GROUP'), ('GROUPING'), ('HAVING'), ('HOLDLOCK'), ('HOST'), ('HOUR'), ('IDENTITY'), ('IDENTITY_INSERT'), ('IDENTITYCOL'), ('IF'), ('IGNORE'), ('IMMEDIATE'), ('IN'), ('INCLUDE'), ('INDEX'), ('INDICATOR'), ('INITIALIZE'), ('INITIALLY'), ('INNER'), ('INOUT'), ('INPUT'), ('INSENSITIVE'), ('INSERT'), ('INT'), ('INTEGER'), ('INTERSECT'), ('INTERVAL'), ('INTO'), ('IS'), ('ISOLATION'), ('ITERATE'), ('JOIN'), ('KEY'), ('KILL'), ('LANGUAGE'), ('LARGE'), ('LAST'), ('LATERAL'), ('LEADING'), ('LEFT'), ('LESS'), ('LEVEL'), ('LIKE'), ('LIMIT'), ('LINENO'), ('LOAD'), ('LOCAL'), ('LOCALTIME'), ('LOCALTIMESTAMP'), ('LOCATOR'), ('LOWER'), ('MAP'), ('MATCH'), ('MAX'), ('MIN'), ('MINUTE'), ('MODIFIES'), ('MODIFY'), ('MODULE'), ('MONTH') SELECT [schema]+'.'+[ObjName] AS ObjectName FROM ( SELECT s.name [schema], so.name [ObjName], type, type_desc FROM sys.objects so INNER JOIN sys.schemas s ON so.schema_id = s.schema_id WHERE so.is_ms_shipped = 0 AND [type] <> 'S') AS ObjNames CROSS JOIN @KeywordTbl WHERE ObjName like '% '+Keyword+' %' COLLATE DATABASE_DEFAULT OR ObjName like '% '+Keyword COLLATE DATABASE_DEFAULT OR ObjName = Keyword COLLATE DATABASE_DEFAULT",
-            "DECLARE @KeywordTbl AS TABLE(Keyword VARCHAR(255)) INSERT INTO @KeywordTbl VALUES ('NAMES'), ('NATIONAL'), ('NATURAL'), ('NCHAR'), ('NCLOB'), ('NEW'), ('NEXT'), ('NO'), ('NOCHECK'), ('NONCLUSTERED'), ('NONE'), ('NOT'), ('NULL'), ('NULLIF'), ('NUMERIC'), ('OBJECT'), ('OCTET_LENGTH'), ('OF'), ('OFF'), ('OFFSETS'), ('OLD'), ('ON'), ('ONLY'), ('OPEN'), ('OPENDATASOURCE'), ('OPENQUERY'), ('OPENROWSET'), ('OPENXML'), ('OPERATION'), ('OPTION'), ('OR'), ('ORDER'), ('ORDINALITY'), ('OUT'), ('OUTER'), ('OUTPUT'), ('OVER'), ('OVERLAPS'), ('PAD'), ('PARAMETER'), ('PARAMETERS'), ('PARTIAL'), ('PASCAL'), ('PATH'), ('PERCENT'), ('PLAN'), ('POSITION'), ('POSTFIX'), ('PRECISION'), ('PREFIX'), ('PREORDER'), ('PREPARE'), ('PRESERVE'), ('PRIMARY'), ('PRINT'), ('PRIOR'), ('PRIVILEGES'), ('PROC'), ('PROCEDURE'), ('PUBLIC'), ('RAISERROR'), ('READ'), ('READS'), ('READTEXT'), ('REAL'), ('RECONFIGURE'), ('RECURSIVE'), ('REF'), ('REFERENCES'), ('REFERENCING'), ('RELATIVE'), ('REPLICATION'), ('RESTORE'), ('RESTRICT'), ('RESULT'), ('RETURN'), ('RETURNS'), ('REVOKE'), ('RIGHT'), ('ROLE'), ('ROLLBACK'), ('ROLLUP'), ('ROUTINE'), ('ROW'), ('ROWCOUNT'), ('ROWGUIDCOL'), ('ROWS'), ('RULE') SELECT [schema]+'.'+[ObjName] AS ObjectName FROM ( SELECT s.name [schema], so.name [ObjName], type, type_desc FROM sys.objects so INNER JOIN sys.schemas s ON so.schema_id = s.schema_id WHERE so.is_ms_shipped = 0 AND [type] <> 'S') AS ObjNames CROSS JOIN @KeywordTbl WHERE ObjName like '% '+Keyword+' %' COLLATE DATABASE_DEFAULT OR ObjName like '% '+Keyword COLLATE DATABASE_DEFAULT OR ObjName = Keyword COLLATE DATABASE_DEFAULT",
-            "DECLARE @KeywordTbl AS TABLE(Keyword VARCHAR(255)) INSERT INTO @KeywordTbl VALUES ('SAVE'), ('SAVEPOINT'), ('SCHEMA'), ('SCOPE'), ('SCROLL'), ('SEARCH'), ('SECOND'), ('SECTION'), ('SELECT'), ('SEQUENCE'), ('SESSION'), ('SESSION_USER'), ('SET'), ('SETS'), ('SETUSER'), ('SHUTDOWN'), ('SIZE'), ('SMALLINT'), ('SOME'), ('SPACE'), ('SPECIFIC'), ('SPECIFICTYPE'), ('SQL'), ('SQLCA'), ('SQLCODE'), ('SQLERROR'), ('SQLEXCEPTION'), ('SQLSTATE'), ('SQLWARNING'), ('START'), ('STATE'), ('STATEMENT'), ('STATIC'), ('STATISTICS'), ('STRUCTURE'), ('SUBSTRING'), ('SUM'), ('SYSTEM_USER'), ('TABLE'), ('TEMPORARY'), ('TERMINATE'), ('TEXTSIZE'), ('THAN'), ('THEN'), ('TIME'), ('TIMESTAMP'), ('TIMEZONE_HOUR'), ('TIMEZONE_MINUTE'), ('TO'), ('TOP'), ('TRAILING'), ('TRAN'), ('TRANSACTION'), ('TRANSLATE'), ('TRANSLATION'), ('TREAT'), ('TRIGGER'), ('TRIM'), ('TRUE'), ('TRUNCATE'), ('UNDER'), ('UNION'), ('UNIQUE'), ('UNKNOWN'), ('UNNEST'), ('UPDATE'), ('UPDATETEXT'), ('UPPER'), ('USAGE'), ('USE'), ('USER'), ('USING'), ('VALUE'), ('VALUES'), ('VARCHAR'), ('VARIABLE'), ('VARYING'), ('VIEW'), ('WAITFOR'), ('WHEN'), ('WHENEVER'), ('WHERE'), ('WHILE'), ('WITH'), ('WITHOUT'), ('WORK'), ('WRITE'), ('WRITETEXT'), ('YEAR'), ('ZONE') SELECT [schema]+'.'+[ObjName] AS ObjectName FROM ( SELECT s.name [schema], so.name [ObjName], type, type_desc FROM sys.objects so INNER JOIN sys.schemas s ON so.schema_id = s.schema_id WHERE so.is_ms_shipped = 0 AND [type] <> 'S') AS ObjNames CROSS JOIN @KeywordTbl WHERE ObjName like '% '+Keyword+' %' COLLATE DATABASE_DEFAULT OR ObjName like '% '+Keyword COLLATE DATABASE_DEFAULT OR ObjName = Keyword COLLATE DATABASE_DEFAULT"
+            "DECLARE @KeywordTbl AS TABLE(Keyword VARCHAR(255)) INSERT INTO @KeywordTbl VALUES ('ABSOLUTE'), ('ACTION'), ('ADA'), ('ADD'), ('ADMIN'), ('AFTER'), ('AGGREGATE'), ('ALIAS'), ('ALL'), ('ALLOCATE'), ('ALTER'), ('AND'), ('ANY'), ('ARE'), ('ARRAY'), ('AS'), ('ASC'), ('ASSERTION'), ('AT'), ('AUTHORIZATION'), ('AVG'), ('BACKUP'), ('BEFORE'), ('BEGIN'), ('BETWEEN'), ('BINARY'), ('BIT'), ('BIT_LENGTH'), ('BLOB'), ('BOOLEAN'), ('BOTH'), ('BREADTH'), ('BREAK'), ('BROWSE'), ('BULK'), ('BY'), ('CALL'), ('CASCADE'), ('CASCADED'), ('CASE'), ('CAST'), ('CATALOG'), ('CHAR'), ('CHAR_LENGTH'), ('CHARACTER'), ('CHARACTER_LENGTH'), ('CHECK'), ('CHECKPOINT'), ('CLASS'), ('CLOB'), ('CLOSE'), ('CLUSTERED'), ('COALESCE'), ('COLLATE'), ('COLLATION'), ('COLUMN'), ('COMMIT'), ('COMPLETION'), ('COMPUTE'), ('CONNECT'), ('CONNECTION'), ('CONSTRAINT'), ('CONSTRAINTS'), ('CONSTRUCTOR'), ('CONTAINS'), ('CONTAINSTABLE'), ('CONTINUE'), ('CONVERT'), ('CORRESPONDING'), ('COUNT'), ('CREATE'), ('CROSS'), ('CUBE'), ('CURRENT'), ('CURRENT_DATE'), ('CURRENT_PATH'), ('CURRENT_ROLE'), ('CURRENT_TIME'), ('CURRENT_TIMESTAMP'), ('CURRENT_USER'), ('CURSOR'), ('CYCLE'), ('DATA'), ('DATABASE'), ('DATE'), ('DAY'), ('DBCC'), ('DEALLOCATE'), ('DEC'), ('DECIMAL'), ('DECLARE'), ('DEFAULT'), ('DEFERRABLE'), ('DEFERRED'), ('DELETE'), ('DENY'), ('DEPTH'), ('DEREF'), ('DESC'), ('DESCRIBE'), ('DESCRIPTOR'), ('DESTROY'), ('DESTRUCTOR'), ('DETERMINISTIC'), ('DIAGNOSTICS'), ('DICTIONARY'), ('DISCONNECT'), ('DISK'), ('DISTINCT'), ('DISTRIBUTED'), ('DOMAIN'), ('DOUBLE'), ('DROP'), ('DUMMY'), ('DUMP'), ('DYNAMIC') SELECT [schema]+'.'+[ObjName] AS ObjectName FROM ( SELECT s.name [schema], so.name [ObjName], type, type_desc FROM sys.objects AS so WITH (NOLOCK) INNER JOIN sys.schemas AS s WITH (NOLOCK) ON so.schema_id = s.schema_id WHERE so.is_ms_shipped = 0 AND [type] <> 'S') AS ObjNames CROSS JOIN @KeywordTbl WHERE ObjName like '% '+Keyword+' %' COLLATE DATABASE_DEFAULT OR ObjName like '% '+Keyword COLLATE DATABASE_DEFAULT OR ObjName = Keyword COLLATE DATABASE_DEFAULT",
+            "DECLARE @KeywordTbl AS TABLE(Keyword VARCHAR(255)) INSERT INTO @KeywordTbl VALUES ('EACH'), ('ELSE'), ('END'), ('END-EXEC'), ('EQUALS'), ('ERRLVL'), ('ESCAPE'), ('EVERY'), ('EXCEPT'), ('EXCEPTION'), ('EXEC'), ('EXECUTE'), ('EXISTS'), ('EXIT'), ('EXTERNAL'), ('EXTRACT'), ('FALSE'), ('FETCH'), ('FILE'), ('FILLFACTOR'), ('FIRST'), ('FLOAT'), ('FOR'), ('FOREIGN'), ('FORTRAN'), ('FOUND'), ('FREE'), ('FREETEXT'), ('FREETEXTTABLE'), ('FROM'), ('FULL'), ('FULLTEXTTABLE'), ('FUNCTION'), ('GENERAL'), ('GET'), ('GLOBAL'), ('GO'), ('GOTO'), ('GRANT'), ('GROUP'), ('GROUPING'), ('HAVING'), ('HOLDLOCK'), ('HOST'), ('HOUR'), ('IDENTITY'), ('IDENTITY_INSERT'), ('IDENTITYCOL'), ('IF'), ('IGNORE'), ('IMMEDIATE'), ('IN'), ('INCLUDE'), ('INDEX'), ('INDICATOR'), ('INITIALIZE'), ('INITIALLY'), ('INNER'), ('INOUT'), ('INPUT'), ('INSENSITIVE'), ('INSERT'), ('INT'), ('INTEGER'), ('INTERSECT'), ('INTERVAL'), ('INTO'), ('IS'), ('ISOLATION'), ('ITERATE'), ('JOIN'), ('KEY'), ('KILL'), ('LANGUAGE'), ('LARGE'), ('LAST'), ('LATERAL'), ('LEADING'), ('LEFT'), ('LESS'), ('LEVEL'), ('LIKE'), ('LIMIT'), ('LINENO'), ('LOAD'), ('LOCAL'), ('LOCALTIME'), ('LOCALTIMESTAMP'), ('LOCATOR'), ('LOWER'), ('MAP'), ('MATCH'), ('MAX'), ('MIN'), ('MINUTE'), ('MODIFIES'), ('MODIFY'), ('MODULE'), ('MONTH') SELECT [schema]+'.'+[ObjName] AS ObjectName FROM ( SELECT s.name [schema], so.name [ObjName], type, type_desc FROM sys.objects AS so WITH (NOLOCK) INNER JOIN sys.schemas AS s WITH (NOLOCK) ON so.schema_id = s.schema_id WHERE so.is_ms_shipped = 0 AND [type] <> 'S') AS ObjNames CROSS JOIN @KeywordTbl WHERE ObjName like '% '+Keyword+' %' COLLATE DATABASE_DEFAULT OR ObjName like '% '+Keyword COLLATE DATABASE_DEFAULT OR ObjName = Keyword COLLATE DATABASE_DEFAULT",
+            "DECLARE @KeywordTbl AS TABLE(Keyword VARCHAR(255)) INSERT INTO @KeywordTbl VALUES ('NAMES'), ('NATIONAL'), ('NATURAL'), ('NCHAR'), ('NCLOB'), ('NEW'), ('NEXT'), ('NO'), ('NOCHECK'), ('NONCLUSTERED'), ('NONE'), ('NOT'), ('NULL'), ('NULLIF'), ('NUMERIC'), ('OBJECT'), ('OCTET_LENGTH'), ('OF'), ('OFF'), ('OFFSETS'), ('OLD'), ('ON'), ('ONLY'), ('OPEN'), ('OPENDATASOURCE'), ('OPENQUERY'), ('OPENROWSET'), ('OPENXML'), ('OPERATION'), ('OPTION'), ('OR'), ('ORDER'), ('ORDINALITY'), ('OUT'), ('OUTER'), ('OUTPUT'), ('OVER'), ('OVERLAPS'), ('PAD'), ('PARAMETER'), ('PARAMETERS'), ('PARTIAL'), ('PASCAL'), ('PATH'), ('PERCENT'), ('PLAN'), ('POSITION'), ('POSTFIX'), ('PRECISION'), ('PREFIX'), ('PREORDER'), ('PREPARE'), ('PRESERVE'), ('PRIMARY'), ('PRINT'), ('PRIOR'), ('PRIVILEGES'), ('PROC'), ('PROCEDURE'), ('PUBLIC'), ('RAISERROR'), ('READ'), ('READS'), ('READTEXT'), ('REAL'), ('RECONFIGURE'), ('RECURSIVE'), ('REF'), ('REFERENCES'), ('REFERENCING'), ('RELATIVE'), ('REPLICATION'), ('RESTORE'), ('RESTRICT'), ('RESULT'), ('RETURN'), ('RETURNS'), ('REVOKE'), ('RIGHT'), ('ROLE'), ('ROLLBACK'), ('ROLLUP'), ('ROUTINE'), ('ROW'), ('ROWCOUNT'), ('ROWGUIDCOL'), ('ROWS'), ('RULE') SELECT [schema]+'.'+[ObjName] AS ObjectName FROM ( SELECT s.name [schema], so.name [ObjName], type, type_desc FROM sys.objects AS so WITH (NOLOCK) INNER JOIN sys.schemas AS s WITH (NOLOCK) ON so.schema_id = s.schema_id WHERE so.is_ms_shipped = 0 AND [type] <> 'S') AS ObjNames CROSS JOIN @KeywordTbl WHERE ObjName like '% '+Keyword+' %' COLLATE DATABASE_DEFAULT OR ObjName like '% '+Keyword COLLATE DATABASE_DEFAULT OR ObjName = Keyword COLLATE DATABASE_DEFAULT",
+            "DECLARE @KeywordTbl AS TABLE(Keyword VARCHAR(255)) INSERT INTO @KeywordTbl VALUES ('SAVE'), ('SAVEPOINT'), ('SCHEMA'), ('SCOPE'), ('SCROLL'), ('SEARCH'), ('SECOND'), ('SECTION'), ('SELECT'), ('SEQUENCE'), ('SESSION'), ('SESSION_USER'), ('SET'), ('SETS'), ('SETUSER'), ('SHUTDOWN'), ('SIZE'), ('SMALLINT'), ('SOME'), ('SPACE'), ('SPECIFIC'), ('SPECIFICTYPE'), ('SQL'), ('SQLCA'), ('SQLCODE'), ('SQLERROR'), ('SQLEXCEPTION'), ('SQLSTATE'), ('SQLWARNING'), ('START'), ('STATE'), ('STATEMENT'), ('STATIC'), ('STATISTICS'), ('STRUCTURE'), ('SUBSTRING'), ('SUM'), ('SYSTEM_USER'), ('TABLE'), ('TEMPORARY'), ('TERMINATE'), ('TEXTSIZE'), ('THAN'), ('THEN'), ('TIME'), ('TIMESTAMP'), ('TIMEZONE_HOUR'), ('TIMEZONE_MINUTE'), ('TO'), ('TOP'), ('TRAILING'), ('TRAN'), ('TRANSACTION'), ('TRANSLATE'), ('TRANSLATION'), ('TREAT'), ('TRIGGER'), ('TRIM'), ('TRUE'), ('TRUNCATE'), ('UNDER'), ('UNION'), ('UNIQUE'), ('UNKNOWN'), ('UNNEST'), ('UPDATE'), ('UPDATETEXT'), ('UPPER'), ('USAGE'), ('USE'), ('USER'), ('USING'), ('VALUE'), ('VALUES'), ('VARCHAR'), ('VARIABLE'), ('VARYING'), ('VIEW'), ('WAITFOR'), ('WHEN'), ('WHENEVER'), ('WHERE'), ('WHILE'), ('WITH'), ('WITHOUT'), ('WORK'), ('WRITE'), ('WRITETEXT'), ('YEAR'), ('ZONE') SELECT [schema]+'.'+[ObjName] AS ObjectName FROM ( SELECT s.name [schema], so.name [ObjName], type, type_desc FROM sys.objects AS so WITH (NOLOCK) INNER JOIN sys.schemas AS s WITH (NOLOCK) ON so.schema_id = s.schema_id WHERE so.is_ms_shipped = 0 AND [type] <> 'S') AS ObjNames CROSS JOIN @KeywordTbl WHERE ObjName like '% '+Keyword+' %' COLLATE DATABASE_DEFAULT OR ObjName like '% '+Keyword COLLATE DATABASE_DEFAULT OR ObjName = Keyword COLLATE DATABASE_DEFAULT"
           ],
           "transform": {
             "type": "aggregate",
@@ -11611,7 +12519,7 @@
         },
         "implementation": {
           "useDatabase": true,
-          "query": "SELECT ss.[name]+'.'+t.[name]+'.'+i.[name] as IndexName FROM [sys].[indexes] AS i INNER JOIN [sys].[tables] AS t ON t.[object_id]=i.[object_id] INNER JOIN [sys].[schemas] ss ON ss.[schema_id]=t.[schema_id] INNER JOIN [sys].[index_columns] AS sic ON sic.[object_id]=t.[object_id] AND sic.index_id=i.index_id INNER JOIN [sys].[columns] AS sc ON sc.[object_id]=t.[object_id] AND sc.column_id=sic.column_id INNER JOIN [sys].[types] AS sty ON sc.user_type_id=sty.user_type_id WHERE sic.is_included_column=0 AND sty.name='uniqueidentifier' and i.type=1 AND i.is_unique_constraint=0 AND t.is_ms_shipped=0 GROUP BY ss.name,t.[name],i.name HAVING COUNT(sty.name)>0",
+          "query": "SELECT CONCAT(ss.[name], '.', t.[name], '.', i.[name]) AS IndexName FROM [sys].[indexes] AS i WITH (NOLOCK) INNER JOIN [sys].[tables] AS t WITH (NOLOCK) ON t.[object_id] = i.[object_id] INNER JOIN [sys].[schemas] AS ss WITH (NOLOCK) ON ss.[schema_id] = t.[schema_id] INNER JOIN [sys].[index_columns] AS sic WITH (NOLOCK) ON sic.[object_id] = t.[object_id] AND sic.index_id = i.index_id INNER JOIN [sys].[columns] AS sc WITH (NOLOCK) ON sc.[object_id] = t.[object_id] AND sc.column_id = sic.column_id INNER JOIN [sys].[types] AS sty WITH (NOLOCK) ON sc.user_type_id = sty.user_type_id WHERE sic.is_included_column = 0 AND sty.name = 'uniqueidentifier' and i.type = 1 AND i.is_unique_constraint = 0 AND t.is_ms_shipped = 0 GROUP BY ss.name, t.[name], i.name HAVING COUNT(sty.name) > 0",
           "transform": {
             "type": "aggregate",
             "map": {
@@ -11633,7 +12541,7 @@
           "version": "[11.0,)"
         },
         "implementation": {
-          "query": "IF (SELECT COUNT(*) FROM msdb.dbo.suspect_pages WHERE (event_type = 1 OR event_type = 2 OR event_type = 3)) > 0 BEGIN SELECT CASE event_type WHEN 1 THEN 'Error 823 or unspecified Error 824' WHEN 2 THEN 'Bad Checksum' WHEN 3 THEN 'Torn Page' ELSE NULL END AS [EventType] FROM msdb.dbo.suspect_pages (NOLOCK) WHERE (event_type = 1 OR event_type = 2 OR event_type = 3) AND DB_NAME(database_id)=(@TargetName) END;"
+          "query": "IF ( SELECT COUNT(*) FROM msdb.dbo.suspect_pages WITH (NOLOCK) WHERE ( event_type = 1 OR event_type = 2 OR event_type = 3 ) ) > 0 BEGIN SELECT CASE event_type WHEN 1 THEN 'Error 823 or unspecified Error 824' WHEN 2 THEN 'Bad Checksum' WHEN 3 THEN 'Torn Page' ELSE NULL END AS [EventType] FROM msdb.dbo.suspect_pages (NOLOCK) WHERE ( event_type = 1 OR event_type = 2 OR event_type = 3 ) AND DB_NAME(database_id) =(@TargetName) END;"
         }
       }
     ],
@@ -11649,7 +12557,7 @@
           "version": "[11.0,)"
         },
         "implementation": {
-          "query": "IF (SELECT COUNT(sd.database_id) FROM sys.databases sd INNER JOIN sys.master_files smf ON sd.database_id = smf.database_id WHERE sd.source_database_id IS NULL AND smf.is_sparse = 1) > 0 BEGIN SELECT 'Database_checks' AS [Category], 'DB_nonSnap_Sparse' AS [Information], DB_NAME(sd.database_id) AS database_name, smf.name AS [SparseFiles], smf.physical_name FROM sys.databases sd INNER JOIN sys.master_files smf ON sd.database_id = smf.database_id WHERE sd.source_database_id IS NULL AND smf.is_sparse = 1 AND DB_NAME(sd.database_id)=@TargetName END;"
+          "query": "IF ( SELECT COUNT(sd.database_id) FROM sys.databases AS sd WITH (NOLOCK) INNER JOIN sys.master_files AS smf WITH (NOLOCK) ON sd.database_id = smf.database_id WHERE sd.source_database_id IS NULL AND smf.is_sparse = 1 ) > 0 BEGIN SELECT 'Database_checks' AS [Category], 'DB_nonSnap_Sparse' AS [Information], DB_NAME(sd.database_id) AS database_name, smf.name AS [SparseFiles], smf.physical_name FROM sys.databases AS sd WITH (NOLOCK) INNER JOIN sys.master_files AS smf WITH (NOLOCK) ON sd.database_id = smf.database_id WHERE sd.source_database_id IS NULL AND smf.is_sparse = 1 AND DB_NAME(sd.database_id) = @TargetName END;"
         }
       }
     ],
@@ -11689,52 +12597,6 @@
         }
       }
     ],
-    "NullPassword": [
-      {
-        "type": "SQL",
-        "target": {
-          "type": "Server",
-          "platform": [
-            "Windows",
-            "Linux"
-          ],
-          "engineEdition": "SqlServer, ManagedInstance",
-          "version": "[11.0,)"
-        },
-        "implementation": {
-          "query": "SELECT RTRIM(name) AS [PasswordData] FROM master.sys.sql_logins WHERE [password_hash] IS NULL AND name NOT IN ('MSCRMSqlClrLogin','##MS_SmoExtendedSigningCertificate##','##MS_PolicySigningCertificate##','##MS_SQLResourceSigningCertificate##','##MS_SQLReplicationSigningCertificate##','##MS_SQLAuthenticatorCertificate##','##MS_AgentSigningCertificate##','##MS_SQLEnableSystemAssemblyLoadingUser##')",
-          "transform": {
-            "type": "aggregate",
-            "map": {
-              "PasswordData": "join"
-            }
-          }
-        }
-      }
-    ],
-    "NamePassword": [
-      {
-        "type": "SQL",
-        "target": {
-          "type": "Server",
-          "platform": [
-            "Windows",
-            "Linux"
-          ],
-          "engineEdition": "SqlServer, ManagedInstance",
-          "version": "[11.0,)"
-        },
-        "implementation": {
-          "query": "SELECT DISTINCT RTRIM(s.name) AS [PasswordData] FROM master.sys.sql_logins s WHERE PWDCOMPARE(RTRIM(RTRIM(s.name)), s.[password_hash]) = 1",
-          "transform": {
-            "type": "aggregate",
-            "map": {
-              "PasswordData": "join"
-            }
-          }
-        }
-      }
-    ],
     "SystemHealth": [
       {
         "type": "SQL",
@@ -11763,7 +12625,7 @@
           "version": "[11.0,)"
         },
         "implementation": {
-          "query": "SELECT compatibility_level as [CompatibilityLevel] FROM sys.databases where name=@TargetName"
+          "query": "SELECT compatibility_level as [CompatibilityLevel] FROM sys.databases WITH (NOLOCK) where name = @TargetName"
         }
       }
     ],
@@ -11819,7 +12681,7 @@
           "version": "[11.0,)"
         },
         "implementation": {
-          "query": "SELECT CONCAT( sh.[name], '.', o.[name] ) AS FullName, CAST(sp.rows_sampled/(sp.[rows]*1.00) AS DECIMAL(5,2)) AS stat_sampling_rate FROM sys.objects AS o INNER JOIN sys.tables AS mst ON mst.[object_id] = o.[object_id] INNER JOIN sys.stats AS ss ON ss.[object_id] = o.[object_id] INNER JOIN sys.schemas AS sh ON sh.[schema_id] = o.[schema_id] CROSS APPLY sys.dm_db_stats_properties(o.[object_id], ss.[stats_id]) AS sp WHERE sp.[rows] > 0 AND sp.rows_sampled/(sp.[rows]*1.00) < @threshold"
+          "query": "SELECT CONCAT(sh.[name], '.', o.[name]) AS FullName, CAST(sp.rows_sampled /(sp.[rows] * 1.00) AS DECIMAL(5, 2)) AS stat_sampling_rate FROM sys.objects AS o WITH (NOLOCK) INNER JOIN sys.tables AS mst WITH (NOLOCK) ON mst.[object_id] = o.[object_id] INNER JOIN sys.stats AS ss WITH (NOLOCK) ON ss.[object_id] = o.[object_id] INNER JOIN sys.schemas AS sh WITH (NOLOCK) ON sh.[schema_id] = o.[schema_id] CROSS APPLY sys.dm_db_stats_properties(o.[object_id], ss.[stats_id]) AS sp WHERE sp.[rows] > 0 AND sp.rows_sampled /(sp.[rows] * 1.00) < @threshold"
         }
       }
     ],
@@ -11837,7 +12699,7 @@
         "implementation": {
           "useDatabase": true,
           "timeout": 180,
-          "query": "SELECT CASE si.type WHEN 0 THEN CONCAT(t.[name], '.', mst.[name], ' (HEAP)') ELSE CONCAT(t.[name], '.', mst.[name], '.', si.name) END AS IndexFullName, index_stat.fragmentation, index_stat.page_count, si.type AS IndexType FROM sys.indexes si INNER JOIN sys.partitions sp ON si.[object_id] = sp.[object_id] AND si.index_id = sp.index_id INNER JOIN sys.tables AS mst ON mst.[object_id] = si.[object_id] INNER JOIN sys.schemas AS t ON t.[schema_id] = mst.[schema_id] LEFT JOIN ( SELECT ps.database_id, ps.[object_id], ps.index_id, ps.partition_number, SUM(ps.avg_fragmentation_in_percent) AS fragmentation, SUM(ps.page_count) [page_count] FROM sys.dm_db_index_physical_stats(DB_ID(@TargetName), NULL, NULL, NULL, NULL) ps WHERE ps.index_level = 0 AND ps.alloc_unit_type_desc = 'IN_ROW_DATA' GROUP BY ps.database_id, ps.[object_id], ps.index_id, ps.partition_number, ps.record_count, ps.forwarded_record_count ) index_stat on index_stat.[object_id] = si.[object_id] AND index_stat.index_id = si.index_id AND index_stat.[partition_number] = sp.partition_number WHERE mst.is_ms_shipped = 0 AND si.[type] IN (0, 1, 2)"
+          "query": "SELECT CASE i.[type] WHEN 0 THEN CONCAT(SCHEMA_NAME(t.schema_id), '.', t.[name], ' (HEAP)') ELSE CONCAT(SCHEMA_NAME(t.schema_id), '.', t.[name], '.', i.[name]) END AS IndexFullName, stat.fragmentation, stat.page_count, i.[type] AS IndexType FROM sys.indexes AS i WITH (NOLOCK) INNER JOIN sys.tables AS t WITH (NOLOCK) ON t.[object_id] = i.[object_id] AND t.is_ms_shipped = 0 INNER JOIN ( SELECT [object_id], index_id, SUM(ps.avg_fragmentation_in_percent) AS fragmentation, SUM(ps.page_count) AS page_count FROM sys.dm_db_index_physical_stats(DB_ID(), NULL, NULL, NULL, NULL) ps WHERE ps.index_level = 0 AND ps.alloc_unit_type_desc = 'IN_ROW_DATA' GROUP BY [object_id], index_id ) stat ON stat.index_id = i.index_id AND stat.[object_id] = i.[object_id] WHERE i.[type] IN (0, 1, 2)"
         }
       },
       {
@@ -11853,7 +12715,7 @@
         "implementation": {
           "useDatabase": true,
           "timeout": 180,
-          "query": "SELECT CASE si.type WHEN 0 THEN CONCAT(t.[name], '.', mst.[name], ' (HEAP)') ELSE CONCAT(t.[name], '.', mst.[name], '.', si.name) END AS IndexFullName, ISNULL(index_stat.fragmentation, 0) AS fragmentation, ISNULL(index_stat.page_count, 0) AS page_count, ISNULL(index_stat_ci.fragmentation_CI, 0) AS fragmentation_CI, ISNULL(index_stat_ci.state, 0) AS state, si.type AS IndexType FROM sys.indexes si INNER JOIN sys.partitions sp ON si.[object_id] = sp.[object_id] AND si.index_id = sp.index_id INNER JOIN sys.tables AS mst ON mst.[object_id] = si.[object_id] INNER JOIN sys.schemas AS t ON t.[schema_id] = mst.[schema_id] LEFT JOIN ( SELECT ps.database_id, ps.[object_id], ps.index_id, ps.partition_number, SUM(ps.avg_fragmentation_in_percent) AS fragmentation, SUM(ps.page_count) [page_count] FROM sys.dm_db_index_physical_stats(DB_ID(@TargetName), NULL, NULL, NULL, NULL) ps WHERE ps.index_level = 0 AND ps.alloc_unit_type_desc = 'IN_ROW_DATA' GROUP BY ps.database_id, ps.[object_id], ps.index_id, ps.partition_number, ps.record_count, ps.forwarded_record_count ) index_stat on index_stat.[object_id] = si.[object_id] AND index_stat.index_id = si.index_id AND index_stat.[partition_number] = sp.partition_number LEFT JOIN ( SELECT rg.object_id, rg.index_id, rg.partition_number, SUM( (ISNULL(rg.deleted_rows, 1) * 100) /CASE WHEN rg.total_rows = 0 THEN 1 ELSE rg.total_rows END ) AS [fragmentation_CI], rg.[state] FROM sys.column_store_row_groups rg GROUP BY rg.object_id, rg.index_id, rg.partition_number, rg.total_rows, rg.delta_store_hobt_id, rg.row_group_id, rg.state ) index_stat_ci on index_stat_ci.[object_id] = si.[object_id] AND index_stat_ci.index_id = si.index_id AND index_stat_ci.[partition_number] = sp.[partition_number] WHERE mst.is_ms_shipped = 0 AND si.[type] IN (0, 1, 2, 5, 6, 7)"
+          "query": "SELECT CASE i.[type] WHEN 0 THEN CONCAT(SCHEMA_NAME(t.schema_id), '.', t.[name], ' (HEAP)') ELSE CONCAT(SCHEMA_NAME(t.schema_id), '.', t.[name], '.', i.[name]) END AS IndexFullName, stat.fragmentation, stat.page_count, 0 AS fragmentation_CI, 0 AS [state], i.[type] AS IndexType FROM sys.indexes AS i WITH (NOLOCK) INNER JOIN sys.tables AS t WITH (NOLOCK) ON t.[object_id] = i.[object_id] AND t.is_ms_shipped = 0 INNER JOIN ( SELECT [object_id], index_id, SUM(ps.avg_fragmentation_in_percent) AS fragmentation, SUM(ps.page_count) AS page_count FROM sys.dm_db_index_physical_stats(DB_ID(), NULL, NULL, NULL, NULL) ps WHERE ps.index_level = 0 AND ps.alloc_unit_type_desc = 'IN_ROW_DATA' GROUP BY [object_id], index_id ) stat ON stat.index_id = i.index_id AND stat.[object_id] = i.[object_id] WHERE i.[type] IN (0, 1, 2, 7) UNION SELECT CONCAT(SCHEMA_NAME(t.schema_id), '.', t.[name], '.', i.[name]) AS IndexFullName, 0, 0, SUM( (ISNULL(rg.deleted_rows, 1) * 100) /CASE WHEN rg.total_rows = 0 THEN 1 ELSE rg.total_rows END ), rg.[state], i.[type] FROM sys.column_store_row_groups AS rg WITH (NOLOCK) INNER JOIN sys.indexes AS i WITH (NOLOCK) ON i.index_id = rg.index_id and i.[object_id] = rg.[object_id] INNER JOIN sys.tables AS t WITH (NOLOCK) ON t.[object_id] = rg.[object_id] AND t.is_ms_shipped = 0 GROUP BY rg.[object_id], i.[name], t.[name], t.[schema_id], rg.[state], i.[type]"
         }
       }
     ],
@@ -11870,7 +12732,7 @@
         },
         "implementation": {
           "useDatabase": true,
-          "query": "IF NOT EXISTS( SELECT * FROM sys.filegroups where [type] = 'FX' ) RETURN; DECLARE @tmpXIS TABLE( [object_id] int, [schema_name] VARCHAR(100) COLLATE database_default, [table_name] VARCHAR(300) COLLATE database_default, [index_id] int, [index_name] VARCHAR(300) COLLATE database_default, total_bucket_count bigint, empty_bucket_count bigint, avg_chain_length bigint, max_chain_length bigint, KeyCols VARCHAR(4000) COLLATE database_default, DistinctCnt bigint NULL, isdone bit ) INSERT INTO @tmpXIS SELECT xis.[object_id], t.name, o.name, xis.index_id, si.name, xhis.total_bucket_count, xhis.empty_bucket_count, xhis.avg_chain_length, xhis.max_chain_length, SUBSTRING( ( SELECT ',' + ac.name FROM sys.tables AS st INNER JOIN sys.indexes AS i ON st.[object_id] = i.[object_id] INNER JOIN sys.index_columns AS ic ON i.[object_id] = ic.[object_id] AND i.[index_id] = ic.[index_id] INNER JOIN sys.all_columns AS ac ON st.[object_id] = ac.[object_id] AND ic.[column_id] = ac.[column_id] WHERE si.[object_id] = i.[object_id] AND si.index_id = i.index_id AND ic.is_included_column = 0 ORDER BY ic.key_ordinal FOR XML PATH('') ), 2, 8000 ) AS KeyCols, NULL distinctCntOUT, 0 FROM sys.dm_db_xtp_hash_index_stats AS xhis INNER JOIN sys.dm_db_xtp_index_stats AS xis ON xis.[object_id] = xhis.[object_id] AND xis.[index_id] = xhis.[index_id] INNER JOIN sys.indexes AS si (NOLOCK) ON xis.[object_id] = si.[object_id] AND xis.[index_id] = si.[index_id] INNER JOIN sys.objects AS o (NOLOCK) ON si.[object_id] = o.[object_id] INNER JOIN sys.tables AS mst (NOLOCK) ON mst.[object_id] = o.[object_id] INNER JOIN sys.schemas AS t (NOLOCK) ON t.[schema_id] = mst.[schema_id] WHERE o.[type] = 'U' DECLARE @objectid int, @indexid int, @sqlcmd NVARCHAR(4000), @params NVARCHAR(500), @schema_name VARCHAR(100), @table_name VARCHAR(300), @KeyCols VARCHAR(4000), @distinctCnt bigint IF EXISTS ( SELECT TOP 1 [object_id] FROM @tmpXIS WHERE isdone = 0 ) BEGIN WHILE ( SELECT COUNT([object_id]) FROM @tmpXIS WHERE isdone = 0 ) > 0 BEGIN SELECT TOP 1 @objectid = [object_id], @indexid = [index_id], @schema_name = [schema_name], @table_name = [table_name], @KeyCols = KeyCols FROM @tmpXIS WHERE isdone = 0 SELECT @sqlcmd = 'SELECT @distinctCntOUT=COUNT(*) FROM (SELECT DISTINCT ' + @KeyCols + ' FROM ' + @schema_name + '.' + @table_name + ') t1;' EXECUTE sp_executesql @sqlcmd, N'@distinctCntOUT bigint OUTPUT', @distinctCntOUT = @distinctCnt OUTPUT UPDATE @tmpXIS SET DistinctCnt = @distinctCnt, isdone = 1 WHERE [object_id] = @objectid AND [index_id] = @indexid; END; END; SELECT CONCAT([schema_name], '.', table_name, '.', index_name) AS IndexFullName, FLOOR( ( CAST(empty_bucket_count AS FLOAT) / total_bucket_count ) * 100 ) EmptyBucketPct, total_bucket_count, avg_chain_length, DistinctCnt FROM @tmpXIS"
+          "query": "IF NOT EXISTS( SELECT * FROM sys.filegroups where [type] = 'FX' ) RETURN; DECLARE @tmpXIS TABLE( [object_id] int, [schema_name] VARCHAR(100) COLLATE database_default, [table_name] VARCHAR(300) COLLATE database_default, [index_id] int, [index_name] VARCHAR(300) COLLATE database_default, total_bucket_count bigint, empty_bucket_count bigint, avg_chain_length bigint, max_chain_length bigint, KeyCols VARCHAR(4000) COLLATE database_default, DistinctCnt bigint NULL, isdone bit ) INSERT INTO @tmpXIS SELECT xis.[object_id], t.name, o.name, xis.index_id, si.name, xhis.total_bucket_count, xhis.empty_bucket_count, xhis.avg_chain_length, xhis.max_chain_length, SUBSTRING( ( SELECT ',' + ac.name FROM sys.tables AS st WITH (NOLOCK) INNER JOIN sys.indexes AS i WITH (NOLOCK) ON st.[object_id] = i.[object_id] INNER JOIN sys.index_columns AS ic WITH (NOLOCK) ON i.[object_id] = ic.[object_id] AND i.[index_id] = ic.[index_id] INNER JOIN sys.all_columns AS ac WITH (NOLOCK) ON st.[object_id] = ac.[object_id] AND ic.[column_id] = ac.[column_id] WHERE si.[object_id] = i.[object_id] AND si.index_id = i.index_id AND ic.is_included_column = 0 ORDER BY ic.key_ordinal FOR XML PATH('') ), 2, 8000 ) AS KeyCols, NULL distinctCntOUT, 0 FROM sys.dm_db_xtp_hash_index_stats AS xhis INNER JOIN sys.dm_db_xtp_index_stats AS xis ON xis.[object_id] = xhis.[object_id] AND xis.[index_id] = xhis.[index_id] INNER JOIN sys.indexes AS si (NOLOCK) ON xis.[object_id] = si.[object_id] AND xis.[index_id] = si.[index_id] INNER JOIN sys.objects AS o (NOLOCK) ON si.[object_id] = o.[object_id] INNER JOIN sys.tables AS mst (NOLOCK) ON mst.[object_id] = o.[object_id] INNER JOIN sys.schemas AS t (NOLOCK) ON t.[schema_id] = mst.[schema_id] WHERE o.[type] = 'U' DECLARE @objectid int, @indexid int, @sqlcmd NVARCHAR(4000), @params NVARCHAR(500), @schema_name VARCHAR(100), @table_name VARCHAR(300), @KeyCols VARCHAR(4000), @distinctCnt bigint IF EXISTS ( SELECT TOP 1 [object_id] FROM @tmpXIS WHERE isdone = 0 ) BEGIN WHILE ( SELECT COUNT([object_id]) FROM @tmpXIS WHERE isdone = 0 ) > 0 BEGIN SELECT TOP 1 @objectid = [object_id], @indexid = [index_id], @schema_name = [schema_name], @table_name = [table_name], @KeyCols = KeyCols FROM @tmpXIS WHERE isdone = 0 SELECT @sqlcmd = 'SELECT @distinctCntOUT=COUNT(*) FROM (SELECT DISTINCT ' + @KeyCols + ' FROM ' + @schema_name + '.' + @table_name + ') t1;' EXECUTE sp_executesql @sqlcmd, N'@distinctCntOUT bigint OUTPUT', @distinctCntOUT = @distinctCnt OUTPUT UPDATE @tmpXIS SET DistinctCnt = @distinctCnt, isdone = 1 WHERE [object_id] = @objectid AND [index_id] = @indexid; END; END; SELECT CONCAT([schema_name], '.', table_name, '.', index_name) AS IndexFullName, FLOOR( ( CAST(empty_bucket_count AS FLOAT) / total_bucket_count ) * 100 ) EmptyBucketPct, total_bucket_count, avg_chain_length, DistinctCnt FROM @tmpXIS"
         }
       }
     ],
@@ -11966,7 +12828,7 @@
         },
         "implementation": {
           "useDatabase": true,
-          "query": "SELECT DISTINCT CONCAT(t.name,'.',OBJECT_NAME(mst.[object_id])) AS [TableName],ss.name AS [StatName],sp.[rows],sp.modification_counter,sp.rows_sampled FROM sys.objects AS o INNER JOIN sys.tables AS mst ON mst.[object_id]=o.[object_id] INNER JOIN sys.schemas AS t ON t.[schema_id]=mst.[schema_id] INNER JOIN sys.stats AS ss ON ss.[object_id]=mst.[object_id] CROSS APPLY sys.dm_db_stats_properties(ss.[object_id],ss.[stats_id]) AS sp WHERE sp.[rows]>0"
+          "query": "SELECT DISTINCT CONCAT(t.name, '.', OBJECT_NAME(mst.[object_id])) AS [TableName], ss.name AS [StatName], sp.[rows], sp.modification_counter, sp.rows_sampled FROM sys.objects AS o WITH (NOLOCK) INNER JOIN sys.tables AS mst WITH (NOLOCK) ON mst.[object_id] = o.[object_id] INNER JOIN sys.schemas AS t WITH (NOLOCK) ON t.[schema_id] = mst.[schema_id] INNER JOIN sys.stats AS ss WITH (NOLOCK) ON ss.[object_id] = mst.[object_id] CROSS APPLY sys.dm_db_stats_properties(ss.[object_id], ss.[stats_id]) AS sp WHERE sp.[rows] > 0"
         }
       },
       {
@@ -11981,7 +12843,7 @@
         },
         "implementation": {
           "useDatabase": true,
-          "query": "SELECT DISTINCT CONCAT(t.name, '.', OBJECT_NAME(mst.[object_id])) AS [TableName], ss.name AS [StatName], SUM(p.[rows]) AS [rows], si.rowmodctr AS modification_counter, 0 AS rows_sampled FROM sys.sysindexes AS si INNER JOIN sys.objects AS o ON si.id = o.[object_id] INNER JOIN sys.tables AS mst ON mst.[object_id] = o.[object_id] INNER JOIN sys.schemas AS t ON t.[schema_id] = mst.[schema_id] INNER JOIN sys.stats AS ss ON ss.[object_id] = o.[object_id] INNER JOIN sys.partitions AS p ON p.[object_id] = ss.[object_id] LEFT JOIN sys.indexes i ON si.id = i.[object_id] AND si.indid = i.index_id WHERE o.type <> 'S' AND i.name IS NOT NULL GROUP BY mst.[object_id], t.name, rowmodctr, ss.name HAVING SUM(p.[rows]) > 0"
+          "query": "SELECT DISTINCT CONCAT(t.name, '.', OBJECT_NAME(mst.[object_id])) AS [TableName], ss.name AS [StatName], SUM(p.[rows]) AS [rows], si.rowmodctr AS modification_counter, 0 AS rows_sampled FROM sys.sysindexes AS si WITH (NOLOCK) INNER JOIN sys.objects AS o WITH (NOLOCK) ON si.id = o.[object_id] INNER JOIN sys.tables AS mst WITH (NOLOCK) ON mst.[object_id] = o.[object_id] INNER JOIN sys.schemas AS t WITH (NOLOCK) ON t.[schema_id] = mst.[schema_id] INNER JOIN sys.stats AS ss WITH (NOLOCK) ON ss.[object_id] = o.[object_id] INNER JOIN sys.partitions AS p WITH (NOLOCK) ON p.[object_id] = ss.[object_id] LEFT JOIN sys.indexes i WITH (NOLOCK) ON si.id = i.[object_id] AND si.indid = i.index_id WHERE o.type <> 'S' AND i.name IS NOT NULL GROUP BY mst.[object_id], t.name, rowmodctr, ss.name HAVING SUM(p.[rows]) > 0"
         }
       }
     ],
@@ -12104,7 +12966,7 @@
         "type": "SQL",
         "target": {
           "type": "Server",
-          "engineEdition": "SqlServer",
+          "engineEdition": "SqlServer, ManagedInstance",
           "platform": [
             "Windows",
             "Linux"
@@ -12458,7 +13320,7 @@
           "version": "[11.0,)"
         },
         "implementation": {
-          "query": "SELECT DISTINCT CASE WHEN LEFT(physical_name, 1)= '\\' THEN LEFT(physical_name, charindex('\\',physical_name,5)) ELSE LEFT(physical_name,3) END AS [masterFilesVolumeName] FROM sys.master_files WHERE [database_id] <> 32767;"
+          "query": "SELECT DISTINCT CASE WHEN LEFT(physical_name, 1)= '\\' THEN LEFT(physical_name, charindex('\\',physical_name,5)) ELSE LEFT(physical_name,3) END AS [masterFilesVolumeName] FROM sys.master_files WITH (NOLOCK) WHERE [database_id] <> 32767;"
         }
       }
     ],
@@ -12476,6 +13338,114 @@
         },
         "implementation": {
           "query": "SELECT (SUM(runnable_tasks_count) / COUNT(scheduler_id)) AS [overall_runnable_tasks_count], SUM(work_queue_count) AS [schedulers_work_queue_count] FROM sys.dm_os_schedulers WHERE parent_node_id < 64 AND scheduler_id < 255"
+        }
+      }
+    ],
+    "AGConfiguration": [
+      {
+        "type": "SQL",
+        "target": {
+          "type": "Server",
+          "platform": [
+            "Windows",
+            "Linux"
+          ],
+          "engineEdition": "SqlServer",
+          "version": "[11.0, 13.0)"
+        },
+        "runFor": {
+          "feature": [
+            "HADR"
+          ]
+        },
+        "implementation": {
+          "query": "SELECT ag.group_id AS ag_id, ag.[name] AS ag_name, ar.replica_id, ar.replica_server_name AS ag_replica_server, ar_state.is_local AS is_ag_replica_local, ar.availability_mode, ar.availability_mode_desc, ar.failover_mode, ar.failover_mode_desc, ar_state.[role] AS ag_replica_role, ar_state.role_desc AS ag_replica_role_desc, ar_state.operational_state AS ag_replica_operational_state, ISNULL(ar_state.operational_state_desc, 'UNKNOWN') AS ag_replica_operational_state_desc, ar_state.connected_state AS ag_replica_connected_state, ar_state.synchronization_health AS ag_replica_synchronization_health, ar.secondary_role_allow_connections, ar.secondary_role_allow_connections_desc, avg_state.primary_recovery_health, avg_state.primary_recovery_health_desc, avg_state.synchronization_health, avg_state.synchronization_health_desc, ar.backup_priority, ag.automated_backup_preference, ag.automated_backup_preference_desc, ag.failure_condition_level, ag.health_check_timeout, ar.session_timeout, ar.endpoint_url, CASE WHEN loc_r.replica_id IS NOT NULL THEN 1 ELSE 0 END AS is_on_primary_replica, 0 AS is_distributed FROM sys.availability_groups AS ag WITH (NOLOCK) INNER JOIN sys.availability_replicas AS ar WITH (NOLOCK) ON ag.group_id = ar.group_id INNER JOIN sys.dm_hadr_availability_replica_states AS ar_state WITH (NOLOCK) ON ar.replica_id = ar_state.replica_id INNER JOIN sys.dm_hadr_availability_group_states AS avg_state WITH (NOLOCK) ON avg_state.group_id = ag.group_id LEFT JOIN sys.dm_hadr_availability_replica_states AS loc_r WITH (NOLOCK) ON loc_r.is_local = 1 AND loc_r.[role] = 1 AND loc_r.group_id = ag.group_id"
+        }
+      },
+      {
+        "type": "SQL",
+        "target": {
+          "type": "Server",
+          "platform": [
+            "Windows",
+            "Linux"
+          ],
+          "engineEdition": "SqlServer",
+          "version": "[13.0,)"
+        },
+        "runFor": {
+          "feature": [
+            "HADR"
+          ]
+        },
+        "implementation": {
+          "query": "SELECT ag.group_id AS ag_id, ag.[name] AS ag_name, ar.replica_id, ar.replica_server_name AS ag_replica_server, ar_state.is_local AS is_ag_replica_local, ar.availability_mode, ar.availability_mode_desc, ar.failover_mode, ar.failover_mode_desc, ar_state.[role] AS ag_replica_role, ar_state.role_desc AS ag_replica_role_desc, ar_state.operational_state AS ag_replica_operational_state, ISNULL(ar_state.operational_state_desc, 'UNKNOWN') AS ag_replica_operational_state_desc, ar_state.connected_state AS ag_replica_connected_state, ar_state.synchronization_health AS ag_replica_synchronization_health, ar.secondary_role_allow_connections, ar.secondary_role_allow_connections_desc, avg_state.primary_recovery_health, avg_state.primary_recovery_health_desc, avg_state.synchronization_health, avg_state.synchronization_health_desc, ar.backup_priority, ag.automated_backup_preference, ag.automated_backup_preference_desc, ag.failure_condition_level, ag.health_check_timeout, ar.session_timeout, ar.endpoint_url, CASE WHEN loc_r.replica_id IS NOT NULL THEN 1 ELSE 0 END AS is_on_primary_replica, ag.is_distributed FROM sys.availability_groups AS ag WITH (NOLOCK) INNER JOIN sys.availability_replicas AS ar WITH (NOLOCK) ON ag.group_id = ar.group_id INNER JOIN sys.dm_hadr_availability_replica_states AS ar_state WITH (NOLOCK) ON ar.replica_id = ar_state.replica_id INNER JOIN sys.dm_hadr_availability_group_states AS avg_state WITH (NOLOCK) ON avg_state.group_id = ag.group_id LEFT JOIN sys.dm_hadr_availability_replica_states AS loc_r WITH (NOLOCK) ON loc_r.is_local = 1 AND loc_r.[role] = 1 AND loc_r.group_id = ag.group_id"
+        }
+      }
+    ],
+    "AGDatabases": [
+      {
+        "type": "SQL",
+        "target": {
+          "type": "Server",
+          "platform": [
+            "Windows",
+            "Linux"
+          ],
+          "engineEdition": "SqlServer",
+          "version": "[11.0,)"
+        },
+        "runFor": {
+          "feature": [
+            "HADR"
+          ]
+        },
+        "implementation": {
+          "query": "SELECT d.database_id, DB_NAME(d.database_id) AS databaseName, d.group_id AS ag_id, d.replica_id, d.synchronization_state, d.synchronization_state_desc, d.synchronization_health, d.synchronization_health_desc, d.database_state, d.database_state_desc, rcs.is_database_joined, rcs.is_failover_ready, rcs.is_pending_secondary_suspend FROM sys.dm_hadr_database_replica_states AS d WITH (NOLOCK) INNER JOIN sys.dm_hadr_database_replica_cluster_states AS rcs WITH (NOLOCK) ON rcs.replica_id = d.replica_id AND rcs.group_database_id = d.group_database_id"
+        }
+      }
+    ],
+    "AGEndpoints": [
+      {
+        "type": "SQL",
+        "target": {
+          "type": "Server",
+          "platform": [
+            "Windows",
+            "Linux"
+          ],
+          "engineEdition": "SqlServer",
+          "version": "[11.0,)"
+        },
+        "runFor": {
+          "feature": [
+            "HADR"
+          ]
+        },
+        "implementation": {
+          "query": "SELECT [name] AS endpoint_name, is_encryption_enabled, encryption_algorithm, encryption_algorithm_desc FROM sys.database_mirroring_endpoints"
+        }
+      }
+    ],
+    "AGListener": [
+      {
+        "type": "SQL",
+        "target": {
+          "type": "Server",
+          "platform": [
+            "Windows",
+            "Linux"
+          ],
+          "engineEdition": "SqlServer",
+          "version": "[11.0,)"
+        },
+        "runFor": {
+          "feature": [
+            "HADR"
+          ]
+        },
+        "implementation": {
+          "query": "SELECT ag.group_id, agl.listener_id, dns_name, ip_address, ip_subnet_mask, network_subnet_ip, is_dhcp FROM sys.availability_groups AS ag INNER JOIN sys.availability_group_listeners AS agl ON ag.group_id = agl.group_id INNER JOIN sys.availability_group_listener_ip_addresses AS aglip ON aglip.listener_id = agl.listener_id"
         }
       }
     ],
@@ -12524,33 +13494,7 @@
           "version": "[11.0,)"
         },
         "implementation": {
-          "query": "SELECT N'msdb..backupfile' AS table_name, COUNT(*) AS row_count FROM msdb..backupfile UNION SELECT N'msdb..backupmediafamily', COUNT(*) FROM msdb..backupmediafamily UNION SELECT N'msdb..backupmediaset', COUNT(*) FROM msdb..backupmediaset UNION SELECT N'msdb..backupset', COUNT(*) FROM msdb..backupset UNION SELECT N'msdb..restorefile', COUNT(*) FROM msdb..restorefile UNION SELECT N'msdb..restorefilegroup', COUNT(*) FROM msdb..restorefilegroup UNION SELECT N'msdb..restorehistory', COUNT(*) FROM msdb..restorehistory"
-        }
-      }
-    ],
-    "DatabaseFilesLocation": [
-      {
-        "type": "SQL",
-        "target": {
-          "type": "Server",
-          "platform": "Windows",
-          "engineEdition": "SqlServer, ManagedInstance",
-          "version": "[11.0,)"
-        },
-        "implementation": {
-          "query": "SELECT DISTINCT volume_mount_point ,volume_id FROM [sys].[master_files] AS mf INNER JOIN [sys].[databases] AS dbs ON mf.database_id = dbs.database_id CROSS APPLY sys.dm_os_volume_stats(mf.database_id, mf.file_id) WHERE mf.[type] = ISNULL(@type, mf.[type])"
-        }
-      },
-      {
-        "type": "SQL",
-        "target": {
-          "type": "Database",
-          "platform": "Windows",
-          "engineEdition": "SqlServer, ManagedInstance",
-          "version": "[11.0,)"
-        },
-        "implementation": {
-          "query": "SELECT DISTINCT volume_mount_point ,volume_id FROM [sys].[master_files] AS mf INNER JOIN [sys].[databases] AS dbs ON mf.database_id = dbs.database_id CROSS APPLY sys.dm_os_volume_stats(mf.database_id, mf.file_id) WHERE mf.[type] = ISNULL(@type, mf.[type]) AND dbs.name = @TargetName"
+          "query": "SELECT N'msdb..backupfile' AS table_name, COUNT(*) AS row_count FROM msdb..backupfile WITH (NOLOCK) UNION SELECT N'msdb..backupmediafamily', COUNT(*) FROM msdb..backupmediafamily WITH (NOLOCK) UNION SELECT N'msdb..backupmediaset', COUNT(*) FROM msdb..backupmediaset WITH (NOLOCK) UNION SELECT N'msdb..backupset', COUNT(*) FROM msdb..backupset WITH (NOLOCK) UNION SELECT N'msdb..restorefile', COUNT(*) FROM msdb..restorefile WITH (NOLOCK) UNION SELECT N'msdb..restorefilegroup', COUNT(*) FROM msdb..restorefilegroup WITH (NOLOCK) UNION SELECT N'msdb..restorehistory', COUNT(*) FROM msdb..restorehistory WITH (NOLOCK)"
         }
       }
     ],
@@ -12567,7 +13511,50 @@
           "version": "[11.0,)"
         },
         "implementation": {
-          "query": "SELECT MIN(compatibility_level) as min_compatibility_level, MAX(compatibility_level) as max_compatibility_level FROM sys.databases"
+          "query": "SELECT MIN(compatibility_level) as min_compatibility_level, MAX(compatibility_level) as max_compatibility_level FROM sys.databases WITH (NOLOCK)"
+        }
+      }
+    ],
+    "DatabaseSharedVolumes": [
+      {
+        "type": "SQL",
+        "target": {
+          "type": "Server",
+          "platform": "Windows",
+          "engineEdition": "SqlServer",
+          "version": "[11.0,)"
+        },
+        "implementation": {
+          "query": "WITH master_volumes AS ( SELECT DISTINCT mf.database_id ,dbs.[name] AS [database_name] ,CASE WHEN dbs.[name] IN ( 'master' ,'model' ,'msdb' ,'tempdb' ) THEN 1 ELSE dbs.is_distributor END AS is_system_database ,volume_id ,volume_mount_point FROM sys.master_files AS mf WITH (NOLOCK) INNER JOIN sys.databases AS dbs WITH (NOLOCK) ON mf.database_id = dbs.database_id CROSS APPLY sys.dm_os_volume_stats(mf.database_id, mf.file_id) WHERE ISNULL(volume_id, '') <> '' ) SELECT dbs.* FROM master_volumes AS dbs WITH (NOLOCK) INNER JOIN master_volumes AS db WITH (NOLOCK) ON db.volume_id = dbs.volume_id AND db.database_id = @dbId AND db.database_id <> dbs.database_id AND dbs.is_system_database = ISNULL(@is_system_database, dbs.is_system_database)"
+        }
+      },
+      {
+        "type": "SQL",
+        "target": {
+          "type": "Database",
+          "platform": "Windows",
+          "engineEdition": "SqlServer",
+          "version": "[11.0,)"
+        },
+        "implementation": {
+          "query": "WITH master_volumes AS ( SELECT DISTINCT mf.database_id ,dbs.[name] AS [database_name] ,CASE WHEN dbs.[name] IN ( 'master' ,'model' ,'msdb' ,'tempdb' ) THEN 1 ELSE dbs.is_distributor END AS is_system_database ,volume_id ,volume_mount_point FROM sys.master_files AS mf WITH (NOLOCK) INNER JOIN sys.databases AS dbs WITH (NOLOCK) ON mf.database_id = dbs.database_id CROSS APPLY sys.dm_os_volume_stats(mf.database_id, mf.file_id) WHERE ISNULL(volume_id, '') <> '' ) SELECT dbs.* FROM master_volumes AS dbs WITH (NOLOCK) INNER JOIN master_volumes AS db WITH (NOLOCK) ON db.volume_id = dbs.volume_id AND db.[database_name] = @TargetName AND db.database_id <> dbs.database_id AND dbs.is_system_database = ISNULL(@is_system_database, dbs.is_system_database)"
+        }
+      }
+    ],
+    "DatabasesState": [
+      {
+        "type": "SQL",
+        "target": {
+          "type": "Server",
+          "platform": [
+            "Windows",
+            "Linux"
+          ],
+          "engineEdition": "SqlServer, ManagedInstance",
+          "version": "[11.0,)"
+        },
+        "implementation": {
+          "query": "SELECT db.name as DbName, db.source_database_id, db.[state] AS DbState, db.state_desc AS DbStateDesc, db.recovery_model, db.is_in_standby FROM [sys].[databases] (NOLOCK) AS db"
         }
       }
     ],
@@ -12654,7 +13641,7 @@
           "machineType": "AzureVm"
         },
         "implementation": {
-          "query": "Resources\n    | where type =~ 'Microsoft.Compute/virtualMachines'\n    | where properties.vmId =~ @vmId\n    | project resourceId = id\n    | take 1"
+          "query": "Resources\r\n    | where type =~ 'Microsoft.Compute/virtualMachines'\r\n    | where properties.vmId =~ @vmId\r\n    | project resourceId = id\r\n    | take 1"
         }
       }
     ],
@@ -12709,7 +13696,7 @@
           "version": "[11.0,)"
         },
         "implementation": {
-          "query": "SELECT SERVERPROPERTY('IsClustered') AS is_clustered_server ,SERVERPROPERTY('ErrorLogFileName') AS error_log_file_path"
+          "query": "SELECT SERVERPROPERTY('IsClustered') AS is_clustered_server ,SERVERPROPERTY('IsIntegratedSecurityOnly') AS is_integrated_security_only ,SERVERPROPERTY('ErrorLogFileName') AS error_log_file_path ,SERVERPROPERTY('Edition') AS [edition] ,CASE WHEN CAST(SERVERPROPERTY('Edition') AS NVARCHAR(128)) LIKE '%(64-bit)' THEN 64 ELSE 32 END AS [architecture]"
         }
       }
     ],
@@ -12741,7 +13728,7 @@
         },
         "implementation": {
           "useDatabase": true,
-          "query": "SELECT o.[type], o.[type_desc], SUM(total_pages) AS TotalPages, SUM( CASE data_compression_desc WHEN 'NONE' THEN 0 ELSE total_pages END ) AS CompressedPages FROM sys.allocation_units au INNER JOIN sys.[partitions] p ON p.[partition_id] = au.container_id INNER JOIN sys.objects o ON o.[object_id] = p.[object_id] WHERE o.[type] = @type GROUP BY o.[type], o.[type_desc]"
+          "query": "SELECT o.[type], o.[type_desc], SUM(total_pages) AS TotalPages, SUM( CASE data_compression_desc WHEN 'NONE' THEN 0 ELSE total_pages END ) AS CompressedPages FROM sys.allocation_units AS au WITH (NOLOCK) INNER JOIN sys.[partitions] AS p WITH (NOLOCK) ON p.[partition_id] = au.container_id INNER JOIN sys.objects AS o WITH (NOLOCK) ON o.[object_id] = p.[object_id] WHERE o.[type] = @type GROUP BY o.[type], o.[type_desc]"
         }
       }
     ],
@@ -12758,7 +13745,7 @@
           "version": "[11.0,)"
         },
         "implementation": {
-          "query": "SELECT S.[name] AS [schema_name], P.[name] AS sp_name FROM [master].sys.procedures P INNER JOIN [master].sys.schemas S ON P.[schema_id] = S.[schema_id] WHERE is_ms_shipped = 0 AND is_auto_executed = 1"
+          "query": "SELECT S.[name] AS [schema_name], P.[name] AS sp_name FROM [master].sys.procedures AS P WITH (NOLOCK) INNER JOIN [master].sys.schemas AS S WITH (NOLOCK) ON P.[schema_id] = S.[schema_id] WHERE is_ms_shipped = 0 AND is_auto_executed = 1"
         }
       }
     ],
@@ -12775,7 +13762,42 @@
           "version": "[11.0,)"
         },
         "implementation": {
-          "query": "SELECT sp.principal_id, sp.default_database_name FROM [sys].[server_principals] AS sp INNER JOIN [sys].[server_role_members] AS srm ON sp.principal_id = srm.member_principal_id WHERE sp.is_disabled = 0 AND srm.role_principal_id = 3 AND sp.default_database_name != 'master' COLLATE DATABASE_DEFAULT"
+          "query": "SELECT sp.principal_id, sp.default_database_name FROM [sys].[server_principals] AS sp WITH (NOLOCK) INNER JOIN [sys].[server_role_members] AS srm WITH (NOLOCK) ON sp.principal_id = srm.member_principal_id WHERE sp.is_disabled = 0 AND srm.role_principal_id = 3 AND sp.default_database_name != 'master' COLLATE DATABASE_DEFAULT"
+        }
+      }
+    ],
+    "SysFullTextLanguages": [
+      {
+        "type": "SQL",
+        "target": {
+          "type": "Server",
+          "engineEdition": "SqlServer, ManagedInstance",
+          "platform": [
+            "Windows",
+            "Linux"
+          ],
+          "version": "[11.0,)"
+        },
+        "implementation": {
+          "query": "SELECT [lcid], [name] FROM sys.fulltext_languages WITH(NOLOCK)"
+        }
+      }
+    ],
+    "TablesInformation": [
+      {
+        "type": "SQL",
+        "target": {
+          "type": "Database",
+          "platform": [
+            "Windows",
+            "Linux"
+          ],
+          "engineEdition": "SqlServer, ManagedInstance",
+          "version": "[11.0,)"
+        },
+        "implementation": {
+          "useDatabase": true,
+          "query": "SELECT QUOTENAME(SCHEMA_NAME(so.schema_id)) AS SchemaName, QUOTENAME(so.name) AS TableName, COUNT(*) ColumnCount, idx.IndexCount, idx.FilteredIndexCount FROM sys.objects so (NOLOCK) INNER JOIN sys.columns cols (NOLOCK) ON cols.object_id = so.object_id INNER JOIN ( SELECT si.object_id, CASE MIN(si.index_id) WHEN 0 THEN COUNT(si.index_id) - 1 ELSE COUNT(si.index_id) END AS IndexCount, COUNT(si.filter_definition) AS FilteredIndexCount FROM sys.indexes si (NOLOCK) WHERE si.is_hypothetical = 0 GROUP BY si.object_id ) idx ON idx.object_id = so.object_id LEFT JOIN ( SELECT major_id FROM sys.extended_properties (NOLOCK) WHERE [name] = N'microsoft_database_tools_support' ) X ON X.major_id = so.object_id WHERE so.type in ('U','V') AND so.is_ms_shipped = 0 AND X.major_id IS NULL GROUP BY so.schema_id, so.name, idx.IndexCount, idx.FilteredIndexCount"
         }
       }
     ],
@@ -12793,7 +13815,7 @@
         },
         "implementation": {
           "useDatabase": true,
-          "query": "SELECT TOP (CAST(@topN AS INT)) QUOTENAME(OBJECT_SCHEMA_NAME(t.[object_id])) + '.' + QUOTENAME(t.Name) + CASE WHEN i.name IS NULL THEN '' ELSE '.' + QUOTENAME(i.name) END AS IndexName, SUM(a.total_pages) as TotalIndexPages, SUM( CASE p.data_compression_desc WHEN 'NONE' THEN a.total_pages ELSE 0 END ) as TotalIndexUnCompressedPages FROM sys.tables t INNER JOIN sys.[indexes] i ON t.[object_id] = i.[object_id] INNER JOIN sys.[partitions] p ON p.[object_id] = i.[object_id] and i.[index_id] = p.[index_id] INNER JOIN sys.allocation_units a ON p.[partition_id] = a.[container_id] WHERE t.is_ms_shipped = 0 GROUP BY t.name, t.[object_id], i.name ORDER BY TotalIndexUnCompressedPages DESC"
+          "query": "SELECT TOP (CAST(@topN AS INT)) QUOTENAME(OBJECT_SCHEMA_NAME(t.[object_id])) + '.' + QUOTENAME(t.Name) + CASE WHEN i.name IS NULL THEN '' ELSE '.' + QUOTENAME(i.name) END AS ObjectName, CASE WHEN p.index_id > 0 THEN 1 ELSE 0 END AS ObjectType, SUM(a.total_pages) as TotalIndexPages, SUM( CASE p.data_compression_desc WHEN 'NONE' THEN a.total_pages ELSE 0 END ) as TotalIndexUnCompressedPages FROM sys.[tables] AS t WITH (NOLOCK) INNER JOIN sys.[indexes] AS i WITH (NOLOCK) ON t.[object_id] = i.[object_id] INNER JOIN sys.[partitions] AS p WITH (NOLOCK) ON p.[object_id] = i.[object_id] AND i.[index_id] = p.[index_id] INNER JOIN sys.[allocation_units] AS a WITH (NOLOCK) ON p.[partition_id] = a.[container_id] WHERE t.is_ms_shipped = 0 GROUP BY t.name, t.[object_id], i.name, p.index_id ORDER BY TotalIndexUnCompressedPages DESC"
         }
       }
     ]

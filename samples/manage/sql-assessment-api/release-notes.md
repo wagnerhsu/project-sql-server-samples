@@ -14,6 +14,86 @@ Download: [SMO NuGet Package](https://www.nuget.org/packages/Microsoft.SqlServer
 
 You can use GitHub issues to provide feedback to the product team.
 
+## July 2022 - 1.1.9
+
+Version: SqlServer PowerShell module, SqlManagementObjects (SMO) package: not updated
+
+### What's new
+
+- New rules:
+  - Access check cache options ratio
+  - Availability group listener network mode
+  - Availability group failure-condition level
+  - Availability group health check timeout
+  - Availability replica connection state
+  - Availability replica synchronization health
+  - Availability database automatic failover readiness
+  - Availability database joined state
+  - Azure data disk striping
+  - Database mirroring endpoint encryption
+  - Database with unavailable state
+  - Maximum number of Availability Groups
+  - Not supported value for 'default full-text language' option
+  - Non-default values for access check cache options
+  - Option 'disallow results from triggers' is disabled
+  - Setting 'Autogrow' for data files
+  - Tables with more indexes than columns
+  - TempDb and user databases should not share volumes
+- New Probes:
+  - AGConfiguration
+  - AGDatabases
+  - AGEndpoints
+  - AGListener
+  - DatabaseSharedVolumes
+  - DatabasesState
+  - SysFullTextLanguages
+  - TablesInformation
+- Added 'MaxCheckResults' configuration option to limit assessment output
+
+### Bug fixes and improvements
+
+- The following rules are not run for Linux targets now:
+  - Indexes keys with more than @{threshold} bytes
+  - MAXDOP set in accordance with CPU count
+  - 'STRelate' and 'STAsBinary' functions unexpected results due to TF 6533
+  - TF 4199 enables query optimizer fixes
+  - TF 6532 enables performance improvements for spatial data
+  - TF 8015 disables auto-detection and NUMA setup
+  - TF 8744 disables pre-fetching for Nested Loop operator
+  - TF 9347 disables batch mode for sort operator
+  - TF 9349 disables batch mode for top N sort operator
+  - TF 9389 enables dynamic memory grant for batch mode operators
+  - TF 9476 causes SQL Server to generate plan using Simple Containment assumption
+  - TF 9481 enables Legacy CE model
+- Improved performance of idex related probes and checks
+- Improved performance of other probes
+- Affinity 64 and Affinity 64 IO masks are checked on 64-bit platforms only
+- Instant File Initialization check is not run for SQL Server 2016 without service packs
+- Fixed requirements processing for checks
+- 'Max allowed memory' and 'Max server memory exceeds system memory' checks are not run for SQL Server Managed Instance now
+- Updated 'Latest cumulative update' check
+- 'Stored procedure naming' check severity changed to Low
+- 'Uncompressed database tables and indexes' gives more details in the message
+- 'SQL logins have weak passwords' now checks for empty passwords and password equal to login
+- Non-default value for 'common criteria compliance enabled' option
+- Option 'backup compression default' is disabled
+- Replaced DatabaseFileLocation probe with DatabaseMasterFiles in the following rules:
+  - Azure disk caching for data files
+  - Azure disk caching for transaction logs
+  - Data files on Azure data disks
+  - Storage spaces disk column count
+  - Tempdb files on Azure temp drive
+  - Use premium SSDs for SQL Server data files
+- Improved probes
+  - OsSysMemory
+  - ServerProperties
+  - TopUncompressedTables
+  - ServerProperties
+  - WeakPassword
+- Removed rules:
+  - LoginEqPassword
+  - LoginNoPassword
+
 ## December 2021 - 1.1.0
 
 Version: SqlServer PowerShell module, SqlManagementObjects (SMO) package: not updated
