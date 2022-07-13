@@ -24,13 +24,13 @@ SELECT @hash = hash
 FROM sys.trusted_assemblies ta
 WHERE ta.description = N'SqlClrCurl'
 
-EXEC sp_drop_trusted_assembly @hash;
+if (@hash is not null)
+	EXEC sp_drop_trusted_assembly @hash;
 GO
 
 --Drop the assembly if it already exists
 DROP ASSEMBLY IF EXISTS SqlClrCurl;
 GO
-
 
 DECLARE @assembly VARBINARY(MAX) = <#= "0x" + BitConverter.ToString(System.IO.File.ReadAllBytes(this.Host.ResolvePath("bin\\Release\\SqlClrCurl.dll"))).Replace("-","")  #>
 DECLARE @hash VARBINARY(64);
