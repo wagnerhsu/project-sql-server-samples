@@ -11,9 +11,9 @@ $bkmFile = "FILEPATH-FOR-THE-.BKM-FILE" # E.g., "C:\BKP\db.bkm"
 $SQLServer = "YOUR-SQL-SERVER-INSTANCE-NAME"
 $db = "YOUR-DATABASE-NAME"
 
-$suspendDb = "ALTER DATABASE [" + $db +"] SET SUSPEND_FOR_SNAPSHOT_BACKUP ON;"
+$suspendDb = "ALTER DATABASE [" + $db +"] SET SUSPEND_FOR_SNAPSHOT_BACKUP=ON;"
 $backupMetadata = "BACKUP DATABASE [" + $db +"] TO DISK='" + $bkmfile + "' WITH METADATA_ONLY, FORMAT;"
-$unsuspendDb = "ALTER DATABASE [" + $db + "] SET SUSPEND_FOR_SNAPSHOT_BACKUP OFF;"
+$unsuspendDb = "ALTER DATABASE [" + $db + "] SET SUSPEND_FOR_SNAPSHOT_BACKUP=OFF;"
 
 $createDB="IF NOT EXISTS(SELECT * FROM sys.databases WHERE name = '" + $db + "') CREATE DATABASE " + $db
 $dropDB="IF EXISTS(SELECT * FROM sys.databases WHERE name = '" + $db + "') BEGIN ALTER DATABASE [" + $db +"] SET SINGLE_USER WITH ROLLBACK IMMEDIATE;DROP DATABASE " + $db + " END"
