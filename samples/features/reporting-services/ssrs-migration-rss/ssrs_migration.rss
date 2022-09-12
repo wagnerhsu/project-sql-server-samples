@@ -948,11 +948,12 @@ End Function
 
 'Helper function to construct correctly formatted filename
 Function GetSnkFilename(srcFilename As String, type As String) As String
-	Dim hasFE As Boolean = HasFileExtension(srcFilename)
-	If SnkIsNative And hasFE And Not GetExtension(type) = "" Then 'Cut off file extension, if present            
+	Dim currentFileExtension As String = GetFileNameExtension(srcFilename)
+
+	If SnkIsNative And (GetExtension(type) = currentFileExtension) and currentFileExtension <> "" Then 'Cut off file extension, if present
 		srcFilename = RemoveFileExtension(srcFilename)
 
-	ElseIf Not SnkIsNative And Not hasFE Then 'Add file extension, if not present
+	ElseIf Not SnkIsNative And currentFileExtension = "" Then 'Add file extension, if not present
 		srcFilename = srcFilename + GetExtension(type)
 	End If
 
@@ -960,9 +961,14 @@ Function GetSnkFilename(srcFilename As String, type As String) As String
 End Function
 
 'Helper
-Function HasFileExtension(filename As String) As Boolean
-	Dim index As Integer = filename.LastIndexOf(".")
-	Return index >= 0 And filename.Length - index <= 5
+Function GetFileNameExtension(filename As String) As String
+	Dim index as Integer = -1
+	index = filename.LastIndexOf(".")
+	If index > 0
+		Return filename.Substring(index)
+	Else
+		Return ""
+	End If
 End Function
 
 'Helper
