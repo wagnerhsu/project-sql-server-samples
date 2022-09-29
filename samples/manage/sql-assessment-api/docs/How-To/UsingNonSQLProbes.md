@@ -1,6 +1,6 @@
 # Retrieving Data from Operating System
 
-In the SQL Assessment API, most of the probes use T-SQL to get data for assessment. However, there are probes that obtain data from the operating system not presented in SQL Server dynamic management views. In order for these probes to get data, the [xp_cmdshell](https://docs.microsoft.com/en-us/sql/relational-databases/system-stored-procedures/xp-cmdshell-transact-sql) stored procedure and PowerShell access should be enabled on the target SQL Server. While these facilities are disabled, some checks may be ckipped.
+In the SQL Assessment API, most of the probes use T-SQL to get data for assessment. However, there are probes that obtain data from the operating system not presented in SQL Server dynamic management views. In order for these probes to get data, the [xp_cmdshell](https://docs.microsoft.com/en-us/sql/relational-databases/system-stored-procedures/xp-cmdshell-transact-sql) stored procedure and PowerShell access should be enabled on the target SQL Server. While these facilities are disabled, some checks may be skipped.
 
 Keep in mind that the [xp_cmdshell](https://docs.microsoft.com/en-us/sql/relational-databases/system-stored-procedures/xp-cmdshell-transact-sql) stored procedure should be enabled temporarily as it is not recommended by the best practices; once you complete the assessment, make sure to disable it.
 

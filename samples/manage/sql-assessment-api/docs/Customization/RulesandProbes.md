@@ -1,6 +1,6 @@
 # Understanding rules and probes
 
-The SQL Assessment API uses sets of best practice recommendations to check if a SQL Server environment or configuration could be improved. Best practices are not universal. Guidelines depend on SQL Server version, edition, and configuration, hosting platform, and even usage pattern. For example, some best practices are applicable only to cloud environments, whereas others work for SQL Server instances installed on a physical machine. Databases may also be of different types. For example, a set of best practices for the `msdb` database might be different from that used for user databases. 
+The SQL Assessment API uses sets of best practice recommendations to check if a SQL Server environment or configuration could be improved. Best practices are not universal. Guidelines depend on SQL Server version, edition, and configuration, hosting platform, and even usage pattern. For example, some best practices are applicable only to cloud environments, whereas others work for SQL Server instances installed on a physical machine. Databases may also be of different types. For example, a set of best practices for the `msdb` database might be different from that used for user databases.
 
 SQL Assessment API makes recommendations more specific by implementing a two-step process:
 
@@ -82,7 +82,7 @@ The following rule disables the `MaxMemory` check and all performance-related ch
 
 Each check needs data to analyze. Checks do not retrieve any data from the target server or database but refer to *probes* instead. Most of the probes use T-SQL queries, but the SQL Assessment API also supports probes for WMI, Windows registry, Azure Instance Metadata Service, as well as custom probes implemented as .NET classes.
 
-Each probe returns zero or more data rows containing named items. If a check gets data from multiple probes, the resulting data set is constructed as *all* combinations of rows. This behavior is similar to `CROSS JOIN` in T-SQL. 
+Each probe returns zero or more data rows containing named items. If a check gets data from multiple probes, the resulting data set is constructed as *all* combinations of rows. This behavior is similar to `CROSS JOIN` in T-SQL.
 
 A check has a condition expression which formally describes best practice as an arithmetic expression referring to data from a data row. Condition is calculated and checked if it holds for each row separately. For example, when a database uses 3 disks for storing its files, then a free space best practice may apply to each disk independently. If a check uses data from two probes, and one probe produces 2 rows while another one produces 3, the check condition will be evaluated 2×3=6 times. If condition gives *false* 2 times out of 6, the check will produce 2 messages.
 

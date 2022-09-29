@@ -54,7 +54,7 @@ Let's say you need to change this rule to validate backups that were created mor
 Then you can save this file to whatever place you need and invoke the assessment, as the following example demonstrates.
 
 ```PowerShell
-Invoke-SqlAssessment -Check FullBackup -Configuration .\BackupPolicy.json | Select TagerObject, Message
+Invoke-SqlAssessment -Check FullBackup -Configuration .\BackupPolicy.json | Select TargetObject, Message
 ```
 
 Here, you are basically using the same command, as shown in the example above, but extended with `-Configuration .\BackupPolicy.json`. This command instructs the assessment to use a custom configuration file that keeps your overrides.
