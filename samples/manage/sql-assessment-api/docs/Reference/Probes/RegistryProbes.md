@@ -43,7 +43,7 @@ where **MSSQL12.SQL2014** is the SQL Server instance name.
 
 ### Example 1
 
-The following registry query returns 2 values for for system hardware. Please, note how multi-string value is handled as multiple strings. Use [join aggregate function](..\DataMorphs\aggregate.md#join) to merge them when needed.
+The following registry query returns 2 values for for system hardware. Please, note how multi-string value is handled as multiple strings. Use [join aggregate function](../DataMorphs/aggregate.md#join) to merge them when needed.
 
 ```json
 "probes": {

@@ -3,6 +3,7 @@
 With the SQL Assessment API, you can use different kinds of operators to make your assessment even more precise.
 
 ## In This Section <!-- omit in toc -->
+
 - [Logical](#logical)
 - [String](#string)
 - [Math](#math)

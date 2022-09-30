@@ -2,7 +2,7 @@
 
 Data for checks comes from probes. Probe reference is a JSON object that describes a probe needed by the check. When a probe is referenced with no additional options or parameters, a probe reference may be abbreviated to a string containing probe ID.
 
-![Probe reference structure](img\ProbeRefStructure.svg)
+![Probe reference structure](./img/ProbeRefStructure.svg)
 
 ## Properties
 
@@ -95,8 +95,3 @@ In the following example *DatabaseMasterFiles* probe finds volume IDs for all di
     }
 ]
 ```
-
-
-
-
-

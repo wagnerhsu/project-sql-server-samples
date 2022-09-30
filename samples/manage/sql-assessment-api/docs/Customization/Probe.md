@@ -12,7 +12,7 @@ Probes from the default rule set read metadata only, e.g. update logs or server 
 
 Probe implementation is represented by a JSON object. Its properties define procedures for getting data and selecting appropriate implementation.
 
-![Probe structure](img\ProbeStructure.svg)
+![Probe structure](./img/ProbeStructure.svg)
 
 ## Probe properties
 

@@ -2,7 +2,7 @@
 
 A rule is represented by a JSON object. A rule applies its properties to a new or existing check.
 
-![Rule structure](img\RuleStructure.svg)
+![Rule structure](./img/RuleStructure.svg)
 
 ## Rule properties
 
@@ -24,11 +24,11 @@ An array of IDs or tags of checks to be modified by this rule. A rule can modify
 
 ### target
 
-Target pattern is a JSON object used to select applicable rules. A rule will be applied if the assessed object matches the `target` pattern. For more information, see [Target pattern]().
+Target pattern is a JSON object used to select applicable rules. A rule will be applied if the assessed object matches the `target` pattern. For more information, see [Target pattern](./TargetPattern.md).
 
 ### targetFilter
 
-Target pattern with the same syntax as the target property, but used exclusively in overrides. For more information on the usage and object format, see [Overrides]() and [Target pattern](), respectively.
+Target pattern with the same syntax as the target property, but used exclusively in overrides. For more information on the usage and object format, see [Overrides](./RulesandProbes.md) and [Target pattern](./TargetPattern.md), respectively.
 
 ### displayName
 
@@ -36,7 +36,7 @@ Short display names are shown in checklists. You may think of a display name as 
 
 ### message
 
-A string which is used as a template for generating messages to the user. Such a message appears when the check detects configurations that are not in compliance with the best practice recommendation. For more information, see [Message template]().
+A string which is used as a template for generating messages to the user. Such a message appears when the check detects configurations that are not in compliance with the best practice recommendation. For more information, see [Message template](./MessageTemplate.md).
 
 ### description
 
@@ -54,7 +54,7 @@ The severity level of the issue detected by this check.
 
 ### probes
 
-The `probes` array contains references to probes to be used to get data required by this check. For more information, see [Probe References]().
+The `probes` array contains references to probes to be used to get data required by this check. For more information, see [Probe References](./ProbeReference.md).
 
 ### condition
 
