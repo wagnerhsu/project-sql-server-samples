@@ -48,7 +48,7 @@ Hyperlink to an article that explains the best practice recommendations and reme
 
 ### level
 
-__Allowed values:__ `Information`, `Low`, `Medium`, 'High'
+__Allowed values:__ `Information`, `Low`, `Medium`, `High`
 
 The severity level of the issue detected by this check.
 

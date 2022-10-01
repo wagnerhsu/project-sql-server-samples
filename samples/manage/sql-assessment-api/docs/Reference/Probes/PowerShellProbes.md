@@ -1,4 +1,4 @@
-# Overview
+# PowerShell probe
 
 **Type code:** *PowerShell*
 
@@ -8,9 +8,9 @@ PowerShell probes execute commands in PowerShell (fx) on the target machine and 
 
 PowerShell probe implementation has the following parameters:
 
-|Parameter|Required|Type|Default|Description|
-|---|:-:|:-:|:-:|---|
-|command|Required|string||PowerShell command to execute|
+| Parameter | Required | Type   | Default | Description                   |
+|-----------|:--------:|:------:|:-------:|-------------------------------|
+| command   | Required | string |         | PowerShell command to execute |
 
 Use the `$` (dollar) sign in the `command` text to access probe parameters passed by checks.
 
@@ -34,9 +34,9 @@ The following probe enumerates file system items in the current dirrectory:
 
 Output:
 
-|@Output|'@Output.FullName'|'@Output.Parent.Name'|
-|-|-|-|
-|"UV"|"C:\Windows\system32\UV"|"system32"|
-|"UV-FOGRA"|"C:\Windows\system32\UV-FOGRA"|"system32"|
-|"x3dom.css"|"C:\Windows\system32\x3dom.css"|"system32"|
-|"x3dom.js"|"C:\Windows\system32\x3dom.js"|"system32"|
+| @Output     | @Output.FullName                | @Output.Parent.Name |
+|-------------|---------------------------------|---------------------|
+| "UV"        | "C:\Windows\system32\UV"        | "system32"          |
+| "UV-FOGRA"  | "C:\Windows\system32\UV-FOGRA"  | "system32"          |
+| "x3dom.css" | "C:\Windows\system32\x3dom.css" | "system32"          |
+| "x3dom.js"  | "C:\Windows\system32\x3dom.js"  | "system32"          |

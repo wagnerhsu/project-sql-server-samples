@@ -1,5 +1,5 @@
 
-# Overview
+# AzGraph probe
 
 **Type code:** *AzGraph*
 
@@ -9,9 +9,9 @@ This probe runs a Kusto query on Azure resource graph.
 
 Implementation part of the probe definition contains the following parameters.
 
-|Parameter|Required|Type|Default|Description|
-|---|:-:|:-:|:-:|---|
-|query|Required|String||Kusto query|
+| Parameter | Required | Type   | Default | Description |
+|-----------|:--------:|:------:|:-------:|-------------|
+| query     | Required | String |         | Kusto query |
 
 Use at-sign '@' to ember parameters into the query string.
 

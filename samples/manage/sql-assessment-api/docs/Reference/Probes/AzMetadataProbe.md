@@ -1,5 +1,5 @@
 
-# Overview
+# AzMetadata probe
 
 **Type code:** *AzMetadata*
 
@@ -11,6 +11,6 @@ When assessment is running remotely and Azure Graph is available, IMDS is emulat
 
 Implementation part of the probe definition contains the following parameters.
 
-|Parameter|Required|Type|Default|Description|
-|---|:-:|:-:|:-:|---|
-|query|Required|String|JSONPath to the data to retrieve|
+| Parameter | Required | Type   | Default | Description                      |
+|-----------|:--------:|:------:|:-------:|----------------------------------|
+| query     | Required | String |         | JSONPath to the data to retrieve |
