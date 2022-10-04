@@ -22,6 +22,14 @@ The `implementation` property contains probe parameters and [data transformation
 
 Probe parameters are specific for [probe type](#type).
 
+### requires
+
+Explicit  functional [requirements](./ProbeRequirements/README.md) for this probe. SQL Assessment API checks if all the requirements are met. If not, the probe is not executed, all dependent checks are skipped, and a warning is returned.
+
+### runFor
+
+Explicit logical [requirements](./ProbeRequirements/README.md) for this probe. SQL Assessment API checks if all the requirements are met. If not, the probe implementation is not executed and an empty result set is returned immediately.
+
 ### target
 
 Target object [pattern](TargetPattern.md).
@@ -30,13 +38,13 @@ Target object [pattern](TargetPattern.md).
 
 Probe `type` determines the mechanism used to get data. it may be a T-SQL or a WMI. Available probe types are listed in the following table.
 
-|Type|Description|
-|---|---|
-|[AzGraph](../Reference/Probes/AzGraphProbe.md)|Kusto query to Azure resource graph|
-|[AzMetadata](../Reference/Probes/AzMetadataProbe.md)|JSONPath for the object returned by Azure Instance Metadata Service|
-|[CMD](../Reference/Probes/CMDShellProbes.md)|Command shell script run on the target machine|
-|[External](../Reference//Probes/ExternalProbe.md)|Arbitrary .NET code|
-|[PowerShell](../Reference/Probes/PowerShellProbes.md)|PowerShell script|
-|[Registry](../Reference/Probes/RegistryProbes.md)|Data from registry|
-|[SQL](../Reference/Probes/TSQLProbes.md)|T-SQl query|
-|[WMI](../Reference/Probes/WMIProbes.md)|WMI query|
+| Type                                                | Description              |
+|-----------------------------------------------------|--------------------------|
+|[AzGraph](../Reference/Probes/AzGraphProbe.md)       | Kusto query to Azure resource graph |
+|[AzMetadata](../Reference/Probes/AzMetadataProbe.md) | JSONPath for the object returned by Azure Instance Metadata Service |
+|[CMD](../Reference/Probes/CMDShellProbes.md)         | Command shell script run on the target machine |
+|[External](../Reference/Probes/ExternalProbe.md)     | Arbitrary .NET code      |
+|[PowerShell](../Reference/Probes/PowerShellProbes.md)| PowerShell script        |
+|[Registry](../Reference/Probes/RegistryProbes.md)    | Data from registry       |
+|[SQL](../Reference/Probes/TSQLProbes.md)             | T-SQl query              |
+|[WMI](../Reference/Probes/WMIProbes.md)              | WMI query                |

@@ -1,4 +1,4 @@
-# Overview
+# WMI probe
 
 **Type code:** *WMI*
 
@@ -10,10 +10,10 @@ A WMI query returns a number of WMI objects. Each object is processed as a separ
 
 Implementation part has the following properties.
 
-|Parameter|Required|Type|Default|Description|
-|---|:-:|:-:|:-:|---|
-|query|Required|String||WMI query returning probe data|
-|methods|Optional|Map||List of WMI methods to be called on selected WMI objects|
+|Parameter|Required|Type  |Default|Description                   |
+|---------|:------:|:----:|:-----:|------------------------------|
+|query    |Required|String|       |WMI query returning probe data|
+|methods  |Optional|Map   |       |List of WMI methods to be called on selected WMI objects|
 
 ### WMI methods
 
@@ -37,15 +37,15 @@ Simple WMI probe returns name and block size for volumes.
 
 Output:
 
-|@Output.Name|@Output.BlockSize|
-|-|-|
-|E:\\|4096|
-|C:\\|4096|
-|\\?\Volume{b9878a89-2e73-4790-8576-9c8217b2fba7}\\|4096|
-|M:\\|4096|
-|G:\\|4096|
-|R:\\|4096|
-|\\?\Volume{41c4c545-aad7-4a8c-86e5-11a52611a81d}\\|1024|
+| @Output.Name                                       | @Output.BlockSize |
+|----------------------------------------------------|------------------:|
+| E:\\                                               | 4096              |
+| C:\\                                               | 4096              |
+| \\?\Volume{b9878a89-2e73-4790-8576-9c8217b2fba7}\\ | 4096              |
+| M:\\                                               | 4096              |
+| G:\\                                               | 4096              |
+| R:\\                                               | 4096              |
+| \\?\Volume{41c4c545-aad7-4a8c-86e5-11a52611a81d}\\ | 1024              |
 
 ### Example 2
 

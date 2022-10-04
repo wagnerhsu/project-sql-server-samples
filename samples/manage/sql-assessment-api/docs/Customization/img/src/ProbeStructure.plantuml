@@ -12,7 +12,7 @@
         "…": "…",
         "transform?": "<i>Data transform</i>"
     },
-    "requires?": "<i>Characteristics</i>",
-    "runFor?": "<i>Characteristics</i>"
+    "requires?": "<i>Requirements</i>",
+    "runFor?": "<i>Requirements</i>"
 }
 @endjson

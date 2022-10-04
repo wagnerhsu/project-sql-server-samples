@@ -16,7 +16,7 @@
     "displayName?": "<i>Short descriptive name</i>",
     "description?": "<i>Long description</i>",
     "message?": "<i>Message template</i>",
-    "level?": "<b>Information</b> | <b>Warning</b> | <b>Critical</b>",
+    "level?": "<b>Information</b> | <b>Low</b> | <b>Medium</b> | <b>High</b>",
     "helpLink?": "<i>Hyperlink to an article</i>",
     "probes?": [
         "<i>Probe ref 1</i>",

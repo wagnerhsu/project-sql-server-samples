@@ -1,4 +1,4 @@
-# Overview
+# Registry probe
 
 **Type code:** *Registry*
 
@@ -8,10 +8,10 @@ Registry probes obtain data from the target machine registry.
 
 Registry probe implementation has the following parameters.
 
-|Parameter|Required|Type|Default|Description|
-|---|:-:|:-:|:-:|---|
-|query|Required|Object||Tree-like structure specifying Registry keys and values to collect see [Registry query](#registry-query)|
-|instance|Optional|Bool|*false*|Indicates whether the probe should return data specific to this SQL Server instance see [Instance specific data](#instance-specific-data)|
+| Parameter | Required | Type   | Default | Description                       |
+|-----------|:--------:|:------:|:-------:|-----------------------------------|
+| query     | Required | object |         | Tree-like structure specifying Registry keys and values to collect see [Registry query](#registry-query) |
+| instance  | Optional | bool   | *false* | Indicates whether the probe should return data specific to this SQL Server instance see [Instance specific data](#instance-specific-data) |
 
 ### Registry query
 
@@ -68,11 +68,11 @@ The following registry query returns 2 values for for system hardware. Please, n
 
 Output:
 
-|@Identifier|@SystemBiosVersion|
-|-|-|
-|"AT/AT COMPATIBLE"|"ALASKA - 1072009"|
-|"AT/AT COMPATIBLE"|"3802"|
-|"AT/AT COMPATIBLE"|"American Megatrends - 5000C"|
+| @Identifier        | @SystemBiosVersion            |
+|--------------------|-------------------------------|
+| "AT/AT COMPATIBLE" | "ALASKA - 1072009"            |
+| "AT/AT COMPATIBLE" | "3802"                        |
+| "AT/AT COMPATIBLE" | "American Megatrends - 5000C" |
 
 ### Example 2
 
@@ -97,11 +97,11 @@ Use asterisk '*' to enumerate all subkeys of the given key. The following regist
 Output:
 
 | @RegistryKeyName | @VendorIdentifier |
-|---|---|
-| 0 | "Genuine Intel" |
-| 1 | "Genuine Intel" |
-| 2 | "Genuine Intel" |
-| 3 | "Genuine Intel" |
+|------------------|-------------------|
+| 0                | "Genuine Intel"   |
+| 1                | "Genuine Intel"   |
+| 2                | "Genuine Intel"   |
+| 3                | "Genuine Intel"   |
 
 ### Example 3
 
