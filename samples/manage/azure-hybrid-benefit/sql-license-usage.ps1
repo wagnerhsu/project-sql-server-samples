@@ -40,7 +40,7 @@ param (
     [Parameter (Mandatory= $false)]
     [bool] $UseInRunbook = $false, 
     [Parameter (Mandatory= $false)]
-    [bool] $ShowEC = $false,
+    [bool] $ShowNC = $false,
     [Parameter (Mandatory= $false)]
     [bool] $ShowUnregistered = $false
 
@@ -184,6 +184,11 @@ function DiscoveryOnWindows {
 }
 
 #
+# Suppress warnings
+#
+Update-AzConfig -DisplayBreakingChangeWarning $false
+
+#
 # This script checks if SQL Server is installed on Linux
 # 
 #    
@@ -271,8 +276,8 @@ if ($useDatabase){
                     [Time] [time](7) NOT NULL,
                     [SubscriptionName] [nvarchar](50) NOT NULL,
                     [SubscriptionID] [nvarchar](50) NOT NULL,
-                    [AHB_EC] [int] NULL,
-                    [PAYG_EC] [int] NULL,
+                    [AHB_NC] [int] NULL,
+                    [PAYG_NC] [int] NULL,
                     [AHB_STD_vCores] [int] NULL,
                     [AHB_ENT_vCores] [int] NULL,
                     [PAYG_STD_vCores] [int] NULL,
@@ -288,8 +293,8 @@ if ($useDatabase){
                     [Time],
                     [SubscriptionName],
                     [SubscriptionID],
-                    [AHB_EC],
-                    [PAYG_EC],
+                    [AHB_NC],
+                    [PAYG_NC],
                     [AHB_STD_vCores],
                     [AHB_ENT_vCores],
                     [PAYG_STD_vCores],
@@ -324,7 +329,7 @@ if ($useDatabase){
     }
 
     [System.Collections.ArrayList]$usageTable = @()
-    $usageTable += ,(@("Date", "Time", "Subscription Name", "Subscription ID", "AHB ECs", "PAYG ECs", "AHB Std vCores", "AHB Ent vCores", "PAYG Std vCores", "PAYG Ent vCores", "HADR Std vCores", "HADR Ent vCores", "Developer vCores", "Express vCores", "Unregistered vCores", "Unknown vCores"))
+    $usageTable += ,(@("Date", "Time", "Subscription Name", "Subscription ID", "AHB NCs", "PAYG NCs", "AHB Std vCores", "AHB Ent vCores", "PAYG Std vCores", "PAYG Ent vCores", "HADR Std vCores", "HADR Ent vCores", "Developer vCores", "Express vCores", "Unregistered vCores", "Unknown vCores"))
 }
 
 $global:VM_SKUs = @{} # To hold the VM SKU table for future use
@@ -542,18 +547,18 @@ foreach ($sub in $subscriptions){
     $Date = Get-Date -Format "yyy-MM-dd"
     
     $Time = Get-Date -Format "HH:mm:ss"
-    if ($ShowEC){
-        $ahb_ec = ($subtotal.ahb_std + $subtotal.ahb_ent*4)
-        $payg_ec = ($subtotal.payg_std + $subtotal.payg_ent*4)
+    if ($ShowNC){
+        $ahb_nc = ($subtotal.ahb_std + $subtotal.ahb_ent*4)
+        $payg_nc = ($subtotal.payg_std + $subtotal.payg_ent*4)
     }else{
-        $ahb_ec = 0
-        $payg_ec = 0
+        $ahb_nc = 0
+        $payg_nc = 0
     }
     if ($useDatabase){
-        $propertiesToSplat.Query = $insertSQL -f $Date, $Time, $sub.Name, $sub.Id, $ahb_ec, $payg_ec, $subtotal.ahb_std, $subtotal.ahb_ent, $subtotal.payg_std, $subtotal.payg_ent, $subtotal.hadr_std, $subtotal.hadr_ent, $subtotal.developer, $subtotal.express, $subtotal.unreg_sqlvm, $subtotal.unknown_tier
+        $propertiesToSplat.Query = $insertSQL -f $Date, $Time, $sub.Name, $sub.Id, $ahb_nc, $payg_nc, $subtotal.ahb_std, $subtotal.ahb_ent, $subtotal.payg_std, $subtotal.payg_ent, $subtotal.hadr_std, $subtotal.hadr_ent, $subtotal.developer, $subtotal.express, $subtotal.unreg_sqlvm, $subtotal.unknown_tier
         Invoke-SQLCmd @propertiesToSplat
     }else{
-        $usageTable += ,(@( $Date, $Time, $sub.Name, $sub.Id, $ahb_ec, $payg_ec, $subtotal.ahb_std, $subtotal.ahb_ent, $subtotal.payg_std, $subtotal.payg_ent, $subtotal.hadr_std, $subtotal.hadr_ent, $subtotal.developer, $subtotal.express, $subtotal.unreg_sqlvm, $subtotal.unknown_tier))
+        $usageTable += ,(@( $Date, $Time, $sub.Name, $sub.Id, $ahb_nc, $payg_nc, $subtotal.ahb_std, $subtotal.ahb_ent, $subtotal.payg_std, $subtotal.payg_ent, $subtotal.hadr_std, $subtotal.hadr_ent, $subtotal.developer, $subtotal.express, $subtotal.unreg_sqlvm, $subtotal.unknown_tier))
     }
 }
 

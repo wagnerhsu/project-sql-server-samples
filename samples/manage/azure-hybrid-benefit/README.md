@@ -3,7 +3,7 @@ services: Azure SQL
 platforms: Azure
 author: anosov1960
 ms.author: sashan
-ms.date: 3/27/2021
+ms.date: 10/26/2022
 ---
 
 # Overview
@@ -58,6 +58,8 @@ The script accepts the following command line parameters:
 |-Cred|credential_object|Optional: value of type PSCredential to securely pass database user and password|
 |-FilePath|csv_file_name|Optional: filename where the data will be saved in a .csv format. Ignored if database parameters are specified|
 |-ShowUnregistered|\$True or \$False (default)|Optional: causes the script to report the total size of VMs with a  self-hosted SQL server instance that is unregistered with the IaaS SQL extension|
+|-ShowNC|\$True or \$False (default)|Optional: causes the script to report the AHB and PAYG consumption in normalized  cores (NC). For more information about normalized cores, see [How licenses apply to Azure resources](https://learn.microsoft.com/azure/cost-management-billing/scope-level/overview-azure-hybrid-benefit-scope#how-licenses-apply-to-azure-resources).|
+
 
 <sup>1</sup>You can create a .csv file using the following command and then edit to remove the subscriptions you don't  want to scan.
 ```PowerShell
