@@ -39,6 +39,7 @@ BEGIN
 		FROM (SELECT COUNT(*) AS OrderCount FROM Sales.Orders 
 			WHERE DATEPART(year,OrderDate) = DATEPART(year,(SELECT MAX(OrderDate) FROM Sales.Orders))
 				AND DATEPART(weekday,OrderDate) NOT IN (1,7)
+				AND BackorderOrderID IS NULL
 			GROUP BY OrderDate) t
 	END
 	ELSE
