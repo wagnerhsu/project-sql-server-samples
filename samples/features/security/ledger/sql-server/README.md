@@ -55,7 +55,7 @@ You also need to make sure the following software is installed on your machine:
 ### Web Application
 
 1. Open Visual Studio
-1. Open the folder [WorldCup](../WorldCup)
+1. Open the folder [WorldCup](../source/WorldCup/)
 1. Click on the file Program.cs in the Explorer and go to line 25
 1. Change the *Server* parameter in the connection string to the name of your SQL Server Instance.
 1. Save your modifications.
@@ -79,12 +79,12 @@ Perform the below steps before you show the demo.
 
 1. Connect to the database
    1. Start the Azure Data Studio.
-   1. Open the Notebook [Ledger - World Cup Demo - SQL Server 2022](../tsql-scripts/Ledger%20-%20World%20Cup%20Demo%20-%20SQL%20Server%202022.ipynb)
+   1. Open the Notebook [Ledger - World Cup Demo - SQL Server 2022](../sql-server/tsql-scripts/Ledger%20-%20World%20Cup%20Demo%20-%20SQL%20Server%202022.ipynb)
    1. Attach the Notebook to the SQL Server Instance and WorldCup database you have created during the demo Setup.
 
 1. Prepare a browser window .
    1. Open Visual Studio
-   1. Open the folder [WorldCup](../WorldCup)
+   1. Open the folder WorldCup](../source/WorldCup/)
    1. Go to the top menu and click *Terminal - New Terminal*
    1. In the terminal window type *dotnet run*. This will launch the web application.
    1. Open your browser and enter the following URL *http://localhost:3000*
@@ -96,7 +96,7 @@ Perform the below steps before you show the demo.
 1. Show the app and the database.
    1. Show the Contoso World Cup web app in the browser. Explain that this is a list of all the soccer games. Show that you are logged in as Pieter (the DBA of the company) and place a bet.
    ![Place Bet](../../../../../media/features/ledger/Place-Bet.png)
-   1. Once you have placed the bet, show that the user can download a cryptographic receipt that proves the bet. This receipt could also be used to verify the database afterwards but is not part of this demo.
+   1. Once you have placed the bet, show that the user can download a cryptographic receipt that proves the bet. This receipt could also be used to verify the database afterwards but this is not part of the demo.
    ![Download Cryptographic Receipt](../../../../../media/features/ledger/Download-Receipt.png)
    1. Go to the Notebook and show the 2 tables, Moneyline and bets in the Explorer. Explain that Moneyline table is an updatable ledger table and bets an append-only ledger table.
    ![Ledger Tables](../../../../../media/features/ledger/Ledger-Tables.png)
@@ -104,14 +104,14 @@ Perform the below steps before you show the demo.
 
 1. Show how ledger captures history information in the updatable ledger table
     1. Pieter has been asked to change the Home Country Odds for the game with ID 1. Run `code cell 2` in the Notebook to update the record.
-    1. Run `code cell 3` in the Notebook to show the history of the updated record. Explain that updates are stored as 2 records. A delete of the old version and an insert of the new version of the row.
+    1. Run `code cell 3` in the Notebook to show the history of the updated record. Explain that updates are stored as 2 records in the history table. A delete of the old version and an insert of the new version of the row.
 
 1. Show how append-only ledger table works and how ledger helps investigate tampering by DBAs. 
-    1. Michael, who is an internal auditor, performs a routine review of changes in the Worldcup database. As his first step, Michael runs the ledger verification to be sure he can trust the data he’s going to examine. Run `code cell 4` to execute the verification stored procedure. The result should be "Success"!
+    1. Michael, who is an internal auditor, performs a routine review of changes in the Worldcup database. As his first step, Michael runs the ledger verification to be sure he can trust the data he’s going to examine. Run `code cell 4` to execute the verification stored procedure. The result should be "Ledger verification succeeded."
     1. Pieter wants to maliciously increase his payout for the game he betted on. Run `code cell 5 and 6` to try to update the record. Explain that update on an append-only ledger table is blocked.
     1. Pieter thinks he's smart and tampers with the data directly into the data file by using a stored procedure. Do not run `code cell 7` because the stored procedure does not exists.
-    1. Michael, reviews the Worldcup database again after the tournament is over. He noticed that the verification procedure failed. Observe the results of code cell 8 to see evidence of tampering in a database ledger. **DO NOT RUN** the cell just review the pre-run results to see tampering in action.
-    1. Review the history of the transaction and show to the audience that you can verify which transactions cannot be trusted. **DO NOT RUN** the cell just review the pre-run results.
+    1. Michael, reviews the Worldcup database again after the tournament is over. He noticed that the verification procedure failed. Observe the results of `code cell 8` to see evidence of tampering in a database ledger. **DO NOT RUN** the cell just review the pre-run results to see tampering in action.
+    1. Review the history of the transaction and show to the audience that you can verify which transactions cannot be trusted. Observe the results of `code cell 9` but **DO NOT RUN** the cell just review the pre-run results.
 
 ## Key Takeaways
 
