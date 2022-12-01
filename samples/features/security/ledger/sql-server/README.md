@@ -99,6 +99,7 @@ Perform the below steps before you show the demo.
    1. Once you have placed the bet, show that the user can download a cryptographic receipt that proves the bet. This receipt could also be used to verify the database afterwards but this is not part of the demo.
    ![Download Cryptographic Receipt](../../../../../media/features/ledger/Download-Receipt.png)
    1. Go to the Notebook and show the 2 tables, Moneyline and bets in the Explorer. Explain that Moneyline table is an updatable ledger table and bets an append-only ledger table.
+
    ![Ledger Tables](../../../../../media/features/ledger/Ledger-Tables.png)
    1. Run the `code cell 1` in the Notebook to show the games in the Moneyline table.
 
