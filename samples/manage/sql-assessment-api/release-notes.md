@@ -14,9 +14,88 @@ Download: [SMO NuGet Package](https://www.nuget.org/packages/Microsoft.SqlServer
 
 You can use GitHub issues to provide feedback to the product team.
 
-## July 2022 - 1.1.9
+## December 2022 - 1.1.17
 
 Version: SqlServer PowerShell module, SqlManagementObjects (SMO) package: not updated
+
+### What's new
+
+- New rules:
+  - 98 recommendations based on SQL Server error log content
+  - Availability database count
+  - Availability replica recovery health
+  - Columnstore indexes with large page memory model
+  - High SQL compilations frequency
+  - High cursor requests frequency
+  - Backup files on a separate physical location
+  - Database mirroring
+  - High deadlock frequency
+  - SQL Server on a domain controller
+  - Error log retention settings
+  - High free space scans rate
+  - Full scans vs index searches
+  - High latch wait time
+  - Excessive lazy writes
+  - Lock requests per batch
+  - Excessive lock waits
+  - Memory grants pending
+  - Non-default value for 'min server memory (MB)' option
+  - Non-default value for 'nested triggers' option
+  - High forwarded records rate
+  - Sleeping sessions with open transactions
+  - Orphaned server audit specification
+  - Orphaned database audit specification
+  - Low page life expectancy
+  - High page lookups frequency
+  - High page split rate
+  - High SQL recompilation rate
+  - Non-default value for 'remote access' option
+  - Non-default value for 'remote login timeout (s)' option
+  - Frequent scan point revalidations
+  - Non-default value for 'server trigger recursion' option
+  - Option 'show advanced options' is enabled
+  - Tempdb data files initial size
+  - High Wait for the worker
+  - High transaction log disk response time
+  - High Network IO
+  - High non-Page latch waits
+  - High Page IO latch waits
+  - High Page Latch waits
+  - High Workfiles Created per second
+  - Low Worktables from Cache ratio
+  - High Worktables Created per second
+- New probes:
+  - [BasicPerformance](./docs/Reference/Probes/BasicPerformance.md)
+  - AuditSpecs
+  - ComputerSystem
+  - DatabaseBackupsMedia
+  - DatabaseMirroring
+  - ErrorLog
+  - ServerAudits
+  - ServerDatabasesProperties
+  - SysOpenTransactions
+- New transformations:
+  - [Performance](./docs//Reference/Probes/BasicPerformance.md#performance-transform) counter [data transformation](./docs/Customization/DataTransformation.md)
+
+### Bug fixes and improvements
+
+- Add [join](./docs/Reference/DataTransformation/aggregate.md#join) string [aggregate function](./docs/Reference/DataTransformation/aggregate.md#aggregate-functions) new parameters:
+  - **distinct** specifies whether duplicates should be eliminated
+  - **comparison** specifies [StringComparison](https://learn.microsoft.com/dotnet/api/system.stringcomparison) used by the aggregate function
+- Add **ag_replica_recovery_health** variable to the **AGConfiguration** probe
+- Add **age_days** to **ErrorLogInfo** probe
+- Add **remote_access**, **remote_login_timeout**, **server_trigger_recursion**, and **default_language** to **SysConfiguration** probe
+- Fix warning message on missing permissions and other requirements
+- Fix help link for DbSpaceAvailable check ([GitHub #1035](https://github.com/microsoft/sql-server-samples/issues/1035))
+- Fix falsely flagging deprecated features in job steps ([GitHub #1025](https://github.com/microsoft/sql-server-samples/issues/1025))
+- Fix configured to active value comparison for Max and Min server memory
+- Fix duplicate messages for Azure disk checks
+- Fix TF834 check triggered when no columnstore index is in use
+- Remove Server target type filter from probes which work for databases
+
+## July 2022 - 1.1.9
+
+Version: SqlServer PowerShell module: [22.0.30-preview](https://www.powershellgallery.com/packages/SqlServer/22.0.30-preview), SqlManagementObjects (SMO) package: not updated
 
 ### What's new
 

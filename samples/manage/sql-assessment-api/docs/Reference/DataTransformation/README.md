@@ -8,5 +8,6 @@
 - [nameValuePairs](nameValuePairs.md)
 - [noData](noData.md)
 - [parse](parse.md)
+- [performance](performance.md)
 - [rename](rename.md)
 - [toString](toString.md)

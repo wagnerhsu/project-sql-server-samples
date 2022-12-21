@@ -6,6 +6,7 @@ The SQL Assessment API provides different types of probes to get data for assess
 
 - [AzGraph](./AzGraphProbe.md)
 - [AzMetadata](./AzMetadataProbe.md)
+- [BasicPerformance](./BasicPerformance.md)
 - [CMD](CMDShellProbes.md)
 - [External](CLRProbes.md)
 - [PowerShell](PowerShellProbes.md)

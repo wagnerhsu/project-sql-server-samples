@@ -1,4 +1,4 @@
-# Parse <!-- omit in toc -->
+# Data transformation: **parse** <!-- omit in toc -->
 
 The regular expression parser extracts data from substrings of variable values that correspond to the named groups specified in regular expressions.
 
