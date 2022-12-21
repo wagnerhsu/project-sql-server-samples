@@ -65,7 +65,8 @@ Version: SqlServer PowerShell module, SqlManagementObjects (SMO) package: not up
   - Low Worktables from Cache ratio
   - High Worktables Created per second
 - New probes:
-  - [BasicPerformance](./docs/Reference/Probes/BasicPerformance.md)
+  - [Performance](./docs/Reference/Probes/Performance.md) probe type
+  - BasicPerformance
   - AuditSpecs
   - ComputerSystem
   - DatabaseBackupsMedia
@@ -75,7 +76,7 @@ Version: SqlServer PowerShell module, SqlManagementObjects (SMO) package: not up
   - ServerDatabasesProperties
   - SysOpenTransactions
 - New transformations:
-  - [Performance](./docs//Reference/Probes/BasicPerformance.md#performance-transform) counter [data transformation](./docs/Customization/DataTransformation.md)
+  - [Performance](./docs/Reference/DataTransformation/performance.md) counter [data transformation](./docs/Customization/DataTransformation.md)
 
 ### Bug fixes and improvements
 
