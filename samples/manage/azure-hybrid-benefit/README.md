@@ -68,7 +68,7 @@ Get-AzSubscription | Export-Csv .\mysubscriptions.csv -NoTypeInformation
 If both database parameters and *FilePath* are omitted, the script will write the results to a `.\sql-license-usage.csv` file. The file is created automatically. If the file already exists, the consecutive scans will append the results to it. If the database parameters are specified, the data will be saved in a *Usage-per-subscription* table. If the table doesn't exist, it will be created automatically.
 
 >[!IMPORTANT]
-> Selecting `-ShowUnregistered` option will substantially increase the execution time, especially for the   subscriptions with a large number of virtual machines. 
+> Selecting `-ShowUnregistered` option will substantially increase the execution time, especially for the   subscriptions with large numbers of virtual machines. 
 
 ## Example 1
 
