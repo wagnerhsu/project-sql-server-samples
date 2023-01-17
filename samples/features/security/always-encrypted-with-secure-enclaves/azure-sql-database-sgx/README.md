@@ -1,6 +1,6 @@
 ![](../../../../manage/sql-server-extended-security-updates/media/solutions-microsoft-logo-small.png)
 
-# Always Encrypted with secure enclaves in Azure SQL Database - Demos
+# Always Encrypted with Intel SGX enclaves in Azure SQL Database - Demos
 
 The demos in this folder showcase [Always Encrypted with secure enclaves](https://docs.microsoft.com/azure/azure-sql/database/always-encrypted-with-secure-enclaves-landing) in Azure SQL Database. The demos use the Contoso HR web application.
 
