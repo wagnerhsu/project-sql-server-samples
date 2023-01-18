@@ -30,7 +30,7 @@ param location string = resourceGroup().location
 
 // Create the server
 var SQLServerName_var = '${projectName}server'
-resource Server_Name_resource 'Microsoft.Sql/servers@2019-06-01-preview' = {
+resource Server_Name_resource 'Microsoft.Sql/servers@2022-05-01-preview' = {
   name: SQLServerName_var
   location: location
   tags: {}
@@ -47,7 +47,7 @@ resource Server_Name_resource 'Microsoft.Sql/servers@2019-06-01-preview' = {
 }
 
 // Allow Azure services and resources to access this server
-resource Server_Name_AllowAllWindowsAzureIps 'Microsoft.Sql/servers/firewallRules@2015-05-01-preview' = {
+resource Server_Name_AllowAllWindowsAzureIps 'Microsoft.Sql/servers/firewallRules@2022-05-01-preview' = {
   name: '${Server_Name_resource.name}/AllowAllWindowsAzureIps'
   properties: {
     endIpAddress: '0.0.0.0'
@@ -56,7 +56,7 @@ resource Server_Name_AllowAllWindowsAzureIps 'Microsoft.Sql/servers/firewallRule
 }
 
 // Allow Client IP to access this server
-resource Server_Name_AllowClientIP 'Microsoft.Sql/servers/firewallRules@2015-05-01-preview' = {
+resource Server_Name_AllowClientIP 'Microsoft.Sql/servers/firewallRules@2022-05-01-preview' = {
   name: '${Server_Name_resource.name}/AllowClientIP'
   properties: {
     endIpAddress: clientIP
@@ -65,7 +65,7 @@ resource Server_Name_AllowClientIP 'Microsoft.Sql/servers/firewallRules@2015-05-
 }
 
 // Make the user an Azure AD administrator for the server, so that the user can connect with universal authentication
-resource Server_Name_activeDirectory 'Microsoft.Sql/servers/administrators@2019-06-01-preview' = {
+resource Server_Name_activeDirectory 'Microsoft.Sql/servers/administrators@2022-05-01-preview' = {
   name: '${Server_Name_resource.name}/activeDirectory'
   properties: {
     administratorType: 'ActiveDirectory'
@@ -80,7 +80,7 @@ resource Server_Name_activeDirectory 'Microsoft.Sql/servers/administrators@2019-
 // Create the ContosoHR database using the DC-series hardware configuration //
 //////////////////////////////////////////////////////////////////////////////
 
-resource Database_Resource 'Microsoft.Sql/servers/databases@2020-08-01-preview' = {
+resource Database_Resource 'Microsoft.Sql/servers/databases@2022-05-01-preview' = {
   name: '${Server_Name_resource.name}/ContosoHR'
   location: location
   tags: {}
@@ -96,7 +96,7 @@ resource Database_Resource 'Microsoft.Sql/servers/databases@2020-08-01-preview' 
 ///////////////////////////////////////
 
 // Create the attestation provider
-resource attestationProviderName_resource 'Microsoft.Attestation/attestationProviders@2020-10-01' = {
+resource attestationProviderName_resource 'Microsoft.Attestation/attestationProviders@2021-06-01-preview' = {
   name: '${projectName}attest'
   location: location
   properties: {}
@@ -107,7 +107,7 @@ resource attestationProviderName_resource 'Microsoft.Attestation/attestationProv
 ///////////////////////////////////
 
 // Create an App Service plan 
-resource WebAppServicePlan_Resource 'Microsoft.Web/serverfarms@2021-01-01' = {
+resource WebAppServicePlan_Resource 'Microsoft.Web/serverfarms@2022-03-01' = {
   name: '${projectName}plan'
  location: location
  properties: {}
@@ -117,7 +117,7 @@ resource WebAppServicePlan_Resource 'Microsoft.Web/serverfarms@2021-01-01' = {
 }
 
 // Create the App Service
-resource WebApp_Resource 'Microsoft.Web/sites@2021-01-01' = {
+resource WebApp_Resource 'Microsoft.Web/sites@2022-03-01' = {
   name: '${projectName}app'
   location: location
   identity: {
@@ -147,11 +147,13 @@ resource WebApp_Resource 'Microsoft.Web/sites@2021-01-01' = {
 }
 
  // Deploy the application
-resource sourceControl 'Microsoft.Web/sites/sourcecontrols@2021-01-01' = {
+resource sourceControl 'Microsoft.Web/sites/sourcecontrols@2022-03-01' = {
   name: '${projectName}app/web'
   properties: {
-    repoUrl: 'https://github.com/microsoft/sql-server-samples.git'
-    branch: 'master'
+    //repoUrl: 'https://github.com/microsoft/sql-server-samples.git'
+    //branch: 'master'
+    repoUrl: 'https://github.com/Pietervanhove/sql-server-samples.git'
+    branch: 'AEVBSDemo'
     isManualIntegration: true
   }
   dependsOn: [
@@ -164,7 +166,7 @@ resource sourceControl 'Microsoft.Web/sites/sourcecontrols@2021-01-01' = {
 //////////////////////////////////////
 
 // Create a key vault and assign key permissions to the user, so that the user can manage the keys
-resource KeyVault_Resource 'Microsoft.KeyVault/vaults@2019-09-01' = {
+resource KeyVault_Resource 'Microsoft.KeyVault/vaults@2022-07-01' = {
   name: '${projectName}vault'
   location: location
   tags: {}
@@ -197,7 +199,7 @@ resource KeyVault_Resource 'Microsoft.KeyVault/vaults@2019-09-01' = {
 }
 
 // Assign key permissions to the web app 
-resource KeyVaultWebAppAccessPolicy_Resource 'Microsoft.KeyVault/vaults/accessPolicies@2019-09-01' = {
+resource KeyVaultWebAppAccessPolicy_Resource 'Microsoft.KeyVault/vaults/accessPolicies@2022-07-01' = {
   name: any('${KeyVault_Resource.name}/add')
   properties: {
     accessPolicies: [
@@ -218,7 +220,7 @@ resource KeyVaultWebAppAccessPolicy_Resource 'Microsoft.KeyVault/vaults/accessPo
 }
 
 // Create a key
-resource Key_Resource 'Microsoft.KeyVault/vaults/keys@2019-09-01' = {
+resource Key_Resource 'Microsoft.KeyVault/vaults/keys@2022-07-01' = {
   name: '${KeyVault_Resource.name}/CMK'
   tags: {}
   properties: {

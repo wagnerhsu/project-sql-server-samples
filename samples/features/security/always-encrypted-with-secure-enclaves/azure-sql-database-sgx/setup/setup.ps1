@@ -1,6 +1,5 @@
-﻿Import-Module "Az" -MinimumVersion "5.6"
-Import-Module "Az.Attestation" -MinimumVersion "0.1.8"
-Import-Module "SqlServer" -MinimumVersion "21.1.18235"
+﻿Import-Module "Az" -MinimumVersion "9.3"
+Import-Module "SqlServer" #-Version "22.0.49-preview" 
 
 ######################################################################
 # Prompt the user to enter the values of deployment parameters
@@ -143,7 +142,7 @@ $policy=Get-Content -path $policyFile -Raw
 Set-AzAttestationPolicy -Name $attestationProviderName -ResourceGroupName $resourceGroupName -Tee $teeType -Policy $policy -PolicyFormat  $policyFormat
 
 # Get the attestation URL
-$attestationProvider = Get-AzAttestation -Name $attestationProviderName -ResourceGroupName $resourceGroupName 
+$attestationProvider = Get-AzAttestationProvider -Name $attestationProviderName -ResourceGroupName $resourceGroupName 
 $attestationUrl = $attestationProvider.AttestUri
 
 ######################################################################

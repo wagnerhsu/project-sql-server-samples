@@ -31,26 +31,20 @@ You also need to make sure the following software is installed on your machine:
 
 1. PowerShell modules:
 
-   1. Az version 5.6 or later. For details on how to install the Az PowerShell module, see [Install the Azure Az PowerShell module](https://docs.microsoft.com/powershell/azure/install-az-ps). To determine the version of the Az module installed on your machine, run the following command from a PowerShell session.
+   1. Az version 9.3 or later. For details on how to install the Az PowerShell module, see [Install the Azure Az PowerShell module](https://docs.microsoft.com/powershell/azure/install-az-ps). To determine the version of the Az module installed on your machine, run the following command from a PowerShell session.
 
      ```powershell
      Get-InstalledModule -Name Az
      ```
 
-   2. Az.Attestation 0.1.8 or later. For details on how to install the Az.Attestation PowerShell module, see [Install Az.Attestation PowerShell module](https://docs.microsoft.com/azure/attestation/quickstart-powershell#install-azattestation-powershell-module). To determine the version of the Az.Attestation module installed on your machine, run the following command from a PowerShell session.
-
-     ```powershell
-     Get-InstalledModule -Name Az.Attestation
-     ```
-
-   3. SqlServer version 21.1.18245 or later. For details on how to install the SqlServer PowerShell module, see [Installing or updating the SqlServer module](https://docs.microsoft.com/sql/powershell/download-sql-server-ps-module#installing-or-updating-the-sqlserver-module). To determine the version the SqlServer module installed on your machine, run the following command from a PowerShell session.
+   2. SqlServer version 22.0.49-preview or later. For details on how to install the SqlServer PowerShell module, see [Installing or updating the SqlServer module](https://docs.microsoft.com/sql/powershell/download-sql-server-ps-module#installing-or-updating-the-sqlserver-module). To determine the version the SqlServer module installed on your machine, run the following command from a PowerShell session.
 
      ```powershell
      Get-InstalledModule -Name SqlServer
      ```
 
-1. [Bicep](https://docs.microsoft.com/azure/azure-resource-manager/templates/bicep-overview) version 0.4.63 or later. You need to install Bicep and ensure it can be invoked from PowerShell. The recommended way to achieve that is to [install Bicep manually with PowerShell](https://docs.microsoft.com/azure/azure-resource-manager/templates/bicep-install?tabs=azure-powershell#manual-with-powershell).
-1. [SQL Server Management Studio](https://msdn.microsoft.com/en-us/library/mt238290.aspx) - version 18.9.1 or later is recommended.
+1. [Bicep](https://docs.microsoft.com/azure/azure-resource-manager/templates/bicep-overview) version 0.13.1 or later. You need to install Bicep and ensure it can be invoked from PowerShell. The recommended way to achieve that is to [install Bicep manually with PowerShell](https://docs.microsoft.com/azure/azure-resource-manager/templates/bicep-install?tabs=azure-powershell#manual-with-powershell).
+1. [SQL Server Management Studio](https://msdn.microsoft.com/en-us/library/mt238290.aspx) - version 19 or later is recommended.
 
 ## Setup
 
@@ -156,7 +150,7 @@ Perform the below steps before each demo presentation.
 
 ### Key Takeaways
 
-Always Encrypted with secure enclaves requires specific hardware that is exposed in Azure SQL Database as the DC-series hardware configuration. Microsoft Azure Attestation is a Platform-as-a-Service solution for attestation enclaves in Azure. Enclaves are attested against a policy, you define and control.
+Always Encrypted with Intel SGX enclaves requires specific hardware that is exposed in Azure SQL Database as the DC-series hardware configuration. Microsoft Azure Attestation is a Platform-as-a-Service solution for attestation enclaves in Azure. Enclaves are attested against a policy, you define and control.
 
 ## Demo 2
 
@@ -272,7 +266,7 @@ Perform the below steps before you show the demo.
 
          ![Connection Properties](./img/ssms-connect-to-server-connection-properties-page.png)
 
-      1. Select the **Always Encrypted** tab. Make sure the **Enable Always Encrypted** checkbox **is** selected. Enter your attestation URL.
+      1. Select the **Always Encrypted** tab. Make sure the **Enable Always Encrypted** and the **Enable secure enclaves** checkbox are selected. Set the Enclave attestation Protocol to **Microsoft Azure Attestation** and enter your attestation URL.
 
          ![Always Encrypted disabled](./img/ssms-connect-to-server-always-encrypted-enabled.png)
 

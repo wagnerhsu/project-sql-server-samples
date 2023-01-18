@@ -1,5 +1,5 @@
 ﻿Import-Module "Az" -MinimumVersion "9.3"
-Import-Module "SqlServer"
+Import-Module "SqlServer" -Version "22.0.49-preview" 
 
 ######################################################################
 # Prompt the user to enter the values of deployment parameters
