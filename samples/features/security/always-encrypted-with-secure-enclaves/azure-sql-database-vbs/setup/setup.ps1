@@ -6,10 +6,8 @@ Import-Module "SqlServer"
 ######################################################################
 
 $projectName = Read-Host -Prompt "Enter a project name that is used to generate resource names"
-#$subscriptionId = Read-Host -Prompt "Enter your subscription id"
-#$location = Read-Host -Prompt "Enter a region where you want to deploy the demo environment"
-$location = "NorthEurope"
-$subscriptionId = "b7b62657-3a23-4ee4-86e6-8cd893cb7331"
+$subscriptionId = Read-Host -Prompt "Enter your subscription id"
+$location = Read-Host -Prompt "Enter a region where you want to deploy the demo environment"
 $sqlAdminUserName = Read-Host -Prompt "Enter the username of the Azure SQL database server administrator for SQL authentication"
 $sqlAdminPasswordSecureString = Read-Host -Prompt "Enter the password of the Azure SQL database server administrator for SQL authentication" -AsSecureString
 
