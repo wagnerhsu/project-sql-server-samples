@@ -50,10 +50,9 @@ You also need to make sure the following software is installed on your machine:
 
 By following the below setup steps, you will create a new resource group and deploy the following resources to your Azure subscription:
 - A logical database server.
-- The **ContosoHR** database using the [DC-series hardware generation](https://docs.microsoft.com/azure/azure-sql/database/service-tiers-sql-database-vcore#dc-series), which is required for Always Encrypted with secure enclaves.
+- The **ContosoHR** database with VBS enclaves enabled.
 - A key vault in [Azure Key Vault](https://docs.microsoft.com/azure/key-vault/) and a key to be used as a column master key for Always Encrypted.
 - The Contoso HR web application in Azure Web Apps.
-- An attestation provider in [Microsoft Azure Attestation](https://docs.microsoft.com/azure/attestation). Your web app will use the attestation provider to attest the enclave in the database.
 
 Setup steps:
 
@@ -69,14 +68,13 @@ Setup steps:
 1. When prompted, enter the following information:
    1. Your Azure subscription id. To determine your subscription id, see [Find your Azure subscription](https://docs.microsoft.com/azure/media-services/latest/setup-azure-subscription-how-to?tabs=portal).
    1. The project name. The resource group containing all your demo resources will have that name. The project name will also be used as a prefix for the names of all demo resources. Please use only lowercase letters and numbers for the project name and make sure it is unique.
-   1. The location - it must be one of the Azure regions supporting the DC-series hardware generation, which are listed [here](https://docs.microsoft.com/azure/azure-sql/database/service-tiers-sql-database-vcore#dc-series-1).
+   1. The location where you want to create the resources.
    1. The username and the password of the Azure SQL database server administrator. The setup script will create the server with these admin credentials and it will later use them to connect to the server using SQL authentication for some of the setup steps.
-1. When prompted, sign in to Azure. Once you sign in, the script will deploy the demo environment using the provided Bicep template, which may take a few minutes. After the deployment completes, the script performs post-deployment setup steps to configure the database and the attestation policy for Always Encrypted with secure enclaves.
+1. When prompted, sign in to Azure. Once you sign in, the script will deploy the demo environment using the provided Bicep template, which may take a few minutes. After the deployment completes, the script performs post-deployment setup steps to configure the database.
 1. When prompted, sign in to Azure again, to enable the SqlServer PowerShell module to connect to the database.
 1. Finally, the script outputs the important information about your demo environment.
    - Database server name (`<project name>server.database.windows.net`)
    - Database name (`ContosoHR`)
-   - Attestation URL (`https://<project name>attest.<region moniker>.attest.azure.net`)
    - Application URL (`https://<project name>app.azurewebsites.net/`)
 
    Please copy and save the above information. You will need it for the demo steps.
@@ -111,26 +109,15 @@ Perform the below steps before each demo presentation.
 1. Review the content of your demo resource group. It should contain the following resources:
 
    - `<project name>app`- an app service hosting the Contoso HR web application.
-   - `<project name>attest`- an attestation provider in Microsoft Azure Attestation for attesting the secure enclave for the **ContosoHR** database.
-   - `<project name>identity` - a user-assigned managed identity that was used to deploy the web application.
    - `<project name>plan` - an app service plan for the web application.
    - `<project name>server`- a logical server in Azure SQL Database.
    - `<project name>vault` - a key vault in Azure Key Vault, containing the column master key for Always Encrypted.
    - `ContosoHR` - a database.
 
-1. Right-click on the **ContosoHR** database in the resource group and open its **Overview** blade in the new tab. Click on **Compute + storage** under **Settings**.  Click **Change configuration**. Note that the database is already configured to use the DC-series hardware configuration that supports confidential computing using secure enclaves. Setting the DC-series hardware configuration for a database is required to use Always Encrypted with secure enclaves in the database. For more information, see [Enable Intel SGX for your Azure SQL Database](https://docs.microsoft.com/azure/azure-sql/database/always-encrypted-enclaves-enable-sgx).
-
-   ![DC-series hardware configuration](./img/portal-dc-series-configuration.png)
-
-1. Close the browser tab for the database. Right-click on the attestation provider in your resource group and open its **Overview** blade in a new tab. Click on **Policy** under **Settings**. Select **SGX-IntelSDK** for **Attestation Type**. This will display the attestation policy configured for Intel Software Guard eXtensions (Intel SGX) enclaves. The policy allows a client driver within an application to verify the secure enclave in Azure SQL Database is a genuine Intel SGX enclave and it runs the genuine SQL library that implements Transact-SQL predicates and cryptographic operations of Always Encrypted. For more information, see [Configure Azure Attestation for your Azure SQL logical server](https://docs.microsoft.com/azure/azure-sql/database/always-encrypted-enclaves-configure-attestation).
-
-   ![DC-series hardware configuration](./img/portal-attestation-policy.png)
-
-1. Close the browser tab for the attestation provider. Right-click on the app service for the Contoso HR web application in your resource group and open its **Overview** blade in a new tab. Click on **Configuration** under **Settings**. In the **Connection strings** section, click **Advanced edit**. This will display the database connection string configured for the web application. There are three important things to call out in the database connection string:
+1. Right-click on the app service for the Contoso HR web application in your resource group and open its **Overview** blade in a new tab. Click on **Configuration** under **Application Settings**. In the **Connection strings** section, click **Advanced edit**. This will display the database connection string configured for the web application. There are two important things to call out in the database connection string:
 
    - **Column Encryption Setting = Enabled** turns the Always Encrypted on in the client driver, allowing it to transparently encrypt query parameters and decrypt query results.
-   - **Attestation Protocol = AAS** specifies Microsoft Azure Attestation is used for attesting the secure enclave for the **ContosoHR** database.
-   - **Enclave Attestation Url** is an attest URI of the attestation provider. 
+   - **Attestation Protocol = None** specifies that there is no attestation used. VBS enclaves currently do not support attestation.
 
    ![Connection string](./img/portal-web-app-connection-string.png)
 
@@ -139,7 +126,7 @@ Perform the below steps before each demo presentation.
 
        ![Connection string](./img/portal-key-vault-key.png)
 
-   2. Click on **Access Policies** under **Settings**. You should see two access policy entries: one for your identity and one for the web app's identity. These policies grant you permissions necessary to perform key management operations and they grant the web app permissions required to decrypt column encryption keys, protecting the data.
+   2. Click on **Access Policies**. You should see two access policy entries: one for your identity and one for the web app's identity. These policies grant you permissions necessary to perform key management operations and they grant the web app permissions required to decrypt column encryption keys, protecting the data.
 
 1. Switch to SSMS.
    1. In Object Explorer, navigate to the **ContosoHR** database. Then go to **Security** > **Always Encrypted Keys**.
@@ -148,13 +135,9 @@ Perform the below steps before each demo presentation.
 
       ![Connection string](./img/ssms-cmk.png)
 
-### Key Takeaways
-
-Always Encrypted with secure enclaves requires specific hardware that is exposed in Azure SQL Database as the DC-series hardware configuration. Microsoft Azure Attestation is a Platform-as-a-Service solution for attestation enclaves in Azure. Enclaves are attested against a policy, you define and control.
-
 ## Demo 2
 
-This short demo highlights the main benefits of Always Encrypted with secure enclaves. The starting point for the demo is the ContosoHR database with the **SSN** and **Salary** columns already encrypted.
+This short demo highlights the main benefits of Always Encrypted with VBS enclaves. The starting point for the demo is the ContosoHR database with the **SSN** and **Salary** columns already encrypted.
 
 ### Prepare for the demo
 Perform the below steps before you show the demo.
@@ -254,7 +237,7 @@ Perform the below steps before you show the demo.
          ![Selecting database](./img/ssms-explorer-select-database.png)
 
       1. With the **ContosoHR** database selected, click Ctrl + O. In the **Open File** dialog, navigate to the **tsql-scripts** folder and select **ListAllEmployees.sql**. Do not execute the query yet.
-      1. With the **ContosoHR** database selected, click Ctrl + O. In the **Open File** dialog, navigate to the **tsql-scripts** folder and select **QueryEvents.sql**. Do not execute the query yet.
+      1. With the **ContosoHR** database selected, click Ctrl + O. In the **Open File** dialog, navigate to the **tsql-scripts** folder and select **QueryXEvents.sql**. Do not execute the query yet.
 1. Prepare Security Administrator's instance of SSMS.
    1. Start SSMS.
    1. In the Connect to Server dialog:
@@ -266,7 +249,7 @@ Perform the below steps before you show the demo.
 
          ![Connection Properties](./img/ssms-connect-to-server-connection-properties-page.png)
 
-      1. Select the **Always Encrypted** tab. Make sure the **Enable Always Encrypted** checkbox **is** selected. Enter your attestation URL.
+      1. Select the **Always Encrypted** tab. Make sure the **Enable Always Encrypted** and the **Enable secure enclaves** checkbox are selected. Set the Enclave attestation Protocol to **None**.
 
          ![Always Encrypted disabled](./img/ssms-connect-to-server-always-encrypted-enabled.png)
 

@@ -141,8 +141,10 @@ resource WebApp_Resource 'Microsoft.Web/sites@2022-03-01' = {
 resource sourceControl 'Microsoft.Web/sites/sourcecontrols@2022-03-01' = {
   name: '${projectName}app/web'
   properties: {
-    repoUrl: 'https://github.com/microsoft/sql-server-samples.git'
-    branch: 'master'
+    //repoUrl: 'https://github.com/microsoft/sql-server-samples.git'
+    repoUrl: 'https://github.com/Pietervanhove/sql-server-samples.git'
+    //branch: 'master'
+    branch: 'AEVBSDemo'
     isManualIntegration: true
   }
   dependsOn: [
