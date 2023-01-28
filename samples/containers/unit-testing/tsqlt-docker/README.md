@@ -9,6 +9,7 @@ This sample describes how to automate the testing for one or more SQL Server obj
 
 [About this sample](#about-this-sample)<br/>
 [Before you begin](#before-you-begin)<br/>
+[Case history](#case-history)<br/>
 [Run this sample](#run-this-sample)<br/>
 [Sample details](#sample-details)<br/>
 [Disclaimers](#disclaimers)<br/>
@@ -38,8 +39,7 @@ To run this example, the following basic concepts are required.
 
 **Software prerequisites:**
 
-1. GitHub account. If you don't already have a GitHub account, you can get one for free [here](https://github.com/signup)!
-2. GitHub sample repository
+1. A GitHub account. If you don't already have a GitHub account, you can get one for free [here](https://github.com/signup)!
 
 <a name=case-history></a>
 
@@ -55,10 +55,10 @@ The trigger we have wrote is to prevent the insertion of new products with value
 
 <!-- Step by step instructions -->
 
-1. If you don't already have one, [sign up for a new GitHub account](https://docs.github.com/get-started/signing-up-for-github/signing-up-for-a-new-github-account)
+1. [Sign in](https://github.com/login) to GitHub. If you don't already have an account, [sign up for a new GitHub account](https://docs.github.com/get-started/signing-up-for-github/signing-up-for-a-new-github-account)
 2. Create your sample repository on GitHub, if you've never done it, you can find the guide [here](https://docs.github.com/get-started/quickstart/create-a-repo)
 3. Create a `.github/workflows` directory in your GitHub repository if this directory does not already exist
-4. Copy the `automated-tests.yml` inside the directory `.github/workflows` you created in the previous step. The `automated-tests.yml` describes the process that will execute one or more jobs
+4. Copy the automated-tests.yml inside the directory `.github/workflows` you created in the previous step. The `automated-tests.yml` describes the process that will execute one or more jobs
 5. Create the `source` and `unit-test` directories in the root of your sample repository
 6. Copy all the files located in the source and unit-test directories to their respective directories in your repository
 7. View and run the workflow as described [here](https://docs.github.com/actions/quickstart)
@@ -70,11 +70,11 @@ The implementation of the trigger and related unit tests has been done, all file
 
 The challenge is to automate the execution of the tests at each commit on the main branch of the repository. GitHub Actions is our CI/CD platform, it supports the use of Docker containers and it is intimately integrated into GitHub, the source control that manages our source code.
 
-**Create your first workflow**
+**Understand and manage your first workflow**
 
 Workflows are defined with a YAML file stored in the same repository which holds the source code. The workflows will be triggered when an event occurs in the repository. Anyway, a workflow can also be activated manually or according to a defined schedule.
 
-A sample YAML file that implements the test automation workflow is available here, the fundamental steps are:
+A sample YAML file that implements the test automation workflow is already in your sample repository, the fundamental steps of the process are:
 
 1. Definition of activation events
 2. Creating a Docker container from a SQL Server image on Linux
