@@ -55,15 +55,24 @@ The trigger we have wrote is to prevent the insertion of new products with value
 
 <!-- Step by step instructions -->
 
-The implementation of the trigger and related unit tests has been done.
+1. If you don't already have one, [sign up for a new GitHub account](https://docs.github.com/get-started/signing-up-for-github/signing-up-for-a-new-github-account)
+2. Create your sample repository on GitHub, if you've never done it, you can find the guide [here](https://docs.github.com/get-started/quickstart/create-a-repo)
+3. Create a `.github/workflows` directory in your GitHub repository if this directory does not already exist
+4. Copy the `automated-tests.yml` inside the directory `.github/workflows` you created in the previous step. The `automated-tests.yml` describes the process that will execute one or more jobs
+5. Create the `source` and `unit-test` directories in the root of your sample repository
+6. Copy all the files located in the source and unit-test directories to their respective directories in your repository
+7. View and run the workflow as described [here](https://docs.github.com/actions/quickstart)
+8. Have fun with the solution details outlined below
+
+**The challenge**
+
+The implementation of the trigger and related unit tests has been done, all files are ready in your repository!
 
 The challenge is to automate the execution of the tests at each commit on the main branch of the repository. GitHub Actions is our CI/CD platform, it supports the use of Docker containers and it is intimately integrated into GitHub, the source control that manages our source code.
 
 **Create your first workflow**
 
-Let's go ahead with the creation of a workflow: an automated and configurable process that will execute one or more jobs.
-
-Workflows are defined with a YAML file stored in the same repository which holds the source code. The workflows will be triggered when an event occurs in the repository. Anyway, a workflow can also be activated manually or according to a defined schedule. Follow [these instructions](https://docs.github.com/en/actions/quickstart) to create your first workflow.
+Workflows are defined with a YAML file stored in the same repository which holds the source code. The workflows will be triggered when an event occurs in the repository. Anyway, a workflow can also be activated manually or according to a defined schedule.
 
 A sample YAML file that implements the test automation workflow is available here, the fundamental steps are:
 
@@ -208,12 +217,15 @@ The YAML script for our workflow is complete, you can find it here.
 
 ## Sample details
 
-Describe sample details
+Unit tests developed for a SQL Server solution are not just meant to verify that requirements have been met once, prior to release; the real game changer is represented by the possibility of repeating the checks during the development of new code and during the bug fixing process.
+
+The repeatability of the tests provides the ability to automate them, an essential condition for integrating automatic tests within a Continuous Integration platform. In this article we described how to automate the testing of SQL Server objects using tSQLt, Docker and GitHub Actions!
 
 <a name=disclaimers></a>
 
 ## Disclaimers
-The code included in this sample is not intended to be ...
+
+The code included in this sample is not intended to be a set of best practices on how to build scalable enterprise grade unit testing or CI/CD system. This is beyond the scope of this quick start sample.
 
 <a name=related-links></a>
 
@@ -221,3 +233,7 @@ The code included in this sample is not intended to be ...
 <!-- Links to more articles. Remember to delete "en-us" from the link path. -->
 
 For more information, see these articles:
+
+- [Unit testing: What it is and why it is important for T-SQL code!](https://medium.com/@segovoni/unit-testing-what-it-is-and-why-it-is-important-for-t-sql-code-7e9df7ca8bfe)
+- [Unit testing: The tSQLt framework and the execution of a test!](https://segovoni.medium.com/unit-testing-the-tsqlt-framework-and-the-execution-of-a-test-e4d135c3e343)
+- [Unit testing: How to write your first unit test for T-SQL code](https://segovoni.medium.com/unit-testing-how-to-write-your-first-unit-test-for-t-sql-code-3bc1533acbbc)
