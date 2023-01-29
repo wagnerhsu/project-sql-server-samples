@@ -21,9 +21,9 @@ This sample describes how to automate the testing for one or more SQL Server obj
 
 - **Applies to:** SQL Server 2016 (or higher)
 - **Key features:** Run SQL Server in Docker containers
-- **Workload:** Unit tests executed on [AdventureWorks2017](https://github.com/Microsoft/sql-server-samples/releases/tag/adventureworks)
+- **Workload:** Unit tests executed on [AdventureWorks](https://github.com/Microsoft/sql-server-samples/releases/tag/adventureworks)
 - **Programming Language:** T-SQL, YAML
-- **Authors:** [Sergio Govoni](https://www.linkedin.com/in/sgovoni/)
+- **Authors:** [Sergio Govoni](https://www.linkedin.com/in/sgovoni/) | [Microsoft MVP Profile](https://mvp.microsoft.com/it-it/PublicProfile/4029181?fullName=Sergio%20Govoni) | [Blog](https://segovoni.medium.com/) | [GitHub](https://github.com/segovoni) | [Twitter](https://twitter.com/segovoni)
 
 <a name=before-you-begin></a>
 
@@ -45,7 +45,7 @@ To run this example, the following basic concepts are required.
 
 ## Case history
 
-The AdventureWorks2017 database contains the Production.Product table that stores products managed and sold by the fake company Adventure Works LTD.
+The AdventureWorks database contains the Production.Product table that stores products managed and sold by the fake company Adventure Works LTD.
 
 The trigger we have wrote is to prevent the insertion of new products with values less than 10 as a “safety stock”. The Company wishes to always have a warehouse stock of no less than 10 units for each product. The safety stock level is a very important value for the automatic procedures: it allows to re-order materials. The creation of new purchase orders and production orders are based on the safety stock level. To make our trigger simple, it will only respond to the OnInsert event, for INSERT commands.
 
@@ -58,9 +58,9 @@ The trigger we have wrote is to prevent the insertion of new products with value
 1. [Sign in](https://github.com/login) to GitHub. If you don't already have an account, [sign up for a new GitHub account](https://docs.github.com/get-started/signing-up-for-github/signing-up-for-a-new-github-account)
 2. Create your sample repository on GitHub, if you've never done it, you can find the guide [here](https://docs.github.com/get-started/quickstart/create-a-repo)
 3. Create a `.github/workflows` directory in your GitHub repository if this directory does not already exist
-4. Copy the automated-tests.yml inside the directory `.github/workflows` you created in the previous step. The `automated-tests.yml` describes the process that will execute one or more jobs
+4. Copy the [automated-tests.yml](https://github.com/microsoft/sql-server-samples/tree/master/samples/containers/unit-testing/tsqlt-docker/.github/workflows) inside the directory `.github/workflows` you created in the previous step in your repository. The `automated-tests.yml` describes the process that will execute one or more jobs
 5. Create the `source` and `unit-test` directories in the root of your sample repository
-6. Copy all the files located in the source and unit-test directories to their respective directories in your repository
+6. Copy all the files located in the [source](https://github.com/microsoft/sql-server-samples/tree/master/samples/containers/unit-testing/tsqlt-docker/source) and [unit-test](https://github.com/microsoft/sql-server-samples/tree/master/samples/containers/unit-testing/tsqlt-docker/unit-test) directories to their respective directories in your repository
 7. View and run the workflow as described [here](https://docs.github.com/actions/quickstart)
 8. Have fun with the solution details outlined below
 
@@ -78,7 +78,7 @@ A sample YAML file that implements the test automation workflow is already in yo
 
 1. Definition of activation events
 2. Creating a Docker container from a SQL Server image on Linux
-3. AdventureWorks2017 database recovery
+3. AdventureWorks database recovery
 4. Installation of the tSQLt framework
 5. Creating the database objects to be tested (SUT)
 6. Creation and execution unit tests
@@ -136,20 +136,20 @@ The following snippet of YAML code sets the ENV_CONTAINER_ID variable with the I
   run: echo "ENV_CONTAINER_ID=$(docker ps --all --filter status=running --no-trunc --format "{{.ID}}")" >> $GITHUB_ENV
 ```
 
-**3. AdventureWorks2017 database recovery**
+**3. AdventureWorks database recovery**
 
-The AdventureWorks2017 database recovery can be performed using the following docker exec command.
+The AdventureWorks database recovery can be performed using the following docker exec command.
 
 ```
-- name: Restore AdventureWorks2017
+- name: Restore AdventureWorks
   run: docker exec -i $ENV_CONTAINER_ID /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P "3uuiCaKxfbForrK" -Q "RESTORE DATABASE [AdventureWorks2017] FROM DISK = '/adventureworks.bak' WITH MOVE 'AdventureWorks2017' TO '/var/opt/mssql/data/AdventureWorks.mdf', MOVE 'AdventureWorks2017_log' TO '/var/opt/mssql/data/AdventureWorks_log.ldf'"
 ```
 
 **4. Installation of the tSQLt framework**
 
-The installation of the latest version of tSQLt framework in the AdventureWorks2017 database is done using the GitHub Actions tSQLt Installer published by [lowlydba](https://github.com/lowlydba), you can find more details [here](https://github.com/lowlydba/tsqlt-installer) and on the [GitHub Actions marketplace](https://github.com/marketplace/actions/tsqlt-installer).
+The installation of the latest version of tSQLt framework in the AdventureWorks database is done using the GitHub Actions tSQLt Installer published by [lowlydba](https://github.com/lowlydba), you can find more details [here](https://github.com/lowlydba/tsqlt-installer) and on the [GitHub Actions marketplace](https://github.com/marketplace/actions/tsqlt-installer).
 
-The snippet of YAML code used for the installation of the tSQLt framework in the AdventureWorks2017 database is the following.
+The snippet of YAML code used for the installation of the tSQLt framework in the AdventureWorks database is the following.
 
 ```
 steps:
@@ -166,13 +166,13 @@ steps:
 
 **5. Creating the database objects to be tested (SUT)**
 
-The test environment is ready, we have a SQL Server instance on Linux inside a Docker container; the AdventureWorks2017 database has been restored and it is ready for use.
+The test environment is ready, we have a SQL Server instance on Linux inside a Docker container; the AdventureWorks database has been restored and it is ready for use.
 
 Let's go ahead with the creation of the trigger and the stored procedure (that manages errors), they represent our [System Under Test (SUT)](https://en.wikipedia.org/wiki/System_under_test).
 
 The TR_Product_SafetyStockLevel trigger creation script and the usp_Raiserror_SafetyStockLevel stored procedure creation script are saved in the source directory of this sample.
 
-Triggers and stored procedures are created in the AdventureWorks2017 database attached to the SQL Server instance, the YAML code snippet that performs this operation is the following.
+Triggers and stored procedures are created in the AdventureWorks database attached to the SQL Server instance, the YAML code snippet that performs this operation is the following.
 
 ```
 - name: Create sp usp_Raiserror_SafetyStockLevel
