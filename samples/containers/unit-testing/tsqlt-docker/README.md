@@ -45,9 +45,9 @@ To run this example, the following basic concepts are required.
 
 ## Case history
 
-The AdventureWorks database contains the Production.Product table that stores products managed and sold by the fake company Adventure Works LTD.
+The AdventureWorks database contains the `Production.Product` table that stores products managed and sold by the fake company Adventure Works LTD.
 
-The trigger we have wrote is to prevent the insertion of new products with values less than 10 as a “safety stock”. The Company wishes to always have a warehouse stock of no less than 10 units for each product. The safety stock level is a very important value for the automatic procedures: it allows to re-order materials. The creation of new purchase orders and production orders are based on the safety stock level. To make our trigger simple, it will only respond to the OnInsert event, for INSERT commands.
+The trigger we have wrote is to prevent the insertion of new products with values less than 10 as a “safety stock”. The Company wishes to always have a warehouse stock of no less than 10 units for each product. The safety stock level is a very important value for the automatic procedures: it allows to re-order materials. The creation of new purchase orders and production orders are based on the safety stock level. To make our trigger simple, it will only respond to the `OnInsert` event, for `INSERT` commands.
 
 <a name=run-this-sample></a>
 
@@ -85,7 +85,7 @@ A sample YAML file that implements the test automation workflow is already in yo
 
 **1. Definition of activation events**
 
-The definition of the activation events is typically done at the beginning of the YAML script with a code snippet similar to the one shown below. The workflow is activated when push or pull request events occur on the “master” branch. The “workflow_dispatch” specification allows you to run the workflow manually from the actions tab.
+The definition of the activation events is typically done at the beginning of the YAML script with a code snippet similar to the one shown below. The workflow is activated when push or pull request events occur on the `master` branch. The `workflow_dispatch` specification allows you to run the workflow manually from the actions tab.
 
 ```
 # Controls when the workflow will run
@@ -102,7 +102,7 @@ on:
 
 **2. Creating a Docker container from a SQL Server image on Linux**
 
-Creating a Docker container from a SQL Server image on Linux can be done by requesting the sqlserver service accompanied by the path to the Docker image you want to use.
+Creating a Docker container from a SQL Server image on Linux can be done by requesting the `sqlserver service` accompanied by the path to the Docker image you want to use.
 
 The official images provided by Microsoft for SQL Server on Linux are available [here](https://hub.docker.com/_/microsoft-mssql-server).
 
@@ -129,7 +129,7 @@ jobs:
 
 In order to reference the newly created Docker container it is important to save its identifier in an environment variable.
 
-The following snippet of YAML code sets the ENV_CONTAINER_ID variable with the ID of the container created.
+The following snippet of YAML code sets the `ENV_CONTAINER_ID` variable with the ID of the container created.
 
 ```
 - name: Set environment variable ENV_CONTAINER_ID
@@ -196,7 +196,7 @@ The following docker exec command, that uses sqlcmd, executes the TSQL commands 
   run: docker exec -i $ENV_CONTAINER_ID /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P "3uuiCaKxfbForrK" -d AdventureWorks2017 -b < ./unit-test/test-class-trproductsafetystocklevel.sql
 ```
 
-Let's go ahead with the creation and execution of the unit tests. Each .sql file of the "test case" family contains the TSQL commands for creating and running the related unit test. Each store procedure tests one and only one test case.
+Let's go ahead with the creation and execution of the unit tests. Each .sql file of the test case family contains the TSQL commands for creating and running the related unit test. Each store procedure tests one and only one test case.
 
 The following snippet of YAML code creates and runs the test units.
 
