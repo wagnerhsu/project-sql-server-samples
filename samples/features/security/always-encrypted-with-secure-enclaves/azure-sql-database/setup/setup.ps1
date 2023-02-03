@@ -1,5 +1,6 @@
-﻿Import-Module "Az" -MinimumVersion "9.3"
-Import-Module "SqlServer" -Version "22.0.49-preview" 
+﻿Import-Module "Az" -MinimumVersion "5.6"
+Import-Module "Az.Attestation" -MinimumVersion "0.1.8"
+Import-Module "SqlServer" -MinimumVersion "21.1.18235"
 
 ######################################################################
 # Prompt the user to enter the values of deployment parameters
@@ -130,6 +131,22 @@ $encryptedColumnSettings += New-SqlColumnEncryptionSettings -ColumnName "dbo.Emp
 Set-SqlColumnEncryption -ColumnEncryptionSettings $encryptedColumnSettings -InputObject $database -LogFileDirectory .
 
 ######################################################################
+# Configure the attestation policy
+######################################################################
+
+$resourceGroupName = "${projectName}"
+$attestationProviderName = "${projectName}attest"
+$policyFile = "AttestationPolicy.txt"
+$teeType = "SgxEnclave"
+$policyFormat = "Text"
+$policy=Get-Content -path $policyFile -Raw
+Set-AzAttestationPolicy -Name $attestationProviderName -ResourceGroupName $resourceGroupName -Tee $teeType -Policy $policy -PolicyFormat  $policyFormat
+
+# Get the attestation URL
+$attestationProvider = Get-AzAttestation -Name $attestationProviderName -ResourceGroupName $resourceGroupName 
+$attestationUrl = $attestationProvider.AttestUri
+
+######################################################################
 # Print parameters for the demo
 ######################################################################
 
@@ -137,4 +154,5 @@ $app = Get-AzWebApp -Name $appName -ResourceGroupName $resourceGroupName
 Write-Host -ForegroundColor "green" "Resource group name: $resourceGroupName"
 Write-Host -ForegroundColor "green" "Database server name: $serverName"
 Write-Host -ForegroundColor "green" "Database name: $databaseName"
+Write-Host -ForegroundColor "green" "Attestation URL: $attestationUrl"
 Write-Host -ForegroundColor "green" "Application URL: https://$($app.HostNames[0].ToString())"
