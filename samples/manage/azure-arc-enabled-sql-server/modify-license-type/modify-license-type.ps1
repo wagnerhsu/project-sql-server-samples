@@ -8,18 +8,22 @@
 #
 # The script accepts the following command line parameters:
 # 
-# -SubId [subscription_id] | [csv_file_name]    (Accepts a .csv file with the list of subscriptions)
-# -LicenceType [license_type_value]             (Specific LT value)
+# -SubId [subscription_id] | [csv_file_name]    (Limit scope to specific subscriptions. Accepts a .csv file with the list of subscriptions)
+# -ResourceGroup [resource_goup]                (Limit scope  to a specific resoure group)
+# -MachineName [machine_name]                   (Limit scope to a specific machine)
+# -LicenseType [license_type_value]             (Specific LT value)
 # -All                                          (Optional. Set the new license type value only if undefined)
 # 
 
 param (
     [Parameter (Mandatory= $false)] 
     [string] $SubId, 
+    [Parameter (Mandatory= $false)] 
+    [string] $ResourceGroup, 
+    [Parameter (Mandatory= $false)] 
+    [string] $MachineName, 
     [Parameter (Mandatory= $false)]
     [string] $LicenseType="Paid", 
-    [Parameter (Mandatory= $false)]
-    [string] $SkipServers,
     [Parameter (Mandatory= $false)]
     [boolean] $All=$false
 )
@@ -51,6 +55,44 @@ function CheckModule ($m) {
     }
 }
 
+function ObjectToHashtable {
+    [CmdletBinding()]
+    [OutputType('hashtable')]
+    param (
+        [Parameter(ValueFromPipeline)]
+        $InputObject
+    )
+    process {
+        ## Return null if the input is null. This can happen when calling the function
+        ## recursively and a property is null
+        if ($null -eq $InputObject) {
+            return $null
+        }
+        ## Check if the input is an array or collection. If so, we also need to convert
+        ## those types into hash tables as well. This function will convert all child
+        ## objects into hash tables (if applicable)
+        if ($InputObject -is [System.Collections.IEnumerable] -and $InputObject -isnot [string]) {
+            $collection = @(
+                foreach ($object in $InputObject) {
+                    ObjectToHashtable -InputObject $object
+                }
+            )
+            ## Return the array but don't enumerate it because the object may be pretty complex
+            Write-Output -NoEnumerate $collection
+        } elseif ($InputObject -is [psobject]) { 
+            ## If the object has properties that need enumeration, cxonvert it to its own hash table and return it
+            $hash = @{}
+            foreach ($property in $InputObject.PSObject.Properties) {
+                $hash[$property.Name] = ObjectToHashtable -InputObject $property.Value
+            }
+            $hash
+        } else {
+            ## If the object isn't an array, collection, or other object, it's already a hash table
+            ## So just return it.
+            $InputObject
+        }
+    }
+}
 
 #
 # Suppress warnings
@@ -87,51 +129,53 @@ foreach ($sub in $subscriptions){
     try {
         Set-AzContext -SubscriptionId $sub.Id  
     }catch {
-        write-host "Invalid subscription: " $sub.Id
+        write-host "Invalid subscription: $($sub.Id)"
         {continue}
     }
    
     $query = "
-        resources
-        | where type =~ 'microsoft.hybridcompute/machines/extensions'
-        | extend extensionPublisher = tostring(properties.publisher), extensionType = tostring(properties.type)
-        | where extensionPublisher =~ 'Microsoft.AzureData'
-        | parse id with * '/providers/Microsoft.HybridCompute/machines/' machineName '/extensions/' *
-        | project machineName, extensionName = name, resourceGroup, location, subscriptionId, extensionPublisher, extensionType, properties
+    resources
+    | where type =~ 'microsoft.hybridcompute/machines/extensions'
+    | extend extensionPublisher = tostring(properties.publisher), extensionType = tostring(properties.type), provisioningState = tostring(properties.provisioningState)
+    | where extensionPublisher =~ 'Microsoft.AzureData'
+    | where provisioningState =~ 'Succeeded'
+    | parse id with * '/providers/Microsoft.HybridCompute/machines/' machineName '/extensions/' *
+    | project machineName, extensionName = name, resourceGroup, location, subscriptionId, extensionPublisher, extensionType, properties
     "
     
-    Search-AzGraph -Query $query | ForEach-Object {
-            
+    if ($MachineName) {$query += "| where machineName =~ '$($MachineName)'"}     
+    if ($ResourceGroup) {$query += "| where resourceGroup =~ '$($ResourceGroup)'"}
+
+    $resources = Search-AzGraph -Query "$($query) | where subscriptionId =~ '$($sub.Id)'"
+    foreach ($r in $resources) {
+
         $setID = @{
-            MachineName = $_.MachineName        
-            Name = $_.extensionName        
-            ResourceGroup = $_.resourceGroup        
-            Location = $_.location        
-            SubscriptionId = $_.subscriptionId
-            Publisher = $_.extensionPublisher
-            ExtensionType = $_.extensionType    
+            MachineName = $r.MachineName        
+            Name = $r.extensionName        
+            ResourceGroup = $r.resourceGroup        
+            Location = $r.location        
+            SubscriptionId = $r.subscriptionId
+            Publisher = $r.extensionPublisher
+            ExtensionType = $r.extensionType    
         }
-        $getID = @{
-            Name = $_.extensionName 
-            MachineName = $_.MachineName
-            ResourceGroup = $_.resourceGroup
-            SubscriptionId = $_.subscriptionId
-        }
-        $old =  Get-AzConnectedMachineExtension @getID
+
         $settings = @{}
-        foreach( $property in $_.properties.settings.psobject.properties.name ){ $settings[$property] = $_.properties.settings.$property }
-        if (-not $all) {
-            if (-not $settings.ContainsKey("LicenseType")) { $settings["LicenseType"] = $LicenseType }
+        $settings = $r.properties.settings | ConvertTo-Json | ConvertFrom-Json | ObjectToHashtable
+        
+        if ($settings.ContainsKey("LicenseType")) {
+            if ($All) {
+                if ($settings["LicenseType"] -ne $LicenseType ) {
+                    $settings["LicenseType"] = $LicenseType 
+                    Write-Host "Resource group: [$($r.resourceGroup)] Connected machine: [$($r.MachineName)] : License type: [$($settings["LicenseType"])]"
+                    Set-AzConnectedMachineExtension @setId -Settings $settings -NoWait   
+                }
+            }        
         } else {
-            $settings["LicenseType"] = $LicenseType
+            $settings["LicenseType"] = $LicenseType   
+            Write-Host "Resource group: [$($r.resourceGroup)] Connected machine: [$($r.MachineName)] : License type: [$($settings["LicenseType"])]"
+            Set-AzConnectedMachineExtension @setId -Settings $settings 
         }
-        if ($_.properties.provisioningState -ne "Succeeded") { 
-            Write-Warning "Skipping extension on server $($_.machineName) because it's state is $($_.properties.provisioningState)"; 
-        } else {
-            Set-AzConnectedMachineExtension @setId -Settings $settings -NoWait
-            $new =  Get-AzConnectedMachineExtension @getID
-        }
-    }
+    } 
 }
     
     

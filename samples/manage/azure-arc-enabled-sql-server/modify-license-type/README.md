@@ -11,15 +11,17 @@ ms.date: 2/09/2023
 
 
 This script allows you to to set or change the license type on all Azure-connected SQL Servers
-in a specific subscription, a list of subscriptions or the entire account. By default, it sets the specified license type value on the servers where it is undefined. But you can request to set it on all servers in scope.  
+on a specific resource, in a single resource group, a specific subscription, a list of subscriptions or the entire account. By default, it sets the specified license type value on the servers where it is undefined. But you can request to set it on all servers in the selected scope.  
 
 You can specify a single subscription to scan, or provide a list of subscriptions as a .CSV file. 
-If not specified, all subscriptions your role has access to are scanned. 
+If not specified, all subscriptions your role has access to are scanned.
+
+If the license type is not specified, the value "Paid" is used.
 
 
 # Required permissions
 
-You must be at least a *Contributor* of each subscription you modify.  
+You must have at least a *Contributor* role in each subscription you modify.  
 
 # Launching the script 
 
@@ -28,6 +30,8 @@ The script accepts the following command line parameters:
 | **Parameter** &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  | **Value** &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; | **Description** |
 |:--|:--|:--|
 |-SubId|subscription_id *or* a file_name|Optional: subscription id or a .csv file with the list of subscriptions<sup>1</sup>|
+|-ResourceGroup |resource_group_name|Optional: Limit the scope  to a specific resource group|
+|-MachineName |machine_name|Optional: Limit the scope to a specific machine|
 |-LicenceType | "Paid" (default), "PAYG" or "LicenseOnly"| Specifies the license type value |
 |-All|\$True or \$False (default)|Optional: Set the new license type value only if undefined|
 
@@ -66,7 +70,7 @@ Use the following steps to run the script in Cloud Shell.
 3. Run the script.  
 
     ```console
-   .//modify-license-type.ps1 -LicenseType "Paid"
+   .//modify-license-type.ps1 -LicenseType "PAYG"
     ```
 
 > [!NOTE]
