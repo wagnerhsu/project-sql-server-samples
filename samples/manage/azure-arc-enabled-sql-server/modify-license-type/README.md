@@ -11,7 +11,7 @@ ms.date: 2/09/2023
 
 
 This script allows you to to set or change the license type on all Azure-connected SQL Servers
-on a specific resource, in a single resource group, a specific subscription, a list of subscriptions or the entire account. By default, it sets the specified license type value on the servers where it is undefined. But you can request to set it on all servers in the selected scope.  
+on a specific resource, in a single resource group, a specific subscription, a list of subscriptions or all subscriptions to which you have access. By default, it sets the specified license type value on the servers where it is undefined. But you can request to set it on all servers in the selected scope.  
 
 You can specify a single subscription to scan, or provide a list of subscriptions as a .CSV file. 
 If not specified, all subscriptions your role has access to are scanned.
@@ -41,10 +41,10 @@ Get-AzSubscription | Export-Csv .\mysubscriptions.csv -NoTypeInformation
 ```
 ## Example 1
 
-The following command will scan all the subscriptions to which the user has access to and set the license type to "PAYG".
+The following command will scan all the subscriptions to which the user has access to, and set the license type to "PAYG".
 
 ```PowerShell
-.\update-license-type.ps1 -LicenseType "PAYG" -All
+.\update-license-type.ps1 -LicenseType PAYG -All $True
 ```
 
 ## Example 2
@@ -52,7 +52,7 @@ The following command will scan all the subscriptions to which the user has acce
 The following command will scan the subscription `<sub_id>` and set the license type value to "Paid" on the servers where it is undefined.
 
 ```PowerShell
-.\update-license-type.ps1 -SubId <sub_id> -LicenseType "Paid"
+.\update-license-type.ps1 -SubId <sub_id> -LicenseType Paid
 ```
 
 # Running the script using Cloud Shell
@@ -70,7 +70,7 @@ Use the following steps to run the script in Cloud Shell.
 3. Run the script.  
 
     ```console
-   .//modify-license-type.ps1 -LicenseType "PAYG"
+   .//modify-license-type.ps1 -LicenseType Paid 
     ```
 
 > [!NOTE]
