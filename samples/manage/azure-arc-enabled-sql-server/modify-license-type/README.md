@@ -41,10 +41,10 @@ Get-AzSubscription | Export-Csv .\mysubscriptions.csv -NoTypeInformation
 ```
 ## Example 1
 
-The following command will scan all the subscriptions to which the user has access to and set the license type to "PAYG".
+The following command will scan all the subscriptions to which the user has access to, and set the license type to "PAYG".
 
 ```PowerShell
-.\update-license-type.ps1 -LicenseType "PAYG" -All
+.\update-license-type.ps1 -LicenseType PAYG -All $True
 ```
 
 ## Example 2
@@ -52,7 +52,7 @@ The following command will scan all the subscriptions to which the user has acce
 The following command will scan the subscription `<sub_id>` and set the license type value to "Paid" on the servers where it is undefined.
 
 ```PowerShell
-.\update-license-type.ps1 -SubId <sub_id> -LicenseType "Paid"
+.\update-license-type.ps1 -SubId <sub_id> -LicenseType Paid
 ```
 
 # Running the script using Cloud Shell
@@ -70,7 +70,7 @@ Use the following steps to run the script in Cloud Shell.
 3. Run the script.  
 
     ```console
-   .//modify-license-type.ps1 -LicenseType PAYG -All $True
+   .//modify-license-type.ps1 -LicenseType Paid 
     ```
 
 > [!NOTE]
