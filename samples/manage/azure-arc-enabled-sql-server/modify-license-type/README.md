@@ -64,7 +64,7 @@ Use the following steps to run the script in Cloud Shell.
 2. Upload the script to the shell using the following command:
 
     ```console
-    curl https://raw.githubusercontent.com/microsoft/sql-server-samples/master/samples/manage/azure-arc-enabled-sql-server/modify-license-type/modify-license-type.ps1 -o /modify-license-type.ps1
+    curl https://raw.githubusercontent.com/microsoft/sql-server-samples/master/samples/manage/azure-arc-enabled-sql-server/modify-license-type/modify-license-type.ps1 -o modify-license-type.ps1
     ```
 
 3. Run the script.  
