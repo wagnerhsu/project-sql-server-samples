@@ -11,7 +11,7 @@ ms.date: 2/09/2023
 
 
 This script allows you to to set or change the license type on all Azure-connected SQL Servers
-on a specific resource, in a single resource group, a specific subscription, a list of subscriptions or the entire account. By default, it sets the specified license type value on the servers where it is undefined. But you can request to set it on all servers in the selected scope.  
+on a specific resource, in a single resource group, a specific subscription, a list of subscriptions or all subscriptions to which you have access. By default, it sets the specified license type value on the servers where it is undefined. But you can request to set it on all servers in the selected scope.  
 
 You can specify a single subscription to scan, or provide a list of subscriptions as a .CSV file. 
 If not specified, all subscriptions your role has access to are scanned.
@@ -70,7 +70,7 @@ Use the following steps to run the script in Cloud Shell.
 3. Run the script.  
 
     ```console
-   .//modify-license-type.ps1 -LicenseType "PAYG"
+   .//modify-license-type.ps1 -LicenseType PAYG -All $True
     ```
 
 > [!NOTE]
