@@ -171,7 +171,7 @@ foreach ($sub in $subscriptions){
                 if ($settings["LicenseType"] -ne $LicenseType ) {
                     $settings["LicenseType"] = $LicenseType 
                     Write-Host "Resource group: [$($r.resourceGroup)] Connected machine: [$($r.MachineName)] : License type: [$($settings["LicenseType"])]"
-                    Set-AzConnectedMachineExtension @setId -Settings $settings -NoWait   
+                    Set-AzConnectedMachineExtension @setId -Settings $settings -NoWait | Out-Null
                 }
             }        
         } else {
