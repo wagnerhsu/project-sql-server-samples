@@ -17,8 +17,8 @@
 #                                               By default the value is set only if license type is undefined undefined)
 # 
 # The script uses a function ConvertTo-HashTable that was created by Adam Bertram (@adam-bertram).
-# The function was originally published on this site: https://4sysops.com/archives/convert-json-to-a-powershell-hash-table/
-# and used here with the author's permission.
+# The function was originally published on https://4sysops.com/archives/convert-json-to-a-powershell-hash-table/
+# and is used here with the author's permission.
 #
 
 param (
