@@ -8,11 +8,13 @@
 #
 # The script accepts the following command line parameters:
 # 
-# -SubId [subscription_id] | [csv_file_name]    (Limit scope to specific subscriptions. Accepts a .csv file with the list of subscriptions)
+# -SubId [subscription_id] | [csv_file_name]    (Limit scope to specific subscriptions. Accepts a .csv file with the list of subscriptions.
+#                                               If not specified all subscriptions will be scanned)
 # -ResourceGroup [resource_goup]                (Limit scope  to a specific resoure group)
 # -MachineName [machine_name]                   (Limit scope to a specific machine)
 # -LicenseType [license_type_value]             (Specific LT value)
-# -All                                          (Optional. Set the new license type value only if undefined)
+# -All                                          (Optional. Set the new license type on all installed extensions. 
+#                                               By default the value is set only if license type is undefined undefined)
 # 
 # The script uses a function ConvertTo-HashTable that was created by Adam Bertram (@adam-bertram).
 # The function was originally published on this site: https://4sysops.com/archives/convert-json-to-a-powershell-hash-table/
