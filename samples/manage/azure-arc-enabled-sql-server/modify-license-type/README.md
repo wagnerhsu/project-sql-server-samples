@@ -39,20 +39,29 @@ The script accepts the following command line parameters:
 ```PowerShell
 Get-AzSubscription | Export-Csv .\mysubscriptions.csv -NoTypeInformation 
 ```
+
 ## Example 1
 
-The following command will scan all the subscriptions to which the user has access to, and set the license type to "PAYG".
+The following command will scan all the subscriptions to which the user has access to, and set the license type to "Paid" on all servers where license type is undefined.
 
 ```PowerShell
-.\update-license-type.ps1 -LicenseType PAYG -All $True
+.\update-license-type.ps1 -LicenseType Paid 
 ```
 
 ## Example 2
 
-The following command will scan the subscription `<sub_id>` and set the license type value to "Paid" on the servers where it is undefined.
+The following command will scan the subscription `<sub_id>` and set the license type value to "Paid" on all servers.
 
 ```PowerShell
-.\update-license-type.ps1 -SubId <sub_id> -LicenseType Paid
+.\update-license-type.ps1 -SubId <sub_id> -LicenseType Paid -All $True
+```
+
+## Example 3
+
+The following command will scan resource group <resource_group_name> in the subscription `<sub_id>` and set the license type value to "PAYG" on all servers.
+
+```PowerShell
+.\update-license-type.ps1 -SubId <sub_id> -ResourceGroup <resource_group_name> -LicenseType PAYG -All $True
 ```
 
 # Running the script using Cloud Shell
