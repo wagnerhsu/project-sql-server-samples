@@ -14,6 +14,10 @@
 # -LicenseType [license_type_value]             (Specific LT value)
 # -All                                          (Optional. Set the new license type value only if undefined)
 # 
+# The script uses a function ConvertTo-HashTable that was created by Adam Bertram (@adam-bertram).
+# The function was originally published in this blog: https://4sysops.com/archives/convert-json-to-a-powershell-hash-table/
+# and used here with the author's permission.
+#
 
 param (
     [Parameter (Mandatory= $false)] 
@@ -55,7 +59,7 @@ function CheckModule ($m) {
     }
 }
 
-function ObjectToHashtable {
+function ConvertTo-Hashtable {
     [CmdletBinding()]
     [OutputType('hashtable')]
     param (
@@ -74,7 +78,7 @@ function ObjectToHashtable {
         if ($InputObject -is [System.Collections.IEnumerable] -and $InputObject -isnot [string]) {
             $collection = @(
                 foreach ($object in $InputObject) {
-                    ObjectToHashtable -InputObject $object
+                    ConvertTo-Hashtable -InputObject $object
                 }
             )
             ## Return the array but don't enumerate it because the object may be pretty complex
@@ -83,7 +87,7 @@ function ObjectToHashtable {
             ## If the object has properties that need enumeration, cxonvert it to its own hash table and return it
             $hash = @{}
             foreach ($property in $InputObject.PSObject.Properties) {
-                $hash[$property.Name] = ObjectToHashtable -InputObject $property.Value
+                $hash[$property.Name] = ConvertTo-Hashtable -InputObject $property.Value
             }
             $hash
         } else {
@@ -160,7 +164,7 @@ foreach ($sub in $subscriptions){
         }
 
         $settings = @{}
-        $settings = $r.properties.settings | ConvertTo-Json | ConvertFrom-Json | ObjectToHashtable
+        $settings = $r.properties.settings | ConvertTo-Json | ConvertFrom-Json | ConvertTo-Hashtable
         
         if ($settings.ContainsKey("LicenseType")) {
             if ($All) {
@@ -173,7 +177,7 @@ foreach ($sub in $subscriptions){
         } else {
             $settings["LicenseType"] = $LicenseType   
             Write-Host "Resource group: [$($r.resourceGroup)] Connected machine: [$($r.MachineName)] : License type: [$($settings["LicenseType"])]"
-            Set-AzConnectedMachineExtension @setId -Settings $settings 
+            Set-AzConnectedMachineExtension @setId -Settings $settings | Out-Null
         }
     } 
 }
