@@ -18,7 +18,7 @@
 # 
 # The script uses a function ConvertTo-HashTable that was created by Adam Bertram (@adam-bertram).
 # The function was originally published on this site: https://4sysops.com/archives/convert-json-to-a-powershell-hash-table/
-# and used here with the author's permission.
+# and is used here with the author's permission.
 #
 
 param (
