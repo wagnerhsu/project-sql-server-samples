@@ -15,7 +15,7 @@
 # -All                                          (Optional. Set the new license type value only if undefined)
 # 
 # The script uses a function ConvertTo-HashTable that was created by Adam Bertram (@adam-bertram).
-# The function was originally published in this blog: https://4sysops.com/archives/convert-json-to-a-powershell-hash-table/
+# The function was originally published on this site: https://4sysops.com/archives/convert-json-to-a-powershell-hash-table/
 # and used here with the author's permission.
 #
 
@@ -177,7 +177,7 @@ foreach ($sub in $subscriptions){
         } else {
             $settings["LicenseType"] = $LicenseType   
             Write-Host "Resource group: [$($r.resourceGroup)] Connected machine: [$($r.MachineName)] : License type: [$($settings["LicenseType"])]"
-            Set-AzConnectedMachineExtension @setId -Settings $settings | Out-Null
+            Set-AzConnectedMachineExtension @setId -Settings $settings -NoWait | Out-Null
         }
     } 
 }
