@@ -13,7 +13,7 @@
 # -ResourceGroup [resource_goup]                (Limit scope  to a specific resoure group)
 # -MachineName [machine_name]                   (Limit scope to a specific machine)
 # -LicenseType [license_type_value]             (Specific LT value)
-# -All                                          (Optional. Set the new license type on all installed extensions. 
+# -All                                          (Required. Set the new license type on all installed extensions. 
 #                                               By default the value is set only if license type is undefined undefined)
 # 
 # The script uses a function ConvertTo-HashTable that was created by Adam Bertram (@adam-bertram).
@@ -28,8 +28,9 @@ param (
     [string] $ResourceGroup, 
     [Parameter (Mandatory= $false)] 
     [string] $MachineName, 
-    [Parameter (Mandatory= $false)]
-    [string] $LicenseType="Paid", 
+    [Parameter (Mandatory= $true)]
+    [ValidateSet(“PAYG”,”Paid”,"LicenseOnly”)]
+    [string] $LicenseType, 
     [Parameter (Mandatory= $false)]
     [boolean] $All=$false
 )
