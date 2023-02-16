@@ -22,14 +22,14 @@
 #
 
 param (
-    [Parameter (Mandatory= $false)] 
+    [Parameter (Mandatory=$false)] 
     [string] $SubId, 
     [Parameter (Mandatory= $false)] 
     [string] $ResourceGroup, 
     [Parameter (Mandatory= $false)] 
     [string] $MachineName, 
     [Parameter (Mandatory= $true)]
-    [ValidateSet(“PAYG”,”Paid”,"LicenseOnly”)]
+    [ValidateSet("PAYG","Paid","LicenseOnly", IgnoreCase=$false)]
     [string] $LicenseType, 
     [Parameter (Mandatory= $false)]
     [boolean] $All=$false

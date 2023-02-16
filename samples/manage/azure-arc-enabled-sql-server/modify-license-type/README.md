@@ -96,11 +96,16 @@ Use the following steps to run the script in a PowerShell session on your PC.
     curl https://raw.githubusercontent.com/microsoft/sql-server-samples/master/samples/manage/azure-arc-enabled-sql-server/modify-license-type/modify-license-type.ps1 -o modify-license-type.ps1
     ```
 
-1. Use the following commands to install the Az module. For more information, see [Install the Azure Az PowerShell module](https://learn.microsoft.com/powershell/azure/install-az-ps):  
+1. Make sure the NuGet package provider is installed:  
 
     ```console
     Set-ExecutionPolicy  -ExecutionPolicy RemoteSigned -Scope CurrentUser
-    Install-packageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force  
+    Install-packageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Scope CurrentUser -Force  
+    ```
+
+1. Make sure the the Az module is installed. For more information, see [Install the Azure Az PowerShell module](https://learn.microsoft.com/powershell/azure/install-az-ps):  
+
+    ```console
     Install-Module Az -Scope CurrentUser -Repository PSGallery -Force
     ```
 
