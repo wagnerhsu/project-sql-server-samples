@@ -35,8 +35,8 @@ BEGIN
 	-- verify whether orders exist, and if so, compute the avg number of customer orders in the last year
 	IF EXISTS (SELECT 1 FROM Sales.Orders)
 	BEGIN
-		SELECT @OldNumberOfCustomerOrders=	AVG(t.OrderCount) 
-		FROM (SELECT COUNT(*) AS OrderCount FROM Sales.Orders 
+		SELECT @OldNumberOfCustomerOrders=	AVG(t.OrderCount)
+		FROM (SELECT COUNT(*) AS OrderCount FROM Sales.Orders
 			WHERE DATEPART(year,OrderDate) = DATEPART(year,(SELECT MAX(OrderDate) FROM Sales.Orders))
 				AND DATEPART(weekday,OrderDate) NOT IN (1,7)
 				AND BackorderOrderID IS NULL
@@ -75,18 +75,18 @@ BEGIN
 			IF NOT EXISTS (SELECT 1 FROM DataLoadSimulation.SeasonVariation WHERE [Year]=@CurrentYear and Season=@CurrentSeason)
 			BEGIN
 				-- compute seasonal variation
-				DECLARE @SeasonalVariation float 
+				DECLARE @SeasonalVariation float
 				SET @SeasonalVariation = 1 + (@MinSeasonalVariationPercent + RAND() * CAST(@MaxSeasonalVariationPercent - @MinSeasonalVariationPercent AS float))/100
 				IF @CurrentSeason % 2 = 1
 					SET @SeasonalVariation = 1/@SeasonalVariation
 
-				INSERT DataLoadSimulation.SeasonVariation ([Year], [Season], YearlyVariation, SeasonalVariation) 
+				INSERT DataLoadSimulation.SeasonVariation ([Year], [Season], YearlyVariation, SeasonalVariation)
 				VALUES (@CurrentYear, @CurrentSeason, @YearlyVariation, @SeasonalVariation)
 			END
 			SET @CurrentSeason += 1
 		END
 		SET @CurrentYear += 1
-	END 
+	END
 	--select * from DataLoadSimulation.SeasonVariation
 
 
@@ -114,7 +114,7 @@ BEGIN
 		-- compute effect of yearly growth on day at hand
 		DECLARE @YearlyEffect float = 1+CAST((@YearlyVariation-1) AS float)*(CAST((DATEDIFF(day, DATEFROMPARTS(@CurrentYear-1, 12, 31), @CurrentDateTime)) AS float)/183)
 
-		DECLARE @DailyEffect float = RAND() 
+		DECLARE @DailyEffect float = RAND()
 		IF @DailyEffect < 0.5
 			SET @DailyEffect = 0-@DailyEffect
 			
@@ -144,11 +144,11 @@ BEGIN
 			-- one transaction per day
 			BEGIN TRAN
 			SET @DateMessage = N'Processing '
-							 + SUBSTRING(DATENAME(weekday, @CurrentDateTime), 1,3) 
-							 + N' ' 
+							 + SUBSTRING(DATENAME(weekday, @CurrentDateTime), 1,3)
+							 + N' '
 							 + CONVERT(nvarchar(20), @CurrentDateTime, 107)
 							 + N' '
-							 + CAST(DATEDIFF(DAY, @CurrentDateTime, @EndDate) AS NVARCHAR) 
+							 + CAST(DATEDIFF(DAY, @CurrentDateTime, @EndDate) AS NVARCHAR)
 							 + N' Days Remaining '
 							 ;
 
@@ -180,7 +180,7 @@ BEGIN
 			-- compute effect of yearly growth on day at hand
 			DECLARE @YearlyEffect float = 1+CAST((@YearlyVariation-1) AS float)*(CAST((DATEDIFF(day, DATEFROMPARTS(@CurrentYear-1, 12, 31), @CurrentDateTime)) AS float)/183)
 
-			DECLARE @DailyEffect float = RAND() 
+			DECLARE @DailyEffect float = RAND()
 			IF @DailyEffect < 0.5
 				SET @DailyEffect = 0-@DailyEffect
 			

@@ -18,5 +18,5 @@ The following steps are required to enable [xp_cmdshell](https://docs.microsoft.
 
     ``` sql
     EXECUTE sp_configure 'xp_cmdshell', 0;
-    RECONFIGURE 
+    RECONFIGURE
     ```

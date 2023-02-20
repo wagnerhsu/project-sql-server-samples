@@ -6,7 +6,7 @@ GO
 
 DECLARE @SSNPattern CHAR(11) = '%9838'
 SELECT * FROM [dbo].[Employees] WHERE [SSN] LIKE @SSNPattern;
-GO 
+GO
 
 DECLARE @MinSalary MONEY = 40000
 DECLARE @MaxSalary MONEY = 45000

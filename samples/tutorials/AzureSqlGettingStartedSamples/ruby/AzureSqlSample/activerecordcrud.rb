@@ -12,7 +12,7 @@ ActiveRecord::Base.establish_connection(
 
 #Create new database SampleDB
 puts "Drop and create new database 'SampleDB'"
-ActiveRecord::Base.connection.drop_database('SampleDB') rescue nil 
+ActiveRecord::Base.connection.drop_database('SampleDB') rescue nil
 ActiveRecord::Base.connection.create_database('SampleDB')
 ActiveRecord::Base.connection.use_database('SampleDB')
 
@@ -22,7 +22,7 @@ ActiveRecord::Schema.define do
     t.string :taskname
     t.string :user
     t.date :duedate
-  end 
+  end
 end
 
 class Task < ActiveRecord::Base

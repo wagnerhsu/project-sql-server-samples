@@ -17,7 +17,7 @@ execute("DROP DATABASE IF EXISTS [SampleDB]; CREATE DATABASE [SampleDB];")
 
 # Create sample table with data
 puts "Creating sample table with data"
-execute("USE SampleDB; CREATE TABLE Employees (Id INT IDENTITY(1,1) NOT NULL PRIMARY KEY, 
+execute("USE SampleDB; CREATE TABLE Employees (Id INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
   Name NVARCHAR(50), Location NVARCHAR(50))
   INSERT INTO Employees (Name, Location) VALUES (N'Jared', N'Australia'),
   (N'Nikita', N'India'), (N'Tom', N'Germany')")

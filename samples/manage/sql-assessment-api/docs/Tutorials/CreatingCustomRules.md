@@ -14,20 +14,20 @@ The following is an example of a rule:
 ```json
 {
     //Target describes a SQL Server object the check is supposed to run against
-    "target": 
-    {     
+    "target":
+    {
         //This check targets an object of the Database type
         "type": "Database",
 
         //Applies to SQL Server 2016 and higher
         //Another example: "[12.0,13.0)" reads as "any SQL Server version >= 12.0 and < 13.0"
-        "version": "[13.0,)",    
+        "version": "[13.0,)",
 
         //Applies to SQL Server on Windows and Linux
-        "platform": "Windows, Linux",      
+        "platform": "Windows, Linux",
 
          //Applies to SQL on Premises and Azure SQL Managed Instance. Here you can also filter specific editions of SQL Server
-        "engineEdition": "OnPremises, ManagedInstance",  
+        "engineEdition": "OnPremises, ManagedInstance",
 
         //Applies to any database excluding master, tempdb, and msdb
         "name": { "not": "/^(master|tempdb|model)$/" }
@@ -50,15 +50,15 @@ The following is an example of a rule:
 
      //Usually, it's for recommendation what user should do if the rule raises up an alert
     "message": "Make sure Query Store actual operation mode is 'Read Write' to keep your performance analysis accurate",
-    
+
     //Reference material
     "helpLink": "https://docs.microsoft.com/sql/relational-databases/performance/monitoring-performance-by-using-the-query-store",
 
     //List of probes that are used to get the required data for this check. See below to know more about probes.
-    "probes": [ "Custom_DatabaseConfiguration" ],   
+    "probes": [ "Custom_DatabaseConfiguration" ],
 
     //Condition object is to define "good" and "bad" state, the latter is when the rule should raise an alert. When the condition is true, it means that the checked object complies with the best practice or policy. Otherwise, the rule raises an alert (it actually adds its message to the resulting set of recommendations)
-    "condition": 
+    "condition":
     {
         //It means that the variable came from the probe should be equal to  2
         "equal": [ "@query_store_state", 2 ]
@@ -77,11 +77,11 @@ The following is an example of a probe:
 //Probe name is used to reference the probe from a rule
 //Probe can have a few implementations that will be used for different targets
 //This probe has two implementations for different version of SQL Server
-"Custom_DatabaseConfiguration": 
+"Custom_DatabaseConfiguration":
 [
     {
         //Probe uses a T-SQL query to get the required data. Use 'CLR' for assemblies.
-        "type": "SQL",  
+        "type": "SQL",
 
          //Probes have their own target, usually to separate implementation for different versions, editions, or platforms. Probe targets work the same way as rule targets do.
         "target":
@@ -95,7 +95,7 @@ The following is an example of a probe:
         },
 
         //Implementation object with a T-SQL query. This probe is used in many rules, that's why the query return so many fields
-        "implementation": 
+        "implementation":
         {
             "query": "SELECT db.is_auto_create_stats_on, db.is_auto_update_stats_on, 0 AS query_store_state, db.collation_name, (SELECT collation_name FROM master.sys.databases (NOLOCK) WHERE database_id = 1) AS master_collation, db.is_auto_close_on, db.is_auto_shrink_on, db.page_verify_option, db.is_db_chaining_on, NULL AS is_auto_create_stats_incremental_on, db.is_trustworthy_on, db.is_parameterization_forced FROM [sys].[databases] (NOLOCK) AS db WHERE db.[name]=@TargetName"
         }
@@ -104,19 +104,19 @@ The following is an example of a probe:
     //This implementation object is to get the required data from SQL Server 2014 (look at target.version)
     {
         "type": "SQL",
-        "target": 
+        "target":
         {
             "type": "Database",
             "version": "[12.0, 13.0)",
             "platform": "Windows, Linux",
             "engineEdition": "OnPremises, ManagedInstance"
         },
-        "implementation": 
+        "implementation":
         {
             "query": "SELECT db.is_auto_create_stats_on, db.is_auto_update_stats_on, 0 AS query_store_state, db.collation_name, (SELECT collation_name FROM master.sys.databases (NOLOCK) WHERE database_id = 1) AS master_collation, db.is_auto_close_on, db.is_auto_shrink_on, db.page_verify_option, db.is_db_chaining_on, db.is_auto_create_stats_incremental_on, db.is_trustworthy_on, db.is_parameterization_forced FROM [sys].[databases] (NOLOCK) AS db WHERE db.[name]=@TargetName"
         }
     },
-    
+
     //This implementation object is to get the required data from SQL Server 2016 and up (look at target.version)
     {
         "type": "SQL",
@@ -127,10 +127,10 @@ The following is an example of a probe:
             "platform": "Windows, Linux",
             "engineEdition": "OnPremises, ManagedInstance"
         },
-        "implementation": 
+        "implementation":
         {
              //Use this key if your query requires to run on a database that is being assessed (it's a replacement for 'USE <DATABASENAME>;')
-            "useDatabase": true,                                               
+            "useDatabase": true,
             "query": "SELECT db.is_auto_create_stats_on, db.is_auto_update_stats_on, (SELECT CAST(actual_state AS DECIMAL) FROM [sys].[database_query_store_options]) AS query_store_state, db.collation_name, (SELECT collation_name FROM master.sys.databases (NOLOCK) WHERE database_id = 1) AS master_collation, db.is_auto_close_on, db.is_auto_shrink_on, db.page_verify_option, db.is_db_chaining_on, db.is_auto_create_stats_incremental_on, db.is_trustworthy_on, db.is_parameterization_forced FROM [sys].[databases] (NOLOCK) AS db WHERE db.[name]=@TargetName"
         }
     }

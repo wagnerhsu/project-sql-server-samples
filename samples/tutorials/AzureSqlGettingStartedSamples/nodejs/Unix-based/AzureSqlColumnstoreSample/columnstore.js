@@ -22,7 +22,7 @@ async function GetSecret(){
 	const client = new KeyVaultSecrets.SecretClient(url, credential);
 
 	try {
-	  secret = await client.getSecret('AppSecret').then((secret) => { 
+	  secret = await client.getSecret('AppSecret').then((secret) => {
 		password = secret.value;
 		});
 	}
@@ -42,7 +42,7 @@ async function GetConnection(){
         }
       },
       options: {
-	encrypt: true, 
+	encrypt: true,
 	trustServerCertificate: true,
 	database: 'your_database'		// update me
       }

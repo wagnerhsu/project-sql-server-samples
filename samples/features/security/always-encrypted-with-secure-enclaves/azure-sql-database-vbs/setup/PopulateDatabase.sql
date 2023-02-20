@@ -11,7 +11,7 @@ CREATE TABLE [dbo].[Employees](
 	[FirstName] [nvarchar](50) NOT NULL,
 	[LastName] [nvarchar](50) NOT NULL,
 	[Salary] [money] NOT NULL,
- CONSTRAINT [PK_dbo.Employees] PRIMARY KEY CLUSTERED 
+ CONSTRAINT [PK_dbo.Employees] PRIMARY KEY CLUSTERED
 (
 	[EmployeeID] ASC
 )WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
@@ -128,7 +128,7 @@ INSERT INTO [dbo].[Employees] ([SSN], [FirstName], [LastName], [Salary]) VALUES 
 INSERT INTO [dbo].[Employees] ([SSN], [FirstName], [LastName], [Salary]) VALUES ('658-41-8532', 'Twanna', 'Evans', 35364)
 INSERT INTO [dbo].[Employees] ([SSN], [FirstName], [LastName], [Salary]) VALUES ('943-41-6011', 'Carolyn', 'Farino', 76201)
 INSERT INTO [dbo].[Employees] ([SSN], [FirstName], [LastName], [Salary]) VALUES ('691-30-8623', 'Geri', 'Farrell', 39600)
-INSERT INTO [dbo].[Employees] ([SSN], [FirstName], [LastName], [Salary]) VALUES ('361-08-3217', 'François', 'Ferrier', 3704)
+INSERT INTO [dbo].[Employees] ([SSN], [FirstName], [LastName], [Salary]) VALUES ('361-08-3217', 'Franï¿½ois', 'Ferrier', 3704)
 INSERT INTO [dbo].[Employees] ([SSN], [FirstName], [LastName], [Salary]) VALUES ('827-51-1487', 'Kathie', 'Flood', 78467)
 INSERT INTO [dbo].[Employees] ([SSN], [FirstName], [LastName], [Salary]) VALUES ('483-93-0057', 'John', 'Ford', 77552)
 INSERT INTO [dbo].[Employees] ([SSN], [FirstName], [LastName], [Salary]) VALUES ('738-37-1607', 'Garth', 'Fort', 34381)
@@ -232,7 +232,7 @@ INSERT INTO [dbo].[Employees] ([SSN], [FirstName], [LastName], [Salary]) VALUES 
 INSERT INTO [dbo].[Employees] ([SSN], [FirstName], [LastName], [Salary]) VALUES ('321-14-1319', 'Scott', 'MacDonald', 30158)
 INSERT INTO [dbo].[Employees] ([SSN], [FirstName], [LastName], [Salary]) VALUES ('340-75-5874', 'Kathy', 'Marcovecchio', 10228)
 INSERT INTO [dbo].[Employees] ([SSN], [FirstName], [LastName], [Salary]) VALUES ('043-85-0648', 'Melissa', 'Marple', 46100)
-INSERT INTO [dbo].[Employees] ([SSN], [FirstName], [LastName], [Salary]) VALUES ('253-33-7509', 'Frank', 'Mart¡nez', 46267)
+INSERT INTO [dbo].[Employees] ([SSN], [FirstName], [LastName], [Salary]) VALUES ('253-33-7509', 'Frank', 'Martï¿½nez', 46267)
 INSERT INTO [dbo].[Employees] ([SSN], [FirstName], [LastName], [Salary]) VALUES ('335-68-4629', 'Chris', 'Maxwell', 92921)
 INSERT INTO [dbo].[Employees] ([SSN], [FirstName], [LastName], [Salary]) VALUES ('535-30-6577', 'Sandra', 'Maynard', 60264)
 INSERT INTO [dbo].[Employees] ([SSN], [FirstName], [LastName], [Salary]) VALUES ('613-34-9127', 'Walter', 'Mays', 70620)

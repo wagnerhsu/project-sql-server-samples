@@ -130,7 +130,7 @@ Perform the below steps before each demo presentation.
 
    - **Column Encryption Setting = Enabled** turns the Always Encrypted on in the client driver, allowing it to transparently encrypt query parameters and decrypt query results.
    - **Attestation Protocol = AAS** specifies Microsoft Azure Attestation is used for attesting the secure enclave for the **ContosoHR** database.
-   - **Enclave Attestation Url** is an attest URI of the attestation provider. 
+   - **Enclave Attestation Url** is an attest URI of the attestation provider.
 
    ![Connection string](./img/portal-web-app-connection-string.png)
 
@@ -205,7 +205,7 @@ Perform the below steps before you show the demo.
    ![Extended event results](./img/ssms-xevents-results.png)
 
 1. Click on the link in the second column of the first row of the result set to see the extended event with the latest query from the application. This will open the extended event in the new tab.
-   1. Review the query statement. Note that the query contains the **WHERE** clause with rich computations on encrypted columns: pattern matching using the **LIKE** predicate on the **SSN** column and the range comparison on the **Salary** column. The query also sorts records (the **ORDER BY** clause) by **SSN** or **Salary**. **Pro Tip:** to make it easier to view the query statement, you can put line brakes in it. 
+   1. Review the query statement. Note that the query contains the **WHERE** clause with rich computations on encrypted columns: pattern matching using the **LIKE** predicate on the **SSN** column and the range comparison on the **Salary** column. The query also sorts records (the **ORDER BY** clause) by **SSN** or **Salary**. **Pro Tip:** to make it easier to view the query statement, you can put line brakes in it.
 
       ![Extended event](./img/ssms-xevent.png)
 
@@ -308,13 +308,13 @@ Perform the below steps before you show the demo.
 
 1. Switch to Security Administrator's instance of SSMS, select the **EncryptColumns.sql** tab and click **F5** to execute the query, encrypts the data in the **SSN** and **Salary** columns in place, using the secure enclave.
 
-1. Switch back to DBA's instance of SSMS, select the **ListAllEmployees.sql** tab and click **F5** to execute the query again. Now the query should show the encrypted data in the **SSN** and **Salary** columns. As both columns are encrypted, the DBA cannot see the data in plaintext. 
+1. Switch back to DBA's instance of SSMS, select the **ListAllEmployees.sql** tab and click **F5** to execute the query again. Now the query should show the encrypted data in the **SSN** and **Salary** columns. As both columns are encrypted, the DBA cannot see the data in plaintext.
 
    ![Encrypted results](./img/ssms-encrypted-results.png)
 
 1. In the web browser, move the slider to reset the filter for salary and then re-enter a few digits of an SSN. Confirm the application still can filter employee records by salary and SSN.
 
-1. Switch to DBA's instance of SSMS, select the **QueryXevents.sql** tab and click **F5** to re-run the query. 
+1. Switch to DBA's instance of SSMS, select the **QueryXevents.sql** tab and click **F5** to re-run the query.
 
 1. Click on the link in the second column of the first row of the result set to see the extended event with the latest query from the application. This will open the extended event in the new tab.
    1. Review the query statement. Note that the query statement the query sends to the database has not changed - it still contains pattern matching using the **LIKE** predicate on the **SSN** column and the range comparison on the **Salary** column, as well as sorting  (the **ORDER BY** clause) by **SSN** or **Salary**. **Pro Tip:** to make it easier to view the query statement, you can put line brakes in it.

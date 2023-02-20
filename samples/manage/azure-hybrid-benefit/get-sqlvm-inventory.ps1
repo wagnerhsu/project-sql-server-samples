@@ -16,14 +16,14 @@
 # IaaS registration status
 #
 # The script accepts the following command line parameters:
-# 
+#
 # -SubId [subscription_id]        (Optional. If not specified all subscription the user has access to Accepts a .csv file with the list of subscriptions)
 # -FilePath [csv_file_name]       (Optional. Sprcifies a .csv file to save the data. if not specified, saves it in sql-vcm-inventory.csv)
-# 
+#
 
 param (
-    [Parameter (Mandatory= $false)] 
-    [string] $SubId, 
+    [Parameter (Mandatory= $false)]
+    [string] $SubId,
     [Parameter (Mandatory= $false)]
     [string] $FilePath
 
@@ -37,7 +37,7 @@ function CheckModule ($m) {
     if (!(Get-Module | Where-Object {$_.Name -eq $m})) {
          # If module is not imported, but available on disk then import
         if (Get-Module -ListAvailable | Where-Object {$_.Name -eq $m}) {
-            Import-Module $m 
+            Import-Module $m
         }
         else {
 
@@ -58,7 +58,7 @@ function CheckModule ($m) {
 
 function GetVCores {
     # This function translates each VM or Host sku type and name into vCores
-    
+
      [CmdletBinding()]
      param (
          [Parameter(Mandatory)]
@@ -66,32 +66,32 @@ function GetVCores {
          [Parameter(Mandatory)]
          [string]$name
      )
-     
+
      if ($global:VM_SKUs.Count -eq 0){
          $global:VM_SKUs = Get-AzComputeResourceSku  "westus" | where-object {$_.ResourceType -in 'virtualMachines','hostGroups/hosts'}
      }
      # Select first size and get the VCPus available
      $size_info = $global:VM_SKUs | Where-Object {$_.ResourceType.Contains($type) -and ($_.Name -eq $name)} | Select-Object -First 1
-                         
+
      # Save the VCPU count
      switch ($type) {
          "hosts" {$vcpu = $size_info.Capabilities | Where-Object {$_.name -eq "Cores"} }
          "virtualMachines" {$vcpu = $size_info.Capabilities | Where-Object {$_.name -eq "vCPUsAvailable"} }
      }
-     
+
      if ($vcpu){
          return $vcpu.Value
      }
      else {
          return 0
-     }      
+     }
  }
 
 function DiscoveryOnWindows {
-    
+
 # This script checks if SQL Server is installed on Windows
-    
-    [string] $SqlInstalled = "" 
+
+    [string] $SqlInstalled = ""
     $regPath = 'HKLM:\SOFTWARE\Microsoft\Microsoft SQL Server'
     if (Test-Path $regPath) {
         $inst = (get-itemproperty $regPath).InstalledInstances
@@ -99,7 +99,7 @@ function DiscoveryOnWindows {
         foreach ($i in $inst) {
             # Read registry data
             #
-            $p = (Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Microsoft SQL Server\Instance Names\SQL').$i        
+            $p = (Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Microsoft SQL Server\Instance Names\SQL').$i
             $setupValues = (Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Microsoft SQL Server\$p\Setup")
             $edition = ($setupValues.Edition -split ' ')[0]
             $version = ($setupValues.Version)
@@ -111,15 +111,15 @@ function DiscoveryOnWindows {
 
 #
 # This script checks if SQL Server is installed on Linux
-# 
-#    
+#
+#
 $DiscoveryOnLinux =
     'if ! systemctl is-active --quiet mssql-server.service; then dir
-    
-    echo "False" 
-    exit 
-    else 
-        echo "True" 
+
+    echo "False"
+    exit
+    else
+        echo "True"
     fi'
 
 
@@ -150,13 +150,13 @@ New-Item  -ItemType file -path DiscoverSql.sh -value $DiscoveryOnLinux -Force | 
 if ($SubId -like "*.csv") {
     $subscriptions = Import-Csv $SubId
 }elseif($SubId.length -gt 0){
-    $subscriptions = [PSCustomObject]@{SubscriptionId = $SubId} | Get-AzSubscription 
+    $subscriptions = [PSCustomObject]@{SubscriptionId = $SubId} | Get-AzSubscription
 }else{
     $subscriptions = Get-AzSubscription
 }
 
 
-#File setup 
+#File setup
 if (!$PSBoundParameters.ContainsKey("FilePath")) {
     $FilePath = '.\sql-vm-inventory.csv'
 }
@@ -168,51 +168,51 @@ $global:VM_SKUs = @{} # To hold the VM SKU table for future use
 
 Write-Host ([Environment]::NewLine + "-- Scanning subscriptions --")
 
-# Calculate usage for each subscription 
+# Calculate usage for each subscription
 
 foreach ($sub in $subscriptions){
 
     if ($sub.State -ne "Enabled") {continue}
 
     try {
-        Set-AzContext -SubscriptionId $sub.Id  
+        Set-AzContext -SubscriptionId $sub.Id
     }catch {
         write-host "Invalid subscription: " $sub.Id
         {continue}
     }
 
-    # Reset the subtotals     
+    # Reset the subtotals
     #$subtotal.psobject.properties.name | Foreach-object {$subtotal.$_ = 0}
-        
+
     # Get all resource groups in the subscription
     #$rgs = Get-AzResourceGroup
-    
-    # Scan all VMs with SQL server installed using a parallel loop (up to 10 at a time). 
+
+    # Scan all VMs with SQL server installed using a parallel loop (up to 10 at a time).
     # NOTE: ForEach-Object -Parallel requires PS v7.1 or higher
     if ($PSVersionTable.PSVersion.Major -ge 7){
         #Get-AzVM -Status | Where-Object { $_.powerstate -eq 'VM running' } | ForEach-Object -ThrottleLimit 10 -Parallel {
         Get-AzVM -Status | Where-Object { $_.powerstate -eq 'VM running' } | ForEach-Object {
-            #$function:GetVCores = $using:GetVCoresDef          
+            #$function:GetVCores = $using:GetVCoresDef
             $SqlEdition = ''
             $SqlVersion = ''
             $vCores = GetVCores -type 'virtualMachines' -name $_.HardwareProfile.VmSize
             $sql_vm = Get-AzSqlVm -ResourceGroupName $_.ResourceGroupName -Name $_.Name -ErrorAction Ignore
-                  
-            
+
+
             if ($sql_vm) {
                 $RegStatus = 'SQL Server registered'
                 $SqlEdition = $Sql_vm.Sku
                 $SqlVersion = $Sql_vm.Offer
             }
             else {
-               if ($_.StorageProfile.OSDisk.OSType -eq "Windows"){            
+               if ($_.StorageProfile.OSDisk.OSType -eq "Windows"){
                     $params =@{
                         ResourceGroupName = $_.ResourceGroupName
                         Name = $_.Name
                         CommandId = 'RunPowerShellScript'
                         ScriptPath = 'DiscoverSql.ps1'
                         ErrorAction = 'Stop'
-                    } 
+                    }
                 }
                 else {
                     $params =@{
@@ -221,11 +221,11 @@ foreach ($sub in $subscriptions){
                         CommandId = 'RunShellScript'
                         ScriptPath = 'DiscoverSql.sh'
                         ErrorAction = 'Stop'
-                    }                       
+                    }
                 }
-                try {                    
-                    $out = Invoke-AzVMRunCommand @params            
-                    if (!$out.Value[0].Message){                
+                try {
+                    $out = Invoke-AzVMRunCommand @params
+                    if (!$out.Value[0].Message){
                         $RegStatus = 'SQL Server not installed'
                     }
                     else {
@@ -233,21 +233,21 @@ foreach ($sub in $subscriptions){
                         $RegStatus = 'SQL Server not registered'
                     }
                 }
-                catch {          
-                    $RegStatus = 'No VM access'                    
+                catch {
+                    $RegStatus = 'No VM access'
                 }
-            }          
+            }
             $inventoryTable += ,(@( $sub.Name, $sub.Id, $_.ResourceGroupName, $_.Name, $_.Location, $_.HardwareProfile.VmSize, $vCores, $_.StorageProfile.ImageReference.Offer, $_.StorageProfile.ImageReference.Sku, $SqlVersion, $SqlEdition, $RegStatus))
             #write-host $_.ResourceGroupName $_.Name $_.Location $_.HardwareProfile.VmSize $vCores $_.StorageProfile.ImageReference.Offer $_.StorageProfile.ImageReference.Sku $SqlVersion $SqlEdition $RegStatus
-        }        
-    }   
+        }
+    }
     [system.gc]::Collect()
 }
 
-    
+
 # Write usage data to the .csv file
 if ($FilePath){
-    (ConvertFrom-Csv ($inventoryTable | %{$_ -join ','})) | Export-Csv $FilePath -NoType #-Append  
+    (ConvertFrom-Csv ($inventoryTable | %{$_ -join ','})) | Export-Csv $FilePath -NoType #-Append
     Write-Host ([Environment]::NewLine + "-- Added the usage data to $FilePath --")
 } else {
     Write-Host $inventoryTable
