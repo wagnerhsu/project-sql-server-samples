@@ -3,9 +3,9 @@ GO
 DECLARE @CurrentDateTime datetime2(7) = '20130101'
 DECLARE @EndOfTime datetime2(7) =  '99991231 23:59:59.9999999'
 
-INSERT Sales.BuyingGroups 
-  (BuyingGroupID, BuyingGroupName, LastEditedBy, ValidFrom, ValidTo) 
-VALUES 
+INSERT Sales.BuyingGroups
+  (BuyingGroupID, BuyingGroupName, LastEditedBy, ValidFrom, ValidTo)
+VALUES
   ( 1, 'Individual Buyers', 1, @CurrentDateTime, @EndOfTime)
 , ( 2, 'Tailspin Toys', 1, @CurrentDateTime, @EndOfTime)
 , ( 3, 'Wingtip Toys', 1, @CurrentDateTime, @EndOfTime)
@@ -30,9 +30,9 @@ GO
 DECLARE @CurrentDateTime datetime2(7) = '20130101'
 DECLARE @EndOfTime datetime2(7) =  '99991231 23:59:59.9999999'
 
-INSERT Sales.CustomerCategories 
-  (CustomerCategoryID, CustomerCategoryName, LastEditedBy, ValidFrom, ValidTo) 
-VALUES 
+INSERT Sales.CustomerCategories
+  (CustomerCategoryID, CustomerCategoryName, LastEditedBy, ValidFrom, ValidTo)
+VALUES
   (1,'Agent', 1, @CurrentDateTime, @EndOfTime)
 , (2,'Wholesaler', 1, @CurrentDateTime, @EndOfTime)
 , (3,'Novelty Shop', 1, @CurrentDateTime, @EndOfTime)

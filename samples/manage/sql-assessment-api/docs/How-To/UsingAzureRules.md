@@ -5,7 +5,7 @@ With SQL Assessment cmdlets, you can assess an instance of SQL Server on an Azur
 To use such rules, do the following:
 
 1. Make sure that both the [Azure PowerShell module](https://aka.ms/AAbdhwk) and the [Az.ResourceGraph module](https://www.powershellgallery.com/packages/Az.ResourceGraph) are installed.
-  
+
 2. [Sign in with Azure PowerShell](https://aka.ms/AAbdogm) before invoking SQL Assessment against SQL Server on an Azure VM.
 
 **NOTE:** It is possible to use Azure account connection persisted between PowerShell sessions, i.e. invoke **Connect-AzAccount** in one session and omit this command later. However, in such a scenario, SQL Assessment cmdlets need the **Az.ResourceGraph** module to be imported explicitly by running **Import-Module Az.ResourceGraph**.
@@ -32,7 +32,7 @@ The following example shows how to invoke assessment for SQL Server on an Azure 
    $cred = Get-Credential
    ```
 
-4. Select SQL Server objects to assess. For example, the following command gets a SQL Server instance. 
+4. Select SQL Server objects to assess. For example, the following command gets a SQL Server instance.
 
      ```PowerShell
     $target = Get-SqlInstance -ServerInstance "Computer002\InstanceName" -Credential $cred
@@ -51,12 +51,12 @@ As a result, you would get an output similar to the following one.
 ```
    TargetPath : Server[@Name='ContosoAzureSQL']
 
-Sev. Message                                                            Check ID              Origin               
----- -------                                                            --------              ------               
+Sev. Message                                                            Check ID              Origin
+---- -------                                                            --------              ------
 Medi Amount of single use plans in cache is high (100%). Consider       PlansUseRatio         Microsoft Ruleset 0.1.202
-     enabling the Optimize for ad hoc workloads setting on heavy OLTP                                                   
-     ad-hoc workloads to conserve resources 
-Low  Use memory optimized virtual machine sizes for the best            AzSqlVmSize           Microsoft Ruleset 0.1.202 
+     enabling the Optimize for ad hoc workloads setting on heavy OLTP
+     ad-hoc workloads to conserve resources
+Low  Use memory optimized virtual machine sizes for the best            AzSqlVmSize           Microsoft Ruleset 0.1.202
      performance of SQL Server workloads
 ```
 

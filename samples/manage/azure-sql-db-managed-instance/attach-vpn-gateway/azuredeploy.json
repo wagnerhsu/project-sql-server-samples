@@ -89,7 +89,7 @@
                     "vpnClientProtocols": [
                         "IkeV2",
                         "SSTP"
-                    ],                    
+                    ],
                     "vpnClientRootCertificates": [
                         {
                             "name": "[variables('clientRootCertName')]",

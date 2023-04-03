@@ -34,7 +34,7 @@ Take the following example:
 "message": "Create index on @{Table} with key columns @{KeyCols}@{IncludedCols: and included columns: #}"
 ```
 
-When `@IncludedCols` is empty the message would be 
+When `@IncludedCols` is empty the message would be
 
 ```plain
 Create index on MyTable with key columns Id, Name

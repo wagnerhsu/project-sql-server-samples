@@ -7,7 +7,7 @@ var Sequelize = require('sequelize');
     var password = 'fetch_from_key_vault';		// fetched from key vault
     var hostName = 'your_server.database.windows.net';  // update me
     var sampleDbName = 'your_database';  		//update me
-   
+
 
 async function GetSecret(){
 	console.log("Getting secret...");
@@ -133,7 +133,7 @@ async function Main() {
                             JSON.stringify(tasks));
                                         console.log('\nAll done!');
 				    })
-                           
+
                                 })
                             })
                         })

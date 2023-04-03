@@ -11,7 +11,7 @@ Takes all data rows returned from probes or previous transformations and calcula
 
 ## Grouping
 
-By default aggregate functions are applied to all data records returned by probes or previous transformations. Optionally, aggregates may be applied to groups of rows having the same value(s) in selected column(s). it works much like `GROUP BY` T-SQL clause. 
+By default aggregate functions are applied to all data records returned by probes or previous transformations. Optionally, aggregates may be applied to groups of rows having the same value(s) in selected column(s). it works much like `GROUP BY` T-SQL clause.
 
 ## Example 1
 

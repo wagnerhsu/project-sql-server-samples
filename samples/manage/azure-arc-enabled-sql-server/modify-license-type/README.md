@@ -10,19 +10,19 @@ ms.date: 2/16/2023
 # Overview
 
 This script allows you to to set or change the license type on all Azure-connected SQL Servers
-on a specific resource, in a single resource group, a specific subscription, a list of subscriptions or all subscriptions to which you have access. By default, it sets the specified license type value on the servers where it is undefined. But you can request to set it on all servers in the selected scope.  
+on a specific resource, in a single resource group, a specific subscription, a list of subscriptions or all subscriptions to which you have access. By default, it sets the specified license type value on the servers where it is undefined. But you can request to set it on all servers in the selected scope.
 
-You can specify a single subscription to scan, or provide a list of subscriptions as a .CSV file. 
+You can specify a single subscription to scan, or provide a list of subscriptions as a .CSV file.
 If not specified, all subscriptions your role has access to are scanned.
 
 If the license type is not specified, the value "Paid" is used.
 
 # Prerequisites
 
-- You must have at least a *Contributor* role in each subscription you modify.  
+- You must have at least a *Contributor* role in each subscription you modify.
 - The Azure extension for SQL Server is updated to version 1.1.2230.58 or newer.
 
-# Launching the script 
+# Launching the script
 
 The script accepts the following command line parameters:
 
@@ -36,7 +36,7 @@ The script accepts the following command line parameters:
 
 <sup>1</sup>You can create a .csv file using the following command and then edit to remove the subscriptions you don't  want to scan.
 ```PowerShell
-Get-AzSubscription | Export-Csv .\mysubscriptions.csv -NoTypeInformation 
+Get-AzSubscription | Export-Csv .\mysubscriptions.csv -NoTypeInformation
 ```
 
 ## Example 1
@@ -44,7 +44,7 @@ Get-AzSubscription | Export-Csv .\mysubscriptions.csv -NoTypeInformation
 The following command will scan all the subscriptions to which the user has access to, and set the license type to "Paid" on all servers where license type is undefined.
 
 ```PowerShell
-.\modify-license-type.ps1 -LicenseType Paid 
+.\modify-license-type.ps1 -LicenseType Paid
 ```
 
 ## Example 2
@@ -75,10 +75,10 @@ This option is recommended because Cloud shell has the Azure PowerShell modules 
     curl https://raw.githubusercontent.com/microsoft/sql-server-samples/master/samples/manage/azure-arc-enabled-sql-server/modify-license-type/modify-license-type.ps1 -o modify-license-type.ps1
     ```
 
-3. Run the script.  
+3. Run the script.
 
     ```console
-   .//modify-license-type.ps1 -LicenseType Paid 
+   .//modify-license-type.ps1 -LicenseType Paid
     ```
 
 > [!NOTE]
@@ -96,14 +96,14 @@ Use the following steps to run the script in a PowerShell session on your PC.
     curl https://raw.githubusercontent.com/microsoft/sql-server-samples/master/samples/manage/azure-arc-enabled-sql-server/modify-license-type/modify-license-type.ps1 -o modify-license-type.ps1
     ```
 
-1. Make sure the NuGet package provider is installed:  
+1. Make sure the NuGet package provider is installed:
 
     ```console
     Set-ExecutionPolicy  -ExecutionPolicy RemoteSigned -Scope CurrentUser
-    Install-packageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Scope CurrentUser -Force  
+    Install-packageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Scope CurrentUser -Force
     ```
 
-1. Make sure the the Az module is installed. For more information, see [Install the Azure Az PowerShell module](https://learn.microsoft.com/powershell/azure/install-az-ps):  
+1. Make sure the the Az module is installed. For more information, see [Install the Azure Az PowerShell module](https://learn.microsoft.com/powershell/azure/install-az-ps):
 
     ```console
     Install-Module Az -Scope CurrentUser -Repository PSGallery -Force
@@ -115,8 +115,8 @@ Use the following steps to run the script in a PowerShell session on your PC.
     Connect-AzAccount <parameters>
     ```
 
-1. Run the script using the desired scope.  
+1. Run the script using the desired scope.
 
     ```console
-   .//modify-license-type.ps1 -LicenseType Paid 
+   .//modify-license-type.ps1 -LicenseType Paid
     ```

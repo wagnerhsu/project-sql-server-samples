@@ -22,7 +22,7 @@ namespace AzureSqlEFSample
         {
             string sql;
             Console.WriteLine("** C# CRUD sample with Entity Framework and Azure SQL **\n");
-            
+
             // Build connection string
             SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
             builder.DataSource = "your_server.database.windows.net";   // update me
@@ -65,7 +65,7 @@ namespace AzureSqlEFSample
                     DateTime dueDate2016 = DateTime.Parse("12-31-2016");
                     List<Task> queryResults = context.Tasks.Where(t => t.DueDate < dueDate2016).ToList();
                     foreach (Task t in queryResults)
-                    { 
+                    {
                         Console.WriteLine("Deleting task: " + t.ToString());
                         context.Tasks.Remove(t);
                     }

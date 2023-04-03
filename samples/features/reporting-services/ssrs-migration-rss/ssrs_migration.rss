@@ -1,5 +1,5 @@
 ' This is a Microsoft SQL Server Reporting Services RSS script that migrates content from one Reporting Services server to another.
-' Run the script with the rs.exe utility.  Rs.exe is installed by Reporting Services. 
+' Run the script with the rs.exe utility.  Rs.exe is installed by Reporting Services.
 ' For details about rs.exe see: https://docs.microsoft.com/sql/reporting-services/tools/rs-exe-utility-ssrs
 '
 ' >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -7,7 +7,7 @@
 ' >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 '
 ' The script supports report server versions SQL Server 2008 R2 and later and Power BI Report Server.
-' The script supports both native mode report servers and SharePoint mode report servers. 
+' The script supports both native mode report servers and SharePoint mode report servers.
 ' The script can be run from the source or target server.
 '
 '-----------------------------------------------------------------------------------------------------------
@@ -45,8 +45,8 @@
 '
 ' ADDITIONAL INFO:
 ' The virtual folder structure presented to the user in SharePoint might be different
-' than the physical structure, which is used for by this script. 
-' Open http://servername/_vti_bin/reportserver in a browser to see the non-virtual folder structure. 
+' than the physical structure, which is used for by this script.
+' Open http://servername/_vti_bin/reportserver in a browser to see the non-virtual folder structure.
 ' This is helpful for setting SrcFolder and SnkFolder to something other than "/" for a server in SharePoint integrated mode.
 
 
@@ -60,7 +60,7 @@ Private SrcFolder As String = "/"
 Private RsSnk As ReportingService2010
 Private SnkProtocol As String = "http"				
 Private SnkServer As String 						
-Private SnkIsNative As Boolean 
+Private SnkIsNative As Boolean
 Private SnkSite As String = ""							
 Private SnkFolder As String = "/"		
 
@@ -116,7 +116,7 @@ Sub Main()
 		Dim password As String = Me.GetType().GetField("tp").GetValue(Me)
 
 		If user.contains("\") Then			
-			Dim domainuser As String() = user.Split(New [Char]() {"\"c}) 
+			Dim domainuser As String() = user.Split(New [Char]() {"\"c})
 			RsSnk.Credentials = New System.Net.NetworkCredential(domainuser(1), password, domainuser(0))	
 		Else
 			RsSnk.Credentials = New System.Net.NetworkCredential(user, password)		
@@ -627,7 +627,7 @@ End Sub
 
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''
 ''''''''''''' Migrate report artefacts ''''''''''''''''
-''''''''''''''''''''''''''''''''''''''''''''''''''''''' 
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
 'Migrate report's subscriptions
 Sub MigrateReportSubscriptions(snkReport As CatalogItem, srcReport As CatalogItem)
@@ -921,7 +921,7 @@ End Sub
 
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''
 '''''''''''''' Helper Functions '''''''''''''''''''''''
-''''''''''''''''''''''''''''''''''''''''''''''''''''''' 
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
 'Helper function to construct correctly formatted path
 Function GetSnkPath(srcPath As String) As String
@@ -1011,7 +1011,7 @@ Function GetMatchData(matchData As String, RsSnk As ReportingService2010) As Str
 	End If
 
 	Dim snkSchedules As Schedule() = RsSnk.ListSchedules(snkSiteUrl)
-	For Each s As Schedule In snkSchedules 
+	For Each s As Schedule In snkSchedules
 		If s.Name = name Then
 			Return s.ScheduleID
 		End If

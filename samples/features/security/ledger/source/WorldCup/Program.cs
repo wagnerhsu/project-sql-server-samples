@@ -27,7 +27,7 @@ const string connString = @"Server=.\SQL2022;Database=WorldCup;Trusted_Connectio
 // root folder
 app.MapGet("/", async context => {
     Console.WriteLine($"Connection from {context.Connection.RemoteIpAddress}");
-    
+
     // get list of moneylines
     using var con = new SqlConnection(connString);
     con.Open();
@@ -39,11 +39,11 @@ app.MapGet("/", async context => {
     List<Game> games = new List<Game>();
     while(rows.Read()) {
         var game = new Game((int)rows.GetValue(0),
-                            (string)rows.GetValue(1), 
-                            (int)rows.GetValue(2), 
-                            (int)rows.GetValue(3), 
-                            (string)rows.GetValue(4), 
-                            (int)rows.GetValue(5), 
+                            (string)rows.GetValue(1),
+                            (int)rows.GetValue(2),
+                            (int)rows.GetValue(3),
+                            (string)rows.GetValue(4),
+                            (int)rows.GetValue(5),
                             (DateTime)rows.GetValue(6));
         games.Add(game);
     }
@@ -72,13 +72,13 @@ app.MapGet("/", async context => {
                 sbHtml.Append(string.Format(Radio, g.MoneyLineID, g.HomeCountry, "W", g.HomeCountryOdds));
                 sbHtml.Append(g.HomeCountry + " " + g.HomeCountryOdds);
             sbHtml.Append(EndTD);
-            
+
             // Draw
             sbHtml.Append(TD);
                 sbHtml.Append(string.Format(Radio, g.MoneyLineID, g.HomeCountry, "D", g.DrawOdds));
                 sbHtml.Append("Draw " + g.DrawOdds);
             sbHtml.Append(EndTD);
-            
+
             // Loss
             sbHtml.Append(TD);
                 sbHtml.Append(string.Format(Radio, g.MoneyLineID, g.HomeCountry, "L", g.VisitCountryOdds));
@@ -104,7 +104,7 @@ app.MapGet("/placebet", async context => {
     string moneyline = context.Request.Query["bet"];
     string name = "Pieter Vanhove";
     Console.WriteLine($"Request for bet from {name} for {amount} on {moneyline}");
-    
+
     string fName = "", lName = "";
     string Country = "", result = "";
     var odds = 0;
@@ -123,7 +123,7 @@ app.MapGet("/placebet", async context => {
                         ref result,
                         ref odds,
                         ref amount2)) {
-        await context.Response.WriteAsync(htmlError); 
+        await context.Response.WriteAsync(htmlError);
     } else {
         var cs = connString;
 
@@ -231,7 +231,7 @@ string? GetLedgerDigest(SqlConnection con) {
 }
 
 /* NOT USED
-// sign some data, this creates real signatures, 
+// sign some data, this creates real signatures,
 // but the keys are ephemeral for demo purposes only
 string SignBlob(string text) {
     const string CRYPTO_VERSION = "01";

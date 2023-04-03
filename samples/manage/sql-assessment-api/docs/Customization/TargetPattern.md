@@ -28,7 +28,7 @@ In the following example __engineEdition__ is any on-premises edition or Azure M
 
 ### name
 
-A [string pattern](#string-pattern) for the target SQL 
+A [string pattern](#string-pattern) for the target SQL
 Server object name. It's a database name or an instance name.
 
 In the following example __name__ matches anything except _master_, _tempdb_, and _model_.

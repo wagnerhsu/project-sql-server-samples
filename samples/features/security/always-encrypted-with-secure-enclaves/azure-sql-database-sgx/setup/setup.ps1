@@ -1,5 +1,5 @@
 ﻿Import-Module "Az" -MinimumVersion "9.3"
-Import-Module "SqlServer" #-Version "22.0.49-preview" 
+Import-Module "SqlServer" #-Version "22.0.49-preview"
 
 ######################################################################
 # Prompt the user to enter the values of deployment parameters
@@ -102,7 +102,7 @@ Invoke-Sqlcmd -ServerInstance "tcp:$serverName" -Database $databaseName -AccessT
 # Get the column master key from Azure Key Vault
 $keyVaultName = "${projectName}vault"
 $keyName = "CMK"
-$key = Get-AzKeyVaultKey -VaultName $keyVaultName -Name $keyName 
+$key = Get-AzKeyVaultKey -VaultName $keyVaultName -Name $keyName
 
 # Connect to the database using the SqlServer PowerShell module
 $connStr = "Data Source=tcp:$serverName;Initial Catalog=$databaseName;User ID=$sqlAdminUserName;Password=$sqlAdminPassword"
@@ -142,14 +142,14 @@ $policy=Get-Content -path $policyFile -Raw
 Set-AzAttestationPolicy -Name $attestationProviderName -ResourceGroupName $resourceGroupName -Tee $teeType -Policy $policy -PolicyFormat  $policyFormat
 
 # Get the attestation URL
-$attestationProvider = Get-AzAttestationProvider -Name $attestationProviderName -ResourceGroupName $resourceGroupName 
+$attestationProvider = Get-AzAttestationProvider -Name $attestationProviderName -ResourceGroupName $resourceGroupName
 $attestationUrl = $attestationProvider.AttestUri
 
 ######################################################################
 # Print parameters for the demo
 ######################################################################
 
-$app = Get-AzWebApp -Name $appName -ResourceGroupName $resourceGroupName 
+$app = Get-AzWebApp -Name $appName -ResourceGroupName $resourceGroupName
 Write-Host -ForegroundColor "green" "Resource group name: $resourceGroupName"
 Write-Host -ForegroundColor "green" "Database server name: $serverName"
 Write-Host -ForegroundColor "green" "Database name: $databaseName"

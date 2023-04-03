@@ -22,7 +22,7 @@ For example, the following rule makes a check with the `MaxMemory` ID appear in 
 {
     "id": "MaxMemory",
     "itemType": "definition",
-    "target": 
+    "target":
     {
         "type": "Server",
         "version": "[11.0,)"
@@ -47,7 +47,7 @@ Note that the rule override can modify checks for selected targets if needed. Th
 {
     "id": "MaxMemory",
     "itemType": "override",
-    "targetFilter": 
+    "targetFilter":
     {
         "engineEdition": "Standard"
     },
@@ -57,7 +57,7 @@ Note that the rule override can modify checks for selected targets if needed. Th
 {
     "id": "MaxMemory",
     "itemType": "override",
-    "targetFilter": 
+    "targetFilter":
     {
         "engineEdition": "Express"
     },

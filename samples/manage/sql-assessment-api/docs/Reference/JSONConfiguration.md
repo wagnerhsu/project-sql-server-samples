@@ -160,7 +160,7 @@ Condition expressions can be any expressions or an array of expressions. An arra
         {"@version": "10.50.0"},
         {"@memroySize": 4096}
     ]
-} 
+}
 ```
 
 Note: The short version for "OR" works only as condition expressions while the short version for "AND" works everywhere. The following expressions are equivalent:

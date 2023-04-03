@@ -6,6 +6,6 @@
     "platform?": "<i>String pattern</i>",
     "name?": "<i>String pattern</i>",
     "serverName?": "<i>String pattern</i>",
-    "machineType?": "<i>String pattern</i>" 
+    "machineType?": "<i>String pattern</i>"
 }
 @end

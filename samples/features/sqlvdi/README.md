@@ -1,5 +1,5 @@
-# SQLVDI 
-This folder contains the latest files and samples required to build a SQL Server VDI based backup/restore application. 
+# SQLVDI
+This folder contains the latest files and samples required to build a SQL Server VDI based backup/restore application.
 
 ### Files available
 1. vdi.h
@@ -12,9 +12,9 @@ More details about this improvement in the SQLVDI protocol can be found in [KB31
 
 The following implementations have to be applied to your VDI client:
 
-1. Request the new VDI feature VDF_RequestComplete. 
-2. If SQL Server supports the VDC_Complete command, it will return a not NULL response. 
-3. Otherwise, it would return a NULL response for the requested feature. 
+1. Request the new VDI feature VDF_RequestComplete.
+2. If SQL Server supports the VDC_Complete command, it will return a not NULL response.
+3. Otherwise, it would return a NULL response for the requested feature.
 
 The code sample here shows how to request the feature: 
 ```
@@ -25,7 +25,7 @@ Determine whether the SQL Server supports the new VDC_Complete command by using 
 
 ```
 hr = m_pvdiComponents->m_pvdDeviceSet->GetConfiguration(timeout, m_pvdiComponents->m_pvdConfig);
- 
+
        if (!(m_pvdiComponents->m_pvdConfig->features & VDF_CompleteEnabled))
        {
               printf("Server does not support VDC_Complete.");

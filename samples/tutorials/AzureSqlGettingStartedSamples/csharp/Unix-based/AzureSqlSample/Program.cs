@@ -9,7 +9,7 @@ namespace AzureSqlSample
         static void Main(string[] args)
         {
             string sql;
-            
+
             // Build connection string
             SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
             builder.DataSource = "your_server_name.database.windows.net";   // update me

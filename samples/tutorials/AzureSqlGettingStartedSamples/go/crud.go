@@ -1,6 +1,6 @@
 package main
 
-import ( 
+import (
     _ "github.com/denisenkom/go-mssqldb"
     "database/sql"
     "context"
