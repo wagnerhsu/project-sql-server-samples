@@ -15,8 +15,6 @@ on a specific resource, in a single resource group, a specific subscription, a l
 You can specify a single subscription to scan, or provide a list of subscriptions as a .CSV file.
 If not specified, all subscriptions your role has access to are scanned.
 
-If the license type is not specified, the value "Paid" is used.
-
 # Prerequisites
 
 - You must have at least a *Contributor* role in each subscription you modify.
