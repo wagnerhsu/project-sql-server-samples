@@ -47,10 +47,11 @@ BEGIN
               + N'{"type":"Feature", "geometry": {"type":"Point", "coordinates":['
               + CAST(@Longitude AS nvarchar(20)) + N',' + CAST(@Latitude AS nvarchar(20))
               + N'] }, "properties":{"rego":"' + STRING_ESCAPE(@VehicleRegistration, N'json')
-              + N'","sensor":"' + CAST(@SensorCounter + 1 AS nvarchar(20))
+              + N'","sensor":' + CAST(@SensorCounter + 1 AS nvarchar(20))
               + N',"when":"' + CONVERT(nvarchar(30), @TimeCounter, 126)
               + N'","temp":' + CAST(@Temperature AS nvarchar(20))
-              + N'}} ]';
+              + N'}} ]'
+              + N'}';
 
             INSERT Warehouse.VehicleTemperatures
                 (VehicleRegistration, ChillerSensorNumber,

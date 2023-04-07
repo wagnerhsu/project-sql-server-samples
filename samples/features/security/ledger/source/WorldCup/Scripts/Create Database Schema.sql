@@ -13,16 +13,16 @@ CREATE TABLE [dbo].[MoneyLine](
 	[VisitCountryOdds] [INT] NOT NULL,
 	[GameDateTime] [datetime2] NOT NULL
 	)
-WITH 
+WITH
 (
   SYSTEM_VERSIONING = ON,
   LEDGER = ON
-); 
+);
 GO
 
 --https://sportsbook.draftkings.com/leagues/soccer/world-cup-2022?category=game-lines&subcategory=moneyline-(regular-time)
 
-INSERT INTO [dbo].[MoneyLine] ([HomeCountry], [HomeCountryOdds], [DrawOdds], [VisitCountry],[VisitCountryOdds],[GameDateTime]) 
+INSERT INTO [dbo].[MoneyLine] ([HomeCountry], [HomeCountryOdds], [DrawOdds], [VisitCountry],[VisitCountryOdds],[GameDateTime])
 VALUES ('Qatar', 250, 245, 'Ecuador',105,'2022-11-20 17:00:00'),
 ('England', -340, 390, 'Iran', 1000, '2022-11-21 14:00:00' ),
 ('Senegal', 475, 270, 'Netherlands',-165, '2022-11-21 17:00:00'),
@@ -76,7 +76,7 @@ CREATE TABLE [dbo].[Bets](
 WITH (LEDGER = ON (APPEND_ONLY = ON));
 GO
 
-CREATE FUNCTION fn_CalucatePayout 
+CREATE FUNCTION fn_CalucatePayout
 (
 	-- Add the parameters for the function here
 	@Stake decimal(8,2), @Odds decimal(8,2)
@@ -102,7 +102,7 @@ GO
 -- Calculating Payouts From Positive Moneyline Odds ---- Potential Profit = Stake x (Odds/100) + Stake
 -- Calculating Payouts From Negative Moneyline Odds ---- Potential Profit = Stake / (Odds/100) + Stake
 
-CREATE PROCEDURE usp_PlaceBet 
+CREATE PROCEDURE usp_PlaceBet
 	@MoneylineID INT,
 	@FirstName NVARCHAR(50),
 	@LastName NVARCHAR(50),
@@ -124,9 +124,9 @@ GO
 */
 
 
-CREATE CREDENTIAL [https://ledgerdemostg.blob.core.windows.net/sqldbledgerdigests]  
-WITH IDENTITY='SHARED ACCESS SIGNATURE',  
-SECRET = 'st=2022-10-18T13:24:48Z&se=2023-10-18T21:24:48Z&si=Ledger&spr=https&sv=2021-06-08&sr=c&sig=KhSroFrZ4HHUn%2B7LldOljrTWqPueV72heqYoaFFjfUk%3D' 
+CREATE CREDENTIAL [https://ledgerdemostg.blob.core.windows.net/sqldbledgerdigests]
+WITH IDENTITY='SHARED ACCESS SIGNATURE',
+SECRET = 'st=2022-10-18T13:24:48Z&se=2023-10-18T21:24:48Z&si=Ledger&spr=https&sv=2021-06-08&sr=c&sig=KhSroFrZ4HHUn%2B7LldOljrTWqPueV72heqYoaFFjfUk%3D'
 GO
 ALTER DATABASE SCOPED CONFIGURATION
  SET LEDGER_DIGEST_STORAGE_ENDPOINT = 'https://ledgerdemostg.blob.core.windows.net';
@@ -134,7 +134,7 @@ ALTER DATABASE SCOPED CONFIGURATION
 GO
 
 CREATE PROCEDURE sp_TamperWithBet
-	@PageID int, 
+	@PageID int,
 	@ID int,
 	@PayOut money
 AS
@@ -143,7 +143,7 @@ SET NOCOUNT ON;
 
 DROP TABLE IF EXISTS #DBCCPAGE
 
- CREATE TABLE  #DBCCPAGE 
+ CREATE TABLE  #DBCCPAGE
  (ParentObject NVARCHAR(128),
  Object   NVARCHAR(128),
  Field   NVARCHAR(128),
@@ -159,17 +159,17 @@ INSERT INTO #dbccpage EXEC('DBCC TRACEON(3604) WITH NO_INFOMSGS;
 DBCC PAGE(' + @DBName + ', 1, ' + @PageID + ', 3) WITH NO_INFOMSGS,TABLERESULTS
 ');
 
-WITH DBCCPAGE_Offset_PayOut (ParentObject,Object,Field,Value)  
-AS  
- 
-(  
+WITH DBCCPAGE_Offset_PayOut (ParentObject,Object,Field,Value)
+AS
+
+(
     SELECT ParentObject, Object, Field,Value FROM #DBCCPAGE
-	WHERE ParentObject=(SELECT ParentObject FROM #DBCCPAGE WHERE Field='BetID' AND Value=@ID) 
-) 
+	WHERE ParentObject=(SELECT ParentObject FROM #DBCCPAGE WHERE Field='BetID' AND Value=@ID)
+)
 SELECT @OffsetPayOut=
 CONVERT(INT,CONVERT(VARBINARY,'0x'+ REPLICATE('0', 8-LEN(SUBSTRING(ParentObject,CHARINDEX('0x',ParentObject)+2,CHARINDEX('Length',ParentObject)-CHARINDEX('0x',ParentObject)-3)))+SUBSTRING(ParentObject,CHARINDEX('0x',ParentObject)+2,CHARINDEX('Length',ParentObject)-CHARINDEX('0x',ParentObject)-3),1)) +
 CONVERT(INT,CONVERT(VARBINARY,'0x'+ REPLICATE('0', 8-LEN(SUBSTRING(Object,CHARINDEX('0x',Object)+2,CHARINDEX('Length',Object)-charindex('0x',Object)-3)))+SUBSTRING(Object,CHARINDEX('0x',Object)+2,CHARINDEX('Length',Object)-CHARINDEX('0x',Object)-3),1))
-FROM DBCCPAGE_Offset_PayOut  
+FROM DBCCPAGE_Offset_PayOut
 WHERE Field='Payout';
 
 DECLARE @BinaryPayout VARBINARY(8) = CONVERT(binary(8), REVERSE(CONVERT(VARBINARY(8), @Payout)))

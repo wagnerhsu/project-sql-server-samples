@@ -148,11 +148,11 @@ CREATE TABLE "Employees" (
 	"Notes" "ntext" NULL ,
 	"ReportsTo" "int" NULL ,
 	"PhotoPath" nvarchar (255) NULL ,
-	CONSTRAINT "PK_Employees" PRIMARY KEY  CLUSTERED 
+	CONSTRAINT "PK_Employees" PRIMARY KEY  CLUSTERED
 	(
 		"EmployeeID"
 	),
-	CONSTRAINT "FK_Employees_Employees" FOREIGN KEY 
+	CONSTRAINT "FK_Employees_Employees" FOREIGN KEY
 	(
 		"ReportsTo"
 	) REFERENCES "dbo"."Employees" (
@@ -171,7 +171,7 @@ CREATE TABLE "Categories" (
 	"CategoryName" nvarchar (15) NOT NULL ,
 	"Description" "ntext" NULL ,
 	"Picture" "image" NULL ,
-	CONSTRAINT "PK_Categories" PRIMARY KEY  CLUSTERED 
+	CONSTRAINT "PK_Categories" PRIMARY KEY  CLUSTERED
 	(
 		"CategoryID"
 	)
@@ -192,7 +192,7 @@ CREATE TABLE "Customers" (
 	"Country" nvarchar (15) NULL ,
 	"Phone" nvarchar (24) NULL ,
 	"Fax" nvarchar (24) NULL ,
-	CONSTRAINT "PK_Customers" PRIMARY KEY  CLUSTERED 
+	CONSTRAINT "PK_Customers" PRIMARY KEY  CLUSTERED
 	(
 		"CustomerID"
 	)
@@ -211,7 +211,7 @@ CREATE TABLE "Shippers" (
 	"ShipperID" "int" IDENTITY (1, 1) NOT NULL ,
 	"CompanyName" nvarchar (40) NOT NULL ,
 	"Phone" nvarchar (24) NULL ,
-	CONSTRAINT "PK_Shippers" PRIMARY KEY  CLUSTERED 
+	CONSTRAINT "PK_Shippers" PRIMARY KEY  CLUSTERED
 	(
 		"ShipperID"
 	)
@@ -230,7 +230,7 @@ CREATE TABLE "Suppliers" (
 	"Phone" nvarchar (24) NULL ,
 	"Fax" nvarchar (24) NULL ,
 	"HomePage" "ntext" NULL ,
-	CONSTRAINT "PK_Suppliers" PRIMARY KEY  CLUSTERED 
+	CONSTRAINT "PK_Suppliers" PRIMARY KEY  CLUSTERED
 	(
 		"SupplierID"
 	)
@@ -256,23 +256,23 @@ CREATE TABLE "Orders" (
 	"ShipRegion" nvarchar (15) NULL ,
 	"ShipPostalCode" nvarchar (10) NULL ,
 	"ShipCountry" nvarchar (15) NULL ,
-	CONSTRAINT "PK_Orders" PRIMARY KEY  CLUSTERED 
+	CONSTRAINT "PK_Orders" PRIMARY KEY  CLUSTERED
 	(
 		"OrderID"
 	),
-	CONSTRAINT "FK_Orders_Customers" FOREIGN KEY 
+	CONSTRAINT "FK_Orders_Customers" FOREIGN KEY
 	(
 		"CustomerID"
 	) REFERENCES "dbo"."Customers" (
 		"CustomerID"
 	),
-	CONSTRAINT "FK_Orders_Employees" FOREIGN KEY 
+	CONSTRAINT "FK_Orders_Employees" FOREIGN KEY
 	(
 		"EmployeeID"
 	) REFERENCES "dbo"."Employees" (
 		"EmployeeID"
 	),
-	CONSTRAINT "FK_Orders_Shippers" FOREIGN KEY 
+	CONSTRAINT "FK_Orders_Shippers" FOREIGN KEY
 	(
 		"ShipVia"
 	) REFERENCES "dbo"."Shippers" (
@@ -308,17 +308,17 @@ CREATE TABLE "Products" (
 	"UnitsOnOrder" "smallint" NULL CONSTRAINT "DF_Products_UnitsOnOrder" DEFAULT (0),
 	"ReorderLevel" "smallint" NULL CONSTRAINT "DF_Products_ReorderLevel" DEFAULT (0),
 	"Discontinued" "bit" NOT NULL CONSTRAINT "DF_Products_Discontinued" DEFAULT (0),
-	CONSTRAINT "PK_Products" PRIMARY KEY  CLUSTERED 
+	CONSTRAINT "PK_Products" PRIMARY KEY  CLUSTERED
 	(
 		"ProductID"
 	),
-	CONSTRAINT "FK_Products_Categories" FOREIGN KEY 
+	CONSTRAINT "FK_Products_Categories" FOREIGN KEY
 	(
 		"CategoryID"
 	) REFERENCES "dbo"."Categories" (
 		"CategoryID"
 	),
-	CONSTRAINT "FK_Products_Suppliers" FOREIGN KEY 
+	CONSTRAINT "FK_Products_Suppliers" FOREIGN KEY
 	(
 		"SupplierID"
 	) REFERENCES "dbo"."Suppliers" (
@@ -347,18 +347,18 @@ CREATE TABLE "Order Details" (
 	"UnitPrice" "money" NOT NULL CONSTRAINT "DF_Order_Details_UnitPrice" DEFAULT (0),
 	"Quantity" "smallint" NOT NULL CONSTRAINT "DF_Order_Details_Quantity" DEFAULT (1),
 	"Discount" "real" NOT NULL CONSTRAINT "DF_Order_Details_Discount" DEFAULT (0),
-	CONSTRAINT "PK_Order_Details" PRIMARY KEY  CLUSTERED 
+	CONSTRAINT "PK_Order_Details" PRIMARY KEY  CLUSTERED
 	(
 		"OrderID",
 		"ProductID"
 	),
-	CONSTRAINT "FK_Order_Details_Orders" FOREIGN KEY 
+	CONSTRAINT "FK_Order_Details_Orders" FOREIGN KEY
 	(
 		"OrderID"
 	) REFERENCES "dbo"."Orders" (
 		"OrderID"
 	),
-	CONSTRAINT "FK_Order_Details_Products" FOREIGN KEY 
+	CONSTRAINT "FK_Order_Details_Products" FOREIGN KEY
 	(
 		"ProductID"
 	) REFERENCES "dbo"."Products" (
@@ -380,7 +380,7 @@ GO
 
 
 create view "Customer and Suppliers by City" AS
-SELECT City, CompanyName, ContactName, 'Customers' AS Relationship 
+SELECT City, CompanyName, ContactName, 'Customers' AS Relationship
 FROM Customers
 UNION SELECT City, CompanyName, ContactName, 'Suppliers'
 FROM Suppliers
@@ -401,9 +401,9 @@ WHERE (((Product_List.Discontinued)=0))
 GO
 
 create view "Orders Qry" AS
-SELECT Orders.OrderID, Orders.CustomerID, Orders.EmployeeID, Orders.OrderDate, Orders.RequiredDate, 
-	Orders.ShippedDate, Orders.ShipVia, Orders.Freight, Orders.ShipName, Orders.ShipAddress, Orders.ShipCity, 
-	Orders.ShipRegion, Orders.ShipPostalCode, Orders.ShipCountry, 
+SELECT Orders.OrderID, Orders.CustomerID, Orders.EmployeeID, Orders.OrderDate, Orders.RequiredDate,
+	Orders.ShippedDate, Orders.ShipVia, Orders.Freight, Orders.ShipName, Orders.ShipAddress, Orders.ShipCity,
+	Orders.ShipRegion, Orders.ShipPostalCode, Orders.ShipCountry,
 	Customers.CompanyName, Customers.Address, Customers.City, Customers.Region, Customers.PostalCode, Customers.Country
 FROM Customers INNER JOIN Orders ON Customers.CustomerID = Orders.CustomerID
 GO
@@ -429,28 +429,28 @@ WHERE Orders.OrderDate BETWEEN '19970101' And '19971231'
 GO
 
 create view Invoices AS
-SELECT Orders.ShipName, Orders.ShipAddress, Orders.ShipCity, Orders.ShipRegion, Orders.ShipPostalCode, 
-	Orders.ShipCountry, Orders.CustomerID, Customers.CompanyName AS CustomerName, Customers.Address, Customers.City, 
-	Customers.Region, Customers.PostalCode, Customers.Country, 
-	(FirstName + ' ' + LastName) AS Salesperson, 
-	Orders.OrderID, Orders.OrderDate, Orders.RequiredDate, Orders.ShippedDate, Shippers.CompanyName As ShipperName, 
-	"Order Details".ProductID, Products.ProductName, "Order Details".UnitPrice, "Order Details".Quantity, 
-	"Order Details".Discount, 
+SELECT Orders.ShipName, Orders.ShipAddress, Orders.ShipCity, Orders.ShipRegion, Orders.ShipPostalCode,
+	Orders.ShipCountry, Orders.CustomerID, Customers.CompanyName AS CustomerName, Customers.Address, Customers.City,
+	Customers.Region, Customers.PostalCode, Customers.Country,
+	(FirstName + ' ' + LastName) AS Salesperson,
+	Orders.OrderID, Orders.OrderDate, Orders.RequiredDate, Orders.ShippedDate, Shippers.CompanyName As ShipperName,
+	"Order Details".ProductID, Products.ProductName, "Order Details".UnitPrice, "Order Details".Quantity,
+	"Order Details".Discount,
 	(CONVERT(money,("Order Details".UnitPrice*Quantity*(1-Discount)/100))*100) AS ExtendedPrice, Orders.Freight
-FROM 	Shippers INNER JOIN 
-		(Products INNER JOIN 
+FROM 	Shippers INNER JOIN
+		(Products INNER JOIN
 			(
-				(Employees INNER JOIN 
-					(Customers INNER JOIN Orders ON Customers.CustomerID = Orders.CustomerID) 
-				ON Employees.EmployeeID = Orders.EmployeeID) 
-			INNER JOIN "Order Details" ON Orders.OrderID = "Order Details".OrderID) 
-		ON Products.ProductID = "Order Details".ProductID) 
+				(Employees INNER JOIN
+					(Customers INNER JOIN Orders ON Customers.CustomerID = Orders.CustomerID)
+				ON Employees.EmployeeID = Orders.EmployeeID)
+			INNER JOIN "Order Details" ON Orders.OrderID = "Order Details".OrderID)
+		ON Products.ProductID = "Order Details".ProductID)
 	ON Shippers.ShipperID = Orders.ShipVia
 GO
 
 create view "Order Details Extended" AS
-SELECT "Order Details".OrderID, "Order Details".ProductID, Products.ProductName, 
-	"Order Details".UnitPrice, "Order Details".Quantity, "Order Details".Discount, 
+SELECT "Order Details".OrderID, "Order Details".ProductID, Products.ProductName,
+	"Order Details".UnitPrice, "Order Details".Quantity, "Order Details".Discount,
 	(CONVERT(money,("Order Details".UnitPrice*Quantity*(1-Discount)/100))*100) AS ExtendedPrice
 FROM Products INNER JOIN "Order Details" ON Products.ProductID = "Order Details".ProductID
 --ORDER BY "Order Details".OrderID
@@ -463,11 +463,11 @@ GROUP BY "Order Details".OrderID
 GO
 
 create view "Product Sales for 1997" AS
-SELECT Categories.CategoryName, Products.ProductName, 
+SELECT Categories.CategoryName, Products.ProductName,
 Sum(CONVERT(money,("Order Details".UnitPrice*Quantity*(1-Discount)/100))*100) AS ProductSales
-FROM (Categories INNER JOIN Products ON Categories.CategoryID = Products.CategoryID) 
-	INNER JOIN (Orders 
-		INNER JOIN "Order Details" ON Orders.OrderID = "Order Details".OrderID) 
+FROM (Categories INNER JOIN Products ON Categories.CategoryID = Products.CategoryID)
+	INNER JOIN (Orders
+		INNER JOIN "Order Details" ON Orders.OrderID = "Order Details".OrderID)
 	ON Products.ProductID = "Order Details".ProductID
 WHERE (((Orders.ShippedDate) Between '19970101' And '19971231'))
 GROUP BY Categories.CategoryName, Products.ProductName
@@ -480,12 +480,12 @@ GROUP BY "Product Sales for 1997".CategoryName
 GO
 
 create view "Sales by Category" AS
-SELECT Categories.CategoryID, Categories.CategoryName, Products.ProductName, 
+SELECT Categories.CategoryID, Categories.CategoryName, Products.ProductName,
 	Sum("Order Details Extended".ExtendedPrice) AS ProductSales
-FROM 	Categories INNER JOIN 
-		(Products INNER JOIN 
-			(Orders INNER JOIN "Order Details Extended" ON Orders.OrderID = "Order Details Extended".OrderID) 
-		ON Products.ProductID = "Order Details Extended".ProductID) 
+FROM 	Categories INNER JOIN
+		(Products INNER JOIN
+			(Orders INNER JOIN "Order Details Extended" ON Orders.OrderID = "Order Details Extended".OrderID)
+		ON Products.ProductID = "Order Details Extended".ProductID)
 	ON Categories.CategoryID = Products.CategoryID
 WHERE Orders.OrderDate BETWEEN '19970101' And '19971231'
 GROUP BY Categories.CategoryID, Categories.CategoryName, Products.ProductName
@@ -494,8 +494,8 @@ GO
 
 create view "Sales Totals by Amount" AS
 SELECT "Order Subtotals".Subtotal AS SaleAmount, Orders.OrderID, Customers.CompanyName, Orders.ShippedDate
-FROM 	Customers INNER JOIN 
-		(Orders INNER JOIN "Order Subtotals" ON Orders.OrderID = "Order Subtotals".OrderID) 
+FROM 	Customers INNER JOIN
+		(Orders INNER JOIN "Order Subtotals" ON Orders.OrderID = "Order Subtotals".OrderID)
 	ON Customers.CustomerID = Orders.CustomerID
 WHERE ("Order Subtotals".Subtotal >2500) AND (Orders.ShippedDate BETWEEN '19970101' And '19971231')
 GO
@@ -521,16 +521,16 @@ FROM Products
 ORDER BY Products.UnitPrice DESC
 GO
 
-create procedure "Employee Sales by Country" 
+create procedure "Employee Sales by Country"
 @Beginning_Date DateTime, @Ending_Date DateTime AS
 SELECT Employees.Country, Employees.LastName, Employees.FirstName, Orders.ShippedDate, Orders.OrderID, "Order Subtotals".Subtotal AS SaleAmount
-FROM Employees INNER JOIN 
-	(Orders INNER JOIN "Order Subtotals" ON Orders.OrderID = "Order Subtotals".OrderID) 
+FROM Employees INNER JOIN
+	(Orders INNER JOIN "Order Subtotals" ON Orders.OrderID = "Order Subtotals".OrderID)
 	ON Employees.EmployeeID = Orders.EmployeeID
 WHERE Orders.ShippedDate Between @Beginning_Date And @Ending_Date
 GO
 
-create procedure "Sales by Year" 
+create procedure "Sales by Year"
 	@Beginning_Date DateTime, @Ending_Date DateTime AS
 SELECT Orders.ShippedDate, Orders.OrderID, "Order Subtotals".Subtotal, DATENAME(yy,ShippedDate) AS Year
 FROM Orders INNER JOIN "Order Subtotals" ON Orders.OrderID = "Order Subtotals".OrderID
@@ -9056,295 +9056,4 @@ AS
 SELECT ProductName,
     UnitPrice=ROUND(Od.UnitPrice, 2),
     Quantity,
-    Discount=CONVERT(int, Discount * 100), 
-    ExtendedPrice=ROUND(CONVERT(money, Quantity * (1 - Discount) * Od.UnitPrice), 2)
-FROM Products P, [Order Details] Od
-WHERE Od.ProductID = P.ProductID and Od.OrderID = @OrderID
-go
-
-
-if exists (select * from sysobjects where id = object_id('dbo.CustOrdersOrders'))
-	drop procedure dbo.CustOrdersOrders
-GO
-
-CREATE PROCEDURE CustOrdersOrders @CustomerID nchar(5)
-AS
-SELECT OrderID, 
-	OrderDate,
-	RequiredDate,
-	ShippedDate
-FROM Orders
-WHERE CustomerID = @CustomerID
-ORDER BY OrderID
-GO
-
-
-if exists (select * from sysobjects where id = object_id('dbo.CustOrderHist') and sysstat & 0xf = 4)
-	drop procedure dbo.CustOrderHist
-GO
-CREATE PROCEDURE CustOrderHist @CustomerID nchar(5)
-AS
-SELECT ProductName, Total=SUM(Quantity)
-FROM Products P, [Order Details] OD, Orders O, Customers C
-WHERE C.CustomerID = @CustomerID
-AND C.CustomerID = O.CustomerID AND O.OrderID = OD.OrderID AND OD.ProductID = P.ProductID
-GROUP BY ProductName
-GO
-
-if exists (select * from sysobjects where id = object_id('dbo.SalesByCategory') and sysstat & 0xf = 4)
-	drop procedure dbo.SalesByCategory
-GO
-CREATE PROCEDURE SalesByCategory
-    @CategoryName nvarchar(15), @OrdYear nvarchar(4) = '1998'
-AS
-IF @OrdYear != '1996' AND @OrdYear != '1997' AND @OrdYear != '1998' 
-BEGIN
-	SELECT @OrdYear = '1998'
-END
-
-SELECT ProductName,
-	TotalPurchase=ROUND(SUM(CONVERT(decimal(14,2), OD.Quantity * (1-OD.Discount) * OD.UnitPrice)), 0)
-FROM [Order Details] OD, Orders O, Products P, Categories C
-WHERE OD.OrderID = O.OrderID 
-	AND OD.ProductID = P.ProductID 
-	AND P.CategoryID = C.CategoryID
-	AND C.CategoryName = @CategoryName
-	AND SUBSTRING(CONVERT(nvarchar(22), O.OrderDate, 111), 1, 4) = @OrdYear
-GROUP BY ProductName
-ORDER BY ProductName
-GO
-
-
-/* The follwing adds tables to the Northwind database */
-
-
-CREATE TABLE [dbo].[CustomerCustomerDemo] 
-	([CustomerID] nchar (5) NOT NULL,
-	[CustomerTypeID] [nchar] (10) NOT NULL
-) ON [PRIMARY] 
-GO
-
-CREATE TABLE [dbo].[CustomerDemographics] 
-	([CustomerTypeID] [nchar] (10) NOT NULL ,
-	[CustomerDesc] [ntext] NULL 
-)  ON [PRIMARY] 
-GO		
-	
-CREATE TABLE [dbo].[Region] 
-	( [RegionID] [int] NOT NULL ,
-	[RegionDescription] [nchar] (50) NOT NULL 
-) ON [PRIMARY]
-GO
-
-CREATE TABLE [dbo].[Territories] 
-	([TerritoryID] [nvarchar] (20) NOT NULL ,
-	[TerritoryDescription] [nchar] (50) NOT NULL ,
-        [RegionID] [int] NOT NULL
-) ON [PRIMARY]
-GO
-
-CREATE TABLE [dbo].[EmployeeTerritories] 
-	([EmployeeID] [int] NOT NULL,
-	[TerritoryID] [nvarchar] (20) NOT NULL 
-) ON [PRIMARY]
-
--- The following adds data to the tables just created.
-
-Insert Into Region Values (1,'Eastern')
-Insert Into Region Values (2,'Western')
-Insert Into Region Values (3,'Northern')
-Insert Into Region Values (4,'Southern')
-Go
-
-Insert Into Territories Values ('01581','Westboro',1)
-Insert Into Territories Values ('01730','Bedford',1)
-Insert Into Territories Values ('01833','Georgetow',1)
-Insert Into Territories Values ('02116','Boston',1)
-Insert Into Territories Values ('02139','Cambridge',1)
-Insert Into Territories Values ('02184','Braintree',1)
-Insert Into Territories Values ('02903','Providence',1)
-Insert Into Territories Values ('03049','Hollis',3)
-Insert Into Territories Values ('03801','Portsmouth',3)
-Insert Into Territories Values ('06897','Wilton',1)
-Insert Into Territories Values ('07960','Morristown',1)
-Insert Into Territories Values ('08837','Edison',1)
-Insert Into Territories Values ('10019','New York',1)
-Insert Into Territories Values ('10038','New York',1)
-Insert Into Territories Values ('11747','Mellvile',1)
-Insert Into Territories Values ('14450','Fairport',1)
-Insert Into Territories Values ('19428','Philadelphia',3)
-Insert Into Territories Values ('19713','Neward',1)
-Insert Into Territories Values ('20852','Rockville',1)
-Insert Into Territories Values ('27403','Greensboro',1)
-Insert Into Territories Values ('27511','Cary',1)
-Insert Into Territories Values ('29202','Columbia',4)
-Insert Into Territories Values ('30346','Atlanta',4)
-Insert Into Territories Values ('31406','Savannah',4)
-Insert Into Territories Values ('32859','Orlando',4)
-Insert Into Territories Values ('33607','Tampa',4)
-Insert Into Territories Values ('40222','Louisville',1)
-Insert Into Territories Values ('44122','Beachwood',3)
-Insert Into Territories Values ('45839','Findlay',3)
-Insert Into Territories Values ('48075','Southfield',3)
-Insert Into Territories Values ('48084','Troy',3)
-Insert Into Territories Values ('48304','Bloomfield Hills',3)
-Insert Into Territories Values ('53404','Racine',3)
-Insert Into Territories Values ('55113','Roseville',3)
-Insert Into Territories Values ('55439','Minneapolis',3)
-Insert Into Territories Values ('60179','Hoffman Estates',2)
-Insert Into Territories Values ('60601','Chicago',2)
-Insert Into Territories Values ('72716','Bentonville',4)
-Insert Into Territories Values ('75234','Dallas',4)
-Insert Into Territories Values ('78759','Austin',4)
-Insert Into Territories Values ('80202','Denver',2)
-Insert Into Territories Values ('80909','Colorado Springs',2)
-Insert Into Territories Values ('85014','Phoenix',2)
-Insert Into Territories Values ('85251','Scottsdale',2)
-Insert Into Territories Values ('90405','Santa Monica',2)
-Insert Into Territories Values ('94025','Menlo Park',2)
-Insert Into Territories Values ('94105','San Francisco',2)
-Insert Into Territories Values ('95008','Campbell',2)
-Insert Into Territories Values ('95054','Santa Clara',2)
-Insert Into Territories Values ('95060','Santa Cruz',2)
-Insert Into Territories Values ('98004','Bellevue',2)
-Insert Into Territories Values ('98052','Redmond',2)
-Insert Into Territories Values ('98104','Seattle',2)
-Go
-
-Insert Into EmployeeTerritories Values (1,'06897')
-Insert Into EmployeeTerritories Values (1,'19713')
-Insert Into EmployeeTerritories Values (2,'01581')
-Insert Into EmployeeTerritories Values (2,'01730')
-Insert Into EmployeeTerritories Values (2,'01833')
-Insert Into EmployeeTerritories Values (2,'02116')
-Insert Into EmployeeTerritories Values (2,'02139')
-Insert Into EmployeeTerritories Values (2,'02184')
-Insert Into EmployeeTerritories Values (2,'40222')
-Insert Into EmployeeTerritories Values (3,'30346')
-Insert Into EmployeeTerritories Values (3,'31406')
-Insert Into EmployeeTerritories Values (3,'32859')
-Insert Into EmployeeTerritories Values (3,'33607')
-Insert Into EmployeeTerritories Values (4,'20852')
-Insert Into EmployeeTerritories Values (4,'27403')
-Insert Into EmployeeTerritories Values (4,'27511')
-Insert Into EmployeeTerritories Values (5,'02903')
-Insert Into EmployeeTerritories Values (5,'07960')
-Insert Into EmployeeTerritories Values (5,'08837')
-Insert Into EmployeeTerritories Values (5,'10019')
-Insert Into EmployeeTerritories Values (5,'10038')
-Insert Into EmployeeTerritories Values (5,'11747')
-Insert Into EmployeeTerritories Values (5,'14450')
-Insert Into EmployeeTerritories Values (6,'85014')
-Insert Into EmployeeTerritories Values (6,'85251')
-Insert Into EmployeeTerritories Values (6,'98004')
-Insert Into EmployeeTerritories Values (6,'98052')
-Insert Into EmployeeTerritories Values (6,'98104')
-Insert Into EmployeeTerritories Values (7,'60179')
-Insert Into EmployeeTerritories Values (7,'60601')
-Insert Into EmployeeTerritories Values (7,'80202')
-Insert Into EmployeeTerritories Values (7,'80909')
-Insert Into EmployeeTerritories Values (7,'90405')
-Insert Into EmployeeTerritories Values (7,'94025')
-Insert Into EmployeeTerritories Values (7,'94105')
-Insert Into EmployeeTerritories Values (7,'95008')
-Insert Into EmployeeTerritories Values (7,'95054')
-Insert Into EmployeeTerritories Values (7,'95060')
-Insert Into EmployeeTerritories Values (8,'19428')
-Insert Into EmployeeTerritories Values (8,'44122')
-Insert Into EmployeeTerritories Values (8,'45839')
-Insert Into EmployeeTerritories Values (8,'53404')
-Insert Into EmployeeTerritories Values (9,'03049')
-Insert Into EmployeeTerritories Values (9,'03801')
-Insert Into EmployeeTerritories Values (9,'48075')
-Insert Into EmployeeTerritories Values (9,'48084')
-Insert Into EmployeeTerritories Values (9,'48304')
-Insert Into EmployeeTerritories Values (9,'55113')
-Insert Into EmployeeTerritories Values (9,'55439')
-GO
-
-
-
---  The following adds constraints to the Northwind database
-
-ALTER TABLE CustomerCustomerDemo
-	ADD CONSTRAINT [PK_CustomerCustomerDemo] PRIMARY KEY  NONCLUSTERED 
-	(
-		[CustomerID],
-		[CustomerTypeID]
-	) ON [PRIMARY]
-GO
-
-ALTER TABLE CustomerDemographics
-	ADD CONSTRAINT [PK_CustomerDemographics] PRIMARY KEY  NONCLUSTERED 
-	(
-		[CustomerTypeID]
-	) ON [PRIMARY]
-GO
-
-ALTER TABLE CustomerCustomerDemo
-	ADD CONSTRAINT [FK_CustomerCustomerDemo] FOREIGN KEY 
-	(
-		[CustomerTypeID]
-	) REFERENCES [dbo].[CustomerDemographics] (
-		[CustomerTypeID]
-	)
-GO
-
-ALTER TABLE CustomerCustomerDemo
-	ADD CONSTRAINT [FK_CustomerCustomerDemo_Customers] FOREIGN KEY
-	(
-		[CustomerID]
-	) REFERENCES [dbo].[Customers] (
-		[CustomerID]
-	)
-GO
-
-ALTER TABLE Region
-	ADD CONSTRAINT [PK_Region] PRIMARY KEY  NONCLUSTERED 
-	(
-		[RegionID]
-	)  ON [PRIMARY] 
-GO
-
-ALTER TABLE Territories
-	ADD CONSTRAINT [PK_Territories] PRIMARY KEY  NONCLUSTERED 
-	(
-		[TerritoryID]
-	)  ON [PRIMARY] 
-GO
-
-ALTER TABLE Territories
-	ADD CONSTRAINT [FK_Territories_Region] FOREIGN KEY 
-	(
-		[RegionID]
-	) REFERENCES [dbo].[Region] (
-		[RegionID]
-	)
-GO
-
-ALTER TABLE EmployeeTerritories
-	ADD CONSTRAINT [PK_EmployeeTerritories] PRIMARY KEY  NONCLUSTERED 
-	(
-		[EmployeeID],
-		[TerritoryID]
-	) ON [PRIMARY]
-GO
-
-ALTER TABLE EmployeeTerritories
-	ADD CONSTRAINT [FK_EmployeeTerritories_Employees] FOREIGN KEY 
-	(
-		[EmployeeID]
-	) REFERENCES [dbo].[Employees] (
-		[EmployeeID]
-	)
-GO
-
-
-ALTER TABLE EmployeeTerritories	
-	ADD CONSTRAINT [FK_EmployeeTerritories_Territories] FOREIGN KEY 
-	(
-		[TerritoryID]
-	) REFERENCES [dbo].[Territories] (
-		[TerritoryID]
-	)
-GO
+    Discount=CONVERT(int, Discount * 100),

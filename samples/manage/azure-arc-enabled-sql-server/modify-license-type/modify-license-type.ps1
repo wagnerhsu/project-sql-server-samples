@@ -1,36 +1,36 @@
 #
 # This script provides a scaleable solution to set or change the license type on all Azure-connected SQL Servers
-# in a specific subscription, a list of subscruiptions or the entire account. By default, it sets the new license  
-# type value only on the servers where it is undefined. 
+# in a specific subscription, a list of subscruiptions or the entire account. By default, it sets the new license
+# type value only on the servers where it is undefined.
 #
-# You can specfy a single subscription to scan, or provide subscriptions as a .CSV file with the list of IDs. 
-# If not specified, all subscriptions your role has access to are scanned. 
+# You can specfy a single subscription to scan, or provide subscriptions as a .CSV file with the list of IDs.
+# If not specified, all subscriptions your role has access to are scanned.
 #
 # The script accepts the following command line parameters:
-# 
+#
 # -SubId [subscription_id] | [csv_file_name]    (Limit scope to specific subscriptions. Accepts a .csv file with the list of subscriptions.
 #                                               If not specified all subscriptions will be scanned)
 # -ResourceGroup [resource_goup]                (Limit scope  to a specific resoure group)
 # -MachineName [machine_name]                   (Limit scope to a specific machine)
 # -LicenseType [license_type_value]             (Specific LT value)
-# -All                                          (Required. Set the new license type on all installed extensions. 
+# -All                                          (Required. Set the new license type on all installed extensions.
 #                                               By default the value is set only if license type is undefined undefined)
-# 
+#
 # The script uses a function ConvertTo-HashTable that was created by Adam Bertram (@adam-bertram).
 # The function was originally published on https://4sysops.com/archives/convert-json-to-a-powershell-hash-table/
 # and is used here with the author's permission.
 #
 
 param (
-    [Parameter (Mandatory=$false)] 
-    [string] $SubId, 
-    [Parameter (Mandatory= $false)] 
-    [string] $ResourceGroup, 
-    [Parameter (Mandatory= $false)] 
-    [string] $MachineName, 
+    [Parameter (Mandatory=$false)]
+    [string] $SubId,
+    [Parameter (Mandatory= $false)]
+    [string] $ResourceGroup,
+    [Parameter (Mandatory= $false)]
+    [string] $MachineName,
     [Parameter (Mandatory= $true)]
     [ValidateSet("PAYG","Paid","LicenseOnly", IgnoreCase=$false)]
-    [string] $LicenseType, 
+    [string] $LicenseType,
     [Parameter (Mandatory= $false)]
     [boolean] $All=$false
 )
@@ -43,7 +43,7 @@ function CheckModule ($m) {
     if (!(Get-Module | Where-Object {$_.Name -eq $m})) {
          # If module is not imported, but available on disk then import
         if (Get-Module -ListAvailable | Where-Object {$_.Name -eq $m}) {
-            Import-Module $m 
+            Import-Module $m
         }
         else {
 
@@ -86,7 +86,7 @@ function ConvertTo-Hashtable {
             )
             ## Return the array but don't enumerate it because the object may be pretty complex
             Write-Output -NoEnumerate $collection
-        } elseif ($InputObject -is [psobject]) { 
+        } elseif ($InputObject -is [psobject]) {
             ## If the object has properties that need enumeration, cxonvert it to its own hash table and return it
             $hash = @{}
             foreach ($property in $InputObject.PSObject.Properties) {
@@ -127,19 +127,19 @@ if ($SubId -like "*.csv") {
 
 Write-Host ([Environment]::NewLine + "-- Scanning subscriptions --")
 
-# Scan arc-enabled servers in each subscription 
+# Scan arc-enabled servers in each subscription
 
 foreach ($sub in $subscriptions){
 
     if ($sub.State -ne "Enabled") {continue}
 
     try {
-        Set-AzContext -SubscriptionId $sub.Id  
+        Set-AzContext -SubscriptionId $sub.Id
     }catch {
         write-host "Invalid subscription: $($sub.Id)"
         {continue}
     }
-   
+
     $query = "
     resources
     | where type =~ 'microsoft.hybridcompute/machines/extensions'
@@ -166,32 +166,32 @@ foreach ($sub in $subscriptions){
     foreach ($r in $resources) {
 
         $setID = @{
-            MachineName = $r.MachineName        
-            Name = $r.extensionName        
-            ResourceGroup = $r.resourceGroup        
-            Location = $r.location        
+            MachineName = $r.MachineName
+            Name = $r.extensionName
+            ResourceGroup = $r.resourceGroup
+            Location = $r.location
             SubscriptionId = $r.subscriptionId
             Publisher = $r.extensionPublisher
-            ExtensionType = $r.extensionType    
+            ExtensionType = $r.extensionType
         }
 
         $settings = @{}
         $settings = $r.properties.settings | ConvertTo-Json | ConvertFrom-Json | ConvertTo-Hashtable
-        
+
         if ($settings.ContainsKey("LicenseType")) {
             if ($All) {
                 if ($settings["LicenseType"] -ne $LicenseType ) {
-                    $settings["LicenseType"] = $LicenseType 
+                    $settings["LicenseType"] = $LicenseType
                     Write-Host "Resource group: [$($r.resourceGroup)] Connected machine: [$($r.MachineName)] : License type: [$($settings["LicenseType"])]"
                     Set-AzConnectedMachineExtension @setId -Settings $settings -NoWait | Out-Null
                 }
-            }        
+            }
         } else {
-            $settings["LicenseType"] = $LicenseType   
+            $settings["LicenseType"] = $LicenseType
             Write-Host "Resource group: [$($r.resourceGroup)] Connected machine: [$($r.MachineName)] : License type: [$($settings["LicenseType"])]"
             Set-AzConnectedMachineExtension @setId -Settings $settings -NoWait | Out-Null
         }
-    } 
+    }
 }
-    
+
     

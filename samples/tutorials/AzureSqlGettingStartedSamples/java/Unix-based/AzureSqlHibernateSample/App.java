@@ -21,7 +21,7 @@ import com.azure.security.keyvault.secrets.SecretClientBuilder;
 public class App {
     String connectionUrl = "jdbc:sqlserver://your_server.database.windows.net"; // update me
     String userName = "your_user"; // update me
-    String password = "Will_Be_Updated_From_Key_Vault"; 
+    String password = "Will_Be_Updated_From_Key_Vault";
     String sampleDatabaseName = "your_db"; // update me
 
     // Main entry point
@@ -59,7 +59,7 @@ public class App {
             cfg.addAnnotatedClass(Task.class);
 
 	    System.out.println("added classes to config");
-        
+
 
             // Hibernate needs an existing database. We already have one created.
 

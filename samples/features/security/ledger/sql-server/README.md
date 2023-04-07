@@ -107,7 +107,7 @@ Perform the below steps before you show the demo.
     1. Pieter has been asked to change the Home Country Odds for the game with ID 1. Run `code cell 2` in the Notebook to update the record.
     1. Run `code cell 3` in the Notebook to show the history of the updated record. Explain that updates are stored as 2 records in the history table. A delete of the old version and an insert of the new version of the row.
 
-1. Show how append-only ledger table works and how ledger helps investigate tampering by DBAs. 
+1. Show how append-only ledger table works and how ledger helps investigate tampering by DBAs.
     1. Michael, who is an internal auditor, performs a routine review of changes in the Worldcup database. As his first step, Michael runs the ledger verification to be sure he can trust the data he’s going to examine. Run `code cell 4` to execute the verification stored procedure. The result should be "Ledger verification succeeded."
     1. Pieter wants to maliciously increase his payout for the game he betted on. Run `code cell 5 and 6` to try to update the record. Explain that update on an append-only ledger table is blocked.
     1. Pieter thinks he's smart and tampers with the data directly into the data file by using a stored procedure. **DO NOT RUN** `code cell 7` because the stored procedure does not exists.

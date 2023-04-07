@@ -144,7 +144,7 @@ The following JSON object represents a complete rule set using performance count
                         "type": "performance",
                         "counters": {
                             "transactions_sec": {
-                                "type": "rate", 
+                                "type": "rate",
                                 "instance": "_Total"
                             }
                         }

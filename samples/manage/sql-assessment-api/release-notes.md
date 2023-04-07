@@ -1,6 +1,6 @@
 # Release notes for SQL Assessment API
 
-This article provides details about updates, improvements, and bug fixes for the current and previous versions of SQL Assessment API. 
+This article provides details about updates, improvements, and bug fixes for the current and previous versions of SQL Assessment API.
 
 To start working with the API, install the SQL Assessment Extention to Azure Data Studio or utilize either the SqlServer module or SMO.
 
@@ -268,9 +268,9 @@ Version: SqlServer PowerShell module wasn't updated, SqlManagementObjects (SMO) 
 
 ### Bug fixes and improvements
 
-- Updated the 'LatestCU' rule with the latest CU versions 
-- Updated the 'ReplErrors24H' rule to collect information for all 'Publisher' databases 
-- Fixed an issue with local variables used for displaying extended details in messages 
+- Updated the 'LatestCU' rule with the latest CU versions
+- Updated the 'ReplErrors24H' rule to collect information for all 'Publisher' databases
+- Fixed an issue with local variables used for displaying extended details in messages
 - Fixed an issue with the wrong Linux target type for the 'PriorityBoostOn' rule
 
 ## December 2020 - 1.0.302
@@ -311,7 +311,7 @@ Version: SqlServer module 21.1.18226, SqlManagementObjects (SMO) package wasn't 
 
 - Added new types of probes in addition to SQL and EXTERNAL: CMDSHELL, WMI, REGISTRY, POWERSHELL
 - Enabling/disabling database checks for particular SQL Server instances (by instance name)
-- Added 40 rules, including  
+- Added 40 rules, including
   - Ad Hoc Distributed Queries are enabled
   - Affinity Mask and Affinity I/O Mask overlapping
   - Auto Soft NUMA should be enabled

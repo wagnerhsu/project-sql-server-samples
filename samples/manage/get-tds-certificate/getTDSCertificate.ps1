@@ -6,7 +6,7 @@ $publicCertificateFile = $parameters['publicCertificateFile']
 
 $Assem = @()
 
-$Source = @" 
+$Source = @"
 
 using System;
 using System.IO;
@@ -44,7 +44,7 @@ namespace CL
         /// <summary>
         /// ResetConnectionSkipTran TDS Message Status
         /// Reset the connection before processing event but do not modify the transaction
-        /// state (the state will remain the same before and after the reset). 
+        /// state (the state will remain the same before and after the reset).
         /// </summary>
         ResetConnectionSkipTran = 0x10
     }
@@ -643,7 +643,7 @@ Using-Object($stream = New-Object CL.TDSStream($stream, [TimeSpan]::FromSeconds(
     $sslStream = New-Object System.Net.Security.SslStream($stream, $true, {$true})
     $sslStream.AuthenticateAsClient($hostName)
     $certificate = $sslStream.RemoteCertificate
-    [System.IO.File]::WriteAllBytes($publicCertificateFile,$certificate.Export([System.Security.Cryptography.X509Certificates.X509ContentType]::Cert))    
+    [System.IO.File]::WriteAllBytes($publicCertificateFile,$certificate.Export([System.Security.Cryptography.X509Certificates.X509ContentType]::Cert))
 }
 
 

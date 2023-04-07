@@ -44,7 +44,7 @@ The next example extends the previous check with support for clustered servers. 
     ],
     "condition": [
         { "not": "@attr::service::SQLAgent" },
-        { 
+        {
             "ine": [
                 "@attr::service::SQLAgent.account",
                 "@localServiceAccount"

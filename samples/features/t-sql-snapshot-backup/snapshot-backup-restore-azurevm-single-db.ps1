@@ -1,9 +1,9 @@
 ﻿$subscriptionId ='########-####-####-####-############'
 $subscriptionName = 'YOUR-AZURE-SUBSCRIPTION-NAME'
-$resourceGroupName = 'YOUR-AZURE-RESOURCE-GROUP-NAME' 
-$location = 'YOUR-AZURE-RESOURCE-GROUP-LOCATION' 
+$resourceGroupName = 'YOUR-AZURE-RESOURCE-GROUP-NAME'
+$location = 'YOUR-AZURE-RESOURCE-GROUP-LOCATION'
 $vmName = 'YOUR-VIRTUAL-MACHINE-NAME'
-$snapshotName = 'SNAPSHOT-NAME' 
+$snapshotName = 'SNAPSHOT-NAME'
 $diskName = "YOUR-SNAPSHOT-BACKUP-NAME"
 $storageType = '' # E.g., 'Premium_LRS'
 $bkmFile = "FILEPATH-FOR-THE-.BKM-FILE" # E.g., "C:\BKP\db.bkm"
@@ -38,7 +38,7 @@ Install-Module -Name Az
 # Create a sample database
 ###########################################
 $sqlConn = New-Object System.Data.SQLClient.SQLConnection
-# Open SQL Server connection to master 
+# Open SQL Server connection to master
 $sqlConn.ConnectionString = "server='" + $SQLServer +"';database='master';Integrated Security=True;"
 $sqlConn.Open()
 
@@ -64,7 +64,7 @@ $sqlConn.Open()
     $Command.Connection = $sqlConn
 
     # Suspend Database
-    $Command.CommandText = $suspendDb 
+    $Command.CommandText = $suspendDb
     $Result = $Command.ExecuteNonQuery();
 
     # Take a disk snapshot
@@ -76,16 +76,16 @@ $sqlConn.Open()
     catch
     {
         # Unsuspend Database
-        $Command.CommandText = $unsuspendDb 
+        $Command.CommandText = $unsuspendDb
         $Result = $Command.ExecuteNonQuery();
     }
-    
+
     # Backup database metadata
     $Command.CommandText = $backupMetadata
     $Result = $Command.ExecuteNonQuery();
 
     # Unsuspend Database
-    $Command.CommandText = $unsuspendDb 
+    $Command.CommandText = $unsuspendDb
     $Result = $Command.ExecuteNonQuery();
 
 # Close SQL Server connection
@@ -115,7 +115,7 @@ Set-Disk -Number 2 -IsOffline $false
 
 # Drop database and restore from snapshot
 ###########################################
-# Open SQL Server connection to master 
+# Open SQL Server connection to master
 $sqlConn.ConnectionString = "server='" + $SQLServer +"';database='master';Integrated Security=True;"
 $sqlConn.Open()
 
@@ -127,7 +127,7 @@ $sqlConn.Open()
     $Result = $Command.ExecuteNonQuery();
 
     # Restore Database
-    $Command.CommandText = $restoreDB 
+    $Command.CommandText = $restoreDB
     $Result = $Command.ExecuteNonQuery();
 
 # Close SQL Server connection
@@ -137,7 +137,7 @@ $sqlConn.Close()
 # Clean up
 ###########################################
 
-# Open SQL Server connection to master 
+# Open SQL Server connection to master
 $sqlConn.ConnectionString = "server='" + $SQLServer +"';database='master';Integrated Security=True;"
 $sqlConn.Open()
 
@@ -161,7 +161,7 @@ if (Test-Path $bkmFile) {
 }
 
 # Remove disk from VM
-$vm = Remove-AzVMDataDisk -VM $vm -Name $diskName 
+$vm = Remove-AzVMDataDisk -VM $vm -Name $diskName
 Update-AzVM -VM $vm -ResourceGroupName $resourceGroupName
 
 # Remove unmanaged disk

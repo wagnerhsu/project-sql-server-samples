@@ -1,9 +1,9 @@
-![](./media/solutions-microsoft-logo-small.png) 
+![](./media/solutions-microsoft-logo-small.png)
 
 # Azure Data SQL Samples Repository
 This GitHub repository contains code samples that demonstrate how to use Microsoft's Azure Data products including SQL Server, Azure SQL Database, Azure Synapse, and Azure SQL Edge. Each sample includes a README file that explains how to run and use the sample.
 
-Note that certain features like In-Memory OLTP are edition specific for SQL Server and would be possible to implement if the edition which supports that feature is being used to run the sample. 
+Note that certain features like In-Memory OLTP are edition specific for SQL Server and would be possible to implement if the edition which supports that feature is being used to run the sample.
 
 ## Releases in this repository
 
@@ -21,7 +21,7 @@ To work in GitHub, go to https://github.com/microsoft/sql-server-samples and for
 Each sample should be in its own folder with a README.md file that follows the [template](README_samples_template.md). Generated files (e.g., .exe or .bacpac) and user configuration settings (e.g., .user) should not be committed to GitHub.
 
 ## Cloning only a subset of the repo (with sparse checkout)
-You can follow the steps below to clone individual files from the sql-server-samples git repo. Note: The following script clones only the files under the **features** and **demos** folders. 
+You can follow the steps below to clone individual files from the sql-server-samples git repo. Note: The following script clones only the files under the **features** and **demos** folders.
 ```
 git clone -n https://github.com/Microsoft/sql-server-samples
 cd sql-server-samples

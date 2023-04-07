@@ -103,7 +103,7 @@ function Read(callback) {
     });
 
     // Print the rows read
-    var result = ""; 
+    var result = "";
     request.on('row', function(columns) {
         columns.forEach(function(column) {
             if (column.value === null) {

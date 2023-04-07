@@ -6,7 +6,7 @@ GO
 
 USE WorldCup
 GO
---Enable Automatic Digest Storage 
+--Enable Automatic Digest Storage
 --REPLACE <YourStorageAccountName> with the name of your Azure storage account.
 ALTER DATABASE SCOPED CONFIGURATION
  SET LEDGER_DIGEST_STORAGE_ENDPOINT = 'https://<YourStorageAccountName>.blob.core.windows.net';
@@ -21,16 +21,16 @@ CREATE TABLE [dbo].[MoneyLine](
 	[VisitCountryOdds] [INT] NOT NULL,
 	[GameDateTime] [datetime2] NOT NULL
 	)
-WITH 
+WITH
 (
   SYSTEM_VERSIONING = ON,
   LEDGER = ON
-); 
+);
 GO
 
 --Populate the MoneyLine table
 
-INSERT INTO [dbo].[MoneyLine] ([HomeCountry], [HomeCountryOdds], [DrawOdds], [VisitCountry],[VisitCountryOdds],[GameDateTime]) 
+INSERT INTO [dbo].[MoneyLine] ([HomeCountry], [HomeCountryOdds], [DrawOdds], [VisitCountry],[VisitCountryOdds],[GameDateTime])
 VALUES ('Qatar', 250, 245, 'Ecuador',105,'2022-11-20 17:00:00'),
 ('England', -340, 390, 'Iran', 1000, '2022-11-21 14:00:00' ),
 ('Senegal', 475, 270, 'Netherlands',-165, '2022-11-21 17:00:00'),
@@ -88,7 +88,7 @@ GO
 -- Create a function to calculate the Payout
 -- Calculating Payouts From Positive Moneyline Odds ---- Potential Profit = Stake x (Odds/100) + Stake
 -- Calculating Payouts From Negative Moneyline Odds ---- Potential Profit = Stake / (Odds/100) + Stake
-CREATE FUNCTION fn_CalculatePayout 
+CREATE FUNCTION fn_CalculatePayout
 (
 	-- Add the parameters for the function here
 	@Stake decimal(8,2), @Odds decimal(8,2)
@@ -113,7 +113,7 @@ GO
 
 
 -- Create a stored procedure to place a bet
-CREATE PROCEDURE usp_PlaceBet 
+CREATE PROCEDURE usp_PlaceBet
 	@MoneylineID INT,
 	@FirstName NVARCHAR(50),
 	@LastName NVARCHAR(50),

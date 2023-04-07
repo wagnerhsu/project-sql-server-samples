@@ -38,7 +38,7 @@
             db.Model(&user).Related(&tasks)
             fmt.Printf("%s %s's tasks:\n", user.FirstName, user.LastName)
             for _, task := range tasks {
-                fmt.Printf("Title: %s\nDueDate: %s\nIsComplete:%t\n\n", 
+                fmt.Printf("Title: %s\nDueDate: %s\nIsComplete:%t\n\n",
                                 task.Title, task.DueDate, task.IsComplete)
             }
         }
@@ -48,7 +48,7 @@
     func UpdateSomeonesTask(db *gorm.DB, userId int){
         var task Task
         db.Where("user_id = ?", userId).First(&task).Update("Title", "Buy donuts for Luis")
-        fmt.Printf("Title: %s\nDueDate: %s\nIsComplete:%t\n\n", 
+        fmt.Printf("Title: %s\nDueDate: %s\nIsComplete:%t\n\n",
                         task.Title, task.DueDate, task.IsComplete)
     }
 

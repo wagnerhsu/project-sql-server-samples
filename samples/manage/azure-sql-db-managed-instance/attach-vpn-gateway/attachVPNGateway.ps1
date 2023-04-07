@@ -20,7 +20,7 @@ if ($clientCertificatePassword -eq '' -or ($null -eq $clientCertificatePassword)
 function VerifyPSVersion {
     Write-Host "Verifying PowerShell version."
     if ($PSVersionTable.PSEdition -eq "Desktop") {
-        if (($PSVersionTable.PSVersion.Major -ge 6) -or 
+        if (($PSVersionTable.PSVersion.Major -ge 6) -or
             (($PSVersionTable.PSVersion.Major -eq 5) -and ($PSVersionTable.PSVersion.Minor -ge 1))) {
             Write-Host "PowerShell version verified." -ForegroundColor Green
         }
@@ -36,7 +36,7 @@ function VerifyPSVersion {
         else {
             Write-Host "You need to install PowerShell version 6.0 or heigher." -ForegroundColor Red
             Break;
-        }        
+        }
     }
 }
 
@@ -54,7 +54,7 @@ function EnsureAzModule {
         }
     }
     else {
-        Write-Host "Module Az imported." -ForegroundColor Green        
+        Write-Host "Module Az imported." -ForegroundColor Green
     }
 }
 
@@ -193,11 +193,11 @@ function CreateCerificateWindows() {
         -HashAlgorithm sha256 -KeyLength 2048 `
         -CertStoreLocation "Cert:\CurrentUser\My" `
         -Signer $certificate -TextExtension @("2.5.29.37={text}1.3.6.1.5.5.7.3.2") | Out-null
-    
+
     [Convert]::ToBase64String((Get-Item cert:\currentuser\my\$certificateThumbprint).RawData)
 }
 
-function CreateCerificateOpenSsl() {   
+function CreateCerificateOpenSsl() {
     $dn = "CN=$certificateNamePrefix" + "P2SRoot"
     ipsec pki --gen --outform pem > caKey.pem
     ipsec pki --self --in caKey.pem --dn $dn --ca --outform pem > caCert.pem
@@ -206,12 +206,12 @@ function CreateCerificateOpenSsl() {
     ipsec pki --gen --outform pem > "$($dn)Key.pem"
     ipsec pki --pub --in "$($dn)Key.pem" --outform pem > "$($dn)PubKey.pem"
     ipsec pki --issue --in "$($dn)PubKey.pem" --cacert caCert.pem --cakey caKey.pem --dn "CN=$($dn)" --san $dn --flag clientAuth --outform pem > "$($dn)Cert.pem"
-    
+
     openssl pkcs12 -in "$($dn)Cert.pem" -inkey "$($dn)Key.pem" -certfile caCert.pem -export -out "$($dn).p12" -password "pass:$($clientCertificatePassword)"
     #openssl pkcs12 -in "$($dn).p12" -password "pass:$($clientCertificatePassword)" -nocerts -out "$($dn)PrivateKey.pem" -nodes
     #openssl pkcs12 -in "$($dn).p12" -password "pass:$($clientCertificatePassword)" -nokeys -out "$($dn)PublicCert.pem" -nodes
 
-    $publicRootCertData = openssl x509 -in caCert.pem -outform pem 
+    $publicRootCertData = openssl x509 -in caCert.pem -outform pem
     $publicRootCertData = $publicRootCertData -replace "-----BEGIN CERTIFICATE-----", ""
     $publicRootCertData = $publicRootCertData -replace "-----END CERTIFICATE-----", ""
     [string]::Join("", $publicRootCertData.Split())
@@ -264,7 +264,7 @@ Write-Host "Starting deployment..."
 Write-Host "Deployment will take about 1h." -ForegroundColor Yellow
 
 $templateParameters = @{
-    location                   = $virtualNetwork.Location    
+    location                   = $virtualNetwork.Location
     virtualNetworkName         = $virtualNetworkName
     gatewaySubnetPrefix        = $gatewaySubnetPrefix
     vpnClientAddressPoolPrefix = $vpnClientAddressPoolPrefix

@@ -35,7 +35,7 @@ Let's say you need to change this rule to validate backups that were created mor
     "name": "Backup Policy",
 
     //Sets the override for the specified rule
-    "rules":    
+    "rules":
     [
         {
             //Sets the type, which is 'override'
