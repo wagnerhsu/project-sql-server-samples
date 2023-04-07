@@ -118,7 +118,7 @@ $requiredModules | Foreach-Object {CheckModule $_}
 
 if ($SubId -like "*.csv") {
     $subscriptions = Import-Csv $SubId
-}elseif($SubId -ne $null){
+}elseif($SubId -ne ""){
     $subscriptions = [PSCustomObject]@{SubscriptionId = $SubId} | Get-AzSubscription 
 }else{
     $subscriptions = Get-AzSubscription
@@ -143,17 +143,26 @@ foreach ($sub in $subscriptions){
     $query = "
     resources
     | where type =~ 'microsoft.hybridcompute/machines/extensions'
+    | where subscriptionId =~ '$($sub.Id)'
     | extend extensionPublisher = tostring(properties.publisher), extensionType = tostring(properties.type), provisioningState = tostring(properties.provisioningState)
+    | parse id with * '/providers/Microsoft.HybridCompute/machines/' machineName '/extensions/' *
     | where extensionPublisher =~ 'Microsoft.AzureData'
     | where provisioningState =~ 'Succeeded'
-    | parse id with * '/providers/Microsoft.HybridCompute/machines/' machineName '/extensions/' *
-    | project machineName, extensionName = name, resourceGroup, location, subscriptionId, extensionPublisher, extensionType, properties
     "
     
-    if ($MachineName) {$query += "| where machineName =~ '$($MachineName)'"}     
-    if ($ResourceGroup) {$query += "| where resourceGroup =~ '$($ResourceGroup)'"}
+    if ($ResourceGroup) {
+        $query += "| where resourceGroup =~ '$($ResourceGroup)'"
+    }
 
-    $resources = Search-AzGraph -Query "$($query) | where subscriptionId =~ '$($sub.Id)'"
+    if ($MachineName) {
+        $query += "| where machineName =~ '$($MachineName)'"
+    } 
+    
+    $query += "
+    | project machineName, extensionName = name, resourceGroup, location, subscriptionId, extensionPublisher, extensionType, properties
+    "
+
+    $resources = Search-AzGraph -Query "$($query)"
     foreach ($r in $resources) {
 
         $setID = @{
