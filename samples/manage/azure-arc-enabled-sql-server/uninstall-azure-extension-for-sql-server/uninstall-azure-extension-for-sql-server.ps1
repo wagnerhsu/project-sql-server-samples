@@ -7,24 +7,21 @@
 #
 # The script accepts the following command line parameters:
 # 
-# -SubId [subscription_id] | [csv_file_name]    (Limit scope to specific subscriptions. Accepts a .csv file with the list of subscriptions.
-#                                               If not specified all subscriptions will be scanned)
-# -ResourceGroup [resource_goup]                (Limit scope  to a specific resoure group)
-# -MachineName [machine_name]                   (Limit scope to a specific machine)
-# -All                                          (Uninstall Azure extension on all Arc-enabled servers in all subscriptions you have contributor access to). 
+# -SubId [subscription_id] | [csv_file_name] | ALL  (Limit scope to specific subscriptions. Accepts a .csv file with the list of subscriptions.
+#                                                   If ALL is specified, all subscriptions will be scanned)
+# -ResourceGroup [resource_goup]                    (Limit scope  to a specific resoure group)
+# -MachineName [machine_name]                       (Limit scope to a specific machine)
 # 
 #
 
 param (
-    [Parameter (Mandatory=$false)] 
+    [Parameter (Mandatory=$true)] 
     [string] $SubId, 
     [Parameter (Mandatory= $false)] 
     [string] $ResourceGroup, 
-    [Parameter (Mandatory= $false)] 
-    [string] $MachineName, 
-    [Parameter (Mandatory= $false)]
-    [boolean] $All=$false
-)
+    [Parameter (Mandatory= $true)] 
+    [string] $MachineName
+ )
 
 function CheckModule ($m) {
 
@@ -60,6 +57,7 @@ Update-AzConfig -DisplayBreakingChangeWarning $false
 
 # Load required modules
 $requiredModules = @(
+    "AzureAD",    
     "Az.Accounts",
     "Az.ConnectedMachine",
     "Az.ResourceGraph"
@@ -70,13 +68,13 @@ $requiredModules | Foreach-Object {CheckModule $_}
 
 if ($SubId -like "*.csv") {
     $subscriptions = Import-Csv $SubId
-}elseif($SubId -ne $null){
-    $subscriptions = [PSCustomObject]@{SubscriptionId = $SubId} | Get-AzSubscription 
-}elseif($All){
-    $subscriptions = Get-AzSubscription
-}else {
-    Write-Host ([Environment]::NewLine + "-- Parameter missing --")   
-    exit 
+}elseif($SubId -like "ALL"){
+    $subscriptions = Get-AzSubscription -TenantID (Get-AzureADTenantDetail).ObjectId
+}elseif($SubId -ne ""){
+    $subscriptions = [PSCustomObject]@{SubscriptionId = $SubId} | Get-AzSubscription -TenantID (Get-AzureADTenantDetail).ObjectId
+}else{
+    Write-Host ([Environment]::NewLine + "-- Subscription parameter is missing --")   
+    exit
 }
 
 Write-Host ([Environment]::NewLine + "-- Scanning subscriptions --")
@@ -94,23 +92,40 @@ foreach ($sub in $subscriptions){
         {continue}
     }
    
-    $query = "
+    $query1 = "
     resources
+    | where subscriptionId =~ '$($sub.Id)'
     | where type =~ 'microsoft.hybridcompute/machines/extensions'
     | extend extensionPublisher = tostring(properties.publisher), extensionType = tostring(properties.type), provisioningState = tostring(properties.provisioningState)
+    | parse id with * '/providers/Microsoft.HybridCompute/machines/' machineName '/extensions/' *
     | where extensionPublisher =~ 'Microsoft.AzureData'
     | where provisioningState =~ 'Succeeded'
-    | parse id with * '/providers/Microsoft.HybridCompute/machines/' machineName '/extensions/' *
+    "
+    $query2 = "
+    resources
+    | where subscriptionId =~ '$($sub.Id)'
+    | where type =~ 'Microsoft.AzureArcData/SqlServerInstances'
+    | where properties.status =~ 'Connected' 
+    "
+
+    if ($ResourceGroup) {
+        $query1 += "| where resourceGroup =~ '$($ResourceGroup)'"
+        $query2 += "| where resourceGroup =~ '$($ResourceGroup)'"
+    }
+
+    if ($MachineName) {
+        $query1 += "| where machineName =~ '$($MachineName)'"
+        $query2 += "| where name =~ '$($MachineName)'"
+    }     
+    
+    $query1 += "
     | project machineName, extensionName = name, resourceGroup, location, subscriptionId, extensionPublisher, extensionType, properties
     "
     
-    if ($MachineName) {$query += "| where machineName =~ '$($MachineName)'"}     
-    if ($ResourceGroup) {$query += "| where resourceGroup =~ '$($ResourceGroup)'"}
-
-    $resources = Search-AzGraph -Query "$($query) | where subscriptionId =~ '$($sub.Id)'"
+    #
+    # Delete Azure extension for SQL
+    $resources = Search-AzGraph -Query "$($query1)" 
     foreach ($r in $resources) {
-
-        
 
         $setID = @{
             MachineName = $r.MachineName        
@@ -118,9 +133,20 @@ foreach ($sub in $subscriptions){
             Name = $r.extensionName        
         }
 
-        Remove-AzConnectedMachineExtension @SetId -NoWait # | Out-Null
+        Remove-AzConnectedMachineExtension @SetId -NoWait | Out-Null
         
     } 
+
+    #
+    # Remove Arc-enable SQL Server resources
+    $resources = Search-AzGraph -Query "$($query2)" 
+
+    foreach ($r in $resources) {     
+
+        Remove-AzResource -ResourceId $r.resourceId -Force | Out-Null
+        
+    } 
+    
 }
     
     
