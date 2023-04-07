@@ -11,7 +11,7 @@
 #                                               If not specified all subscriptions will be scanned)
 # -ResourceGroup [resource_goup]                (Limit scope  to a specific resoure group)
 # -MachineName [machine_name]                   (Limit scope to a specific machine)
-# -All                                          (Uninstall Azure extension on all Arc-enabled servers in all subscriptions you have cointributor access to). 
+# -All                                          (Uninstall Azure extension on all Arc-enabled servers in all subscriptions you have contributor access to). 
 # 
 #
 
