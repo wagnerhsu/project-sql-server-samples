@@ -17,8 +17,9 @@ You can specify a single subscription to scan, or provide a list of subscription
 
 - You must have at least a *Contributor* role in each subscription you modify.  
 - The Azure extension for SQL Server is updated to version 1.1.2230.58 or newer.
+- You must be connected to Azure AD and logged in to your Azure account. If your account have access to multiple tenants, make sure to log in with a specific tenant ID.
 
-# Launching the script 
+# Launching the script
 
 The script accepts the following command line parameters:
 
@@ -39,7 +40,7 @@ Get-AzSubscription | Export-Csv .\mysubscriptions.csv -NoTypeInformation
 The following command will scan all the subscriptions to which the user has contributor access to, and uninstall Azure extension for SQL Server on all Arc-enabled servers where it is installed.
 
 ```PowerShell
-.\uninstall-azure-extension-for-sql-server.ps1 -All $True
+.\uninstall-azure-extension-for-sql-server.ps1 -SubId ALL
 ```
 
 ## Example 2
@@ -57,6 +58,13 @@ The following command will scan resource group <resource_group_name> in the subs
 ```PowerShell
 .\uninstall-azure-extension-for-sql-server.ps1 -SubId <sub_id> -ResourceGroup <resource_group_name> 
 ```
+## Example 4
+
+The following command will uninstall Azure extension for SQL Server on a specific Arc-enabled server.
+
+```PowerShell
+.\uninstall-azure-extension-for-sql-server.ps1 -SubId <sub_id> -MachineName <machine_name> 
+```
 
 # Running the script using Cloud Shell
 
@@ -64,16 +72,22 @@ This option is recommended because Cloud shell has the Azure PowerShell modules 
 
 1. Launch the [Cloud Shell](https://shell.azure.com/). For details, [read more about PowerShell in Cloud Shell](https://aka.ms/pscloudshell/docs).
 
-2. Upload the script to your cloud shell using the following command:
+1. Connect to Azure AD
+
+    ```console
+   Connect-AzureAD
+    ```
+
+1. Upload the script to your cloud shell using the following command:
 
     ```console
     curl https://raw.githubusercontent.com/microsoft/sql-server-samples/master/samples/manage/azure-arc-enabled-sql-server/uninstall-azure-extension-for-sql-server/uninstall-azure-extension-for-sql-server.ps1 -o uninstall-azure-extension-for-sql-server.ps1
     ```
 
-3. Run the script.  
+1. Run the script.  
 
     ```console
-   .\uninstall-azure-extension-for-sql-server.ps1 -All $True
+   .\uninstall-azure-extension-for-sql-server.ps1 -SubId ALL
     ```
 
 > [!NOTE]
@@ -81,7 +95,6 @@ This option is recommended because Cloud shell has the Azure PowerShell modules 
 > - The script will be uploaded directly to the home folder associated with your Cloud Shell session.
 
 # Running the script from a PC
-
 
 Use the following steps to run the script in a PowerShell session on your PC.
 
@@ -104,10 +117,11 @@ Use the following steps to run the script in a PowerShell session on your PC.
     Install-Module Az -Scope CurrentUser -Repository PSGallery -Force
     ```
 
-1. Connect to Azure with an authenticated account using an authentication method of your choice. For more information, see [Connect-AzAccount](https://learn.microsoft.com/powershell/module/az.accounts/connect-azaccount).
+1. Connect to Azure AD and login to your Azure account.
 
     ```console
-    Connect-AzAccount <parameters>
+    Connect-AzureAD
+    Connect-AzAccount -TenantID (Get-AzureADTenantDetail).ObjectId
     ```
 
 1. Run the script using the desired scope.
