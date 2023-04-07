@@ -19,7 +19,7 @@ param (
     [string] $SubId, 
     [Parameter (Mandatory= $false)] 
     [string] $ResourceGroup, 
-    [Parameter (Mandatory= $true)] 
+    [Parameter (Mandatory= $false)] 
     [string] $MachineName
  )
 

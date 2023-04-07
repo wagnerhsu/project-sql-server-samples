@@ -25,10 +25,10 @@ The script accepts the following command line parameters:
 
 | **Parameter** &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  | **Value** &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; | **Description** |
 |:--|:--|:--|
-|-SubId|subscription_id *or* a file_name|Optional: subscription id or a .csv file with the list of subscriptions<sup>1</sup>. |
+|-SubId|subscription_id *or* a file_name *or* ALL |Required: modify a specific subscription id, a list of subscriptions in a .csv file<sup>1</sup>, or ALL subscriptions |
 |-ResourceGroup |resource_group_name|Optional: Limit the scope  to a specific resource group|
 |-MachineName |machine_name|Optional: Limit the scope to a specific machine|
-|-All|\$True or \$False (default)|Optional. Uninstall Azure extension on all Arc-enabled servers in all subscriptions you have contributor access to.|
+
 
 <sup>1</sup>You can create a .csv file using the following command and then edit to remove the subscriptions you don't  want to scan.
 ```PowerShell
