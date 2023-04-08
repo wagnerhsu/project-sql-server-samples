@@ -84,10 +84,10 @@ This option is recommended because Cloud shell has the Azure PowerShell modules 
     curl https://raw.githubusercontent.com/microsoft/sql-server-samples/master/samples/manage/azure-arc-enabled-sql-server/uninstall-azure-extension-for-sql-server/uninstall-azure-extension-for-sql-server.ps1 -o uninstall-azure-extension-for-sql-server.ps1
     ```
 
-1. Run the script.  
+1. Run the script using the desired scope. For example:
 
     ```console
-   .\uninstall-azure-extension-for-sql-server.ps1 -SubId ALL
+   .\uninstall-azure-extension-for-sql-server.ps1 -SubId <sub_id>
     ```
 
 > [!NOTE]
@@ -124,8 +124,8 @@ Use the following steps to run the script in a PowerShell session on your PC.
     Connect-AzAccount -TenantID (Get-AzureADTenantDetail).ObjectId
     ```
 
-1. Run the script using the desired scope.
+1. Run the script using the desired scope. For example:
 
     ```console
-   .\uninstall-azure-extension-for-sql-server.ps1 -All $True
+   .\uninstall-azure-extension-for-sql-server.ps1 -SubId <sub_id> -ResourceGroup <resource_group>
     ```

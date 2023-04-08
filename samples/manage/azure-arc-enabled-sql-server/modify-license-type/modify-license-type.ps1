@@ -108,6 +108,7 @@ Update-AzConfig -DisplayBreakingChangeWarning $false
 
 # Load required modules
 $requiredModules = @(
+    "AzureAD",    
     "Az.Accounts",
     "Az.ConnectedMachine",
     "Az.ResourceGraph"

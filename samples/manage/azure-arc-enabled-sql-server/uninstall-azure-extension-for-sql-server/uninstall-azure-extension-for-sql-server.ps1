@@ -88,7 +88,7 @@ foreach ($sub in $subscriptions){
     try {
         Set-AzContext -SubscriptionId $sub.Id  
     }catch {
-        write-host "[Environment]::NewLine + Invalid subscription: $($sub.Id)"
+        write-host ([Environment]::NewLine + "Invalid subscription: $($sub.Id)")
         {continue}
     }
    
@@ -142,8 +142,9 @@ foreach ($sub in $subscriptions){
     $resources = Search-AzGraph -Query "$($query2)" 
 
     foreach ($r in $resources) {     
-
-        Remove-AzResource -ResourceId $r.resourceId -Force | Out-Null
+  
+        $job = Remove-AzResource -ResourceId $r.resourceId -Force -AsJob | Out-Null
+	    write-host ([Environment]::NewLine + "Removing resource: $($r.resourceId)")
         
     } 
     
